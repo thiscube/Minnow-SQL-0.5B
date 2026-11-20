@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Models, checkpoints and data (weights go to Hugging Face, data is downloaded)
+checkpoints/
+outputs/
+models/
+data/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.gguf
+*.sqlite
+*.db
+
+# Caches and logs
+.cache/
+wandb/
+runs/
+*.log
