@@ -100,6 +100,16 @@ python -m minnow.runlog add outputs/run --change "..."        # log the run and 
 
 `runlog add` copies the run into `results/`, records it in `results/runs.json`, and regenerates `results.md`, the chart and the results table in this README. `python -m minnow.runlog check` fails when any of them is out of date or a run under `results/` is not logged, and it is part of the checks below.
 
+## Dashboard
+
+A local page shows every logged run: scores, kinds of error, accuracy per database, and each question with the model's query next to the reference query.
+
+```bash
+python scripts/dashboard.py
+```
+
+It serves the repository on `127.0.0.1` only and reads the files under `results/` directly. Question text and reference queries appear when Spider is unpacked in `data/spider`.
+
 ## Development
 
 Requires Python 3.12 or later.
