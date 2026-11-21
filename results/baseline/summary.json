@@ -4,7 +4,7 @@
   "correct": 469,
   "total": 1034,
   "execution_accuracy": 45.36,
-  "generation_seconds_this_run": 291,
+  "generation_seconds": 291,
   "batch_size": 16,
   "max_new_tokens": 256,
   "decoding": "greedy",

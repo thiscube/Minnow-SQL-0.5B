@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from datetime import date
 
 import pytest
@@ -38,11 +39,23 @@ def make_run(folder, verdicts=("correct", "correct", "wrong_rows", "error"), **s
         "model": "Qwen/Tiny-Instruct",
         "correct": verdicts.count("correct"),
         "total": len(verdicts),
-        "generation_seconds_this_run": 12,
+        "execution_accuracy": round(100 * verdicts.count("correct") / len(verdicts), 2),
+        "generation_seconds": 12,
         **summary,
     }
     (folder / "summary.json").write_text(json.dumps(written), encoding="utf-8")
     return folder
+
+
+def unsigned(run):
+    """The run without its fingerprint, to compare with a record written by hand."""
+    return replace(run, fingerprint="")
+
+
+def edit_json(path, change):
+    data = json.loads(path.read_text(encoding="utf-8"))
+    change(data)
+    path.write_text(json.dumps(data), encoding="utf-8")
 
 
 @pytest.fixture
@@ -76,8 +89,9 @@ def test_add_records_the_run_and_writes_the_whole_log(repo):
     run = add(repo, make_run(repo / "results" / "baseline"), "Baseline", "2026-11-21")
 
     counts = {"baseline": breakdown(load_outcomes(repo / "results/baseline/outcomes.jsonl"))}
-    assert run == BASELINE
-    assert load_runs(repo) == [BASELINE]
+    assert unsigned(run) == BASELINE
+    assert len(run.fingerprint) == 64
+    assert load_runs(repo) == [run]
     assert json.loads((repo / "results/runs.json").read_text(encoding="utf-8")) == [
         {
             "name": "baseline",
@@ -88,6 +102,7 @@ def test_add_records_the_run_and_writes_the_whole_log(repo):
             "total": 4,
             "execution_accuracy": 50.0,
             "generation_seconds": 12,
+            "fingerprint": run.fingerprint,
         }
     ]
     assert (repo / "results.md").read_text(encoding="utf-8") == results_markdown([run], counts)
@@ -111,10 +126,22 @@ def test_add_copies_a_run_from_outside_the_results_folder(repo):
     assert check(repo) == []
 
 
-def test_adding_a_run_again_replaces_its_record_in_place(logged):
-    add(logged, make_run(logged / "outputs" / "sft"), "Fine-tuned", "2026-12-01")
+def test_a_second_run_with_a_logged_name_is_refused_and_changes_nothing(logged):
+    before = (logged / "results/baseline/summary.json").read_bytes()
+    other = make_run(logged / "outputs" / "baseline", verdicts=("correct",) * 4)
 
-    add(logged, logged / "results" / "baseline", "Baseline,\n  measured again", "2026-12-02")
+    with pytest.raises(RunLogError, match=r"A run named baseline is already logged\."):
+        add(logged, other, "Another experiment", "2026-12-01")
+
+    assert (logged / "results/baseline/summary.json").read_bytes() == before
+    assert check(logged) == []
+
+
+def test_adding_a_run_again_with_replace_updates_its_record_in_place(logged):
+    add(logged, make_run(logged / "outputs" / "sft"), "Fine-tuned", "2026-12-01")
+    again = logged / "results" / "baseline"
+
+    add(logged, again, "Baseline,\n  measured again", "2026-12-02", replace=True)
 
     runs = load_runs(logged)
     assert [(run.name, run.date) for run in runs] == [
@@ -264,24 +291,60 @@ def test_check_notices_a_logged_run_without_its_outcomes(logged):
 
     (problem,) = check(logged)
 
-    assert problem.endswith("outcomes.jsonl does not exist, so baseline cannot be reported.")
+    assert problem.endswith(
+        "results/baseline/outcomes.jsonl does not exist. Run python -m minnow.outcomes on it first."
+    )
 
 
 @pytest.mark.parametrize(
     ("field", "value"), [("correct", 3), ("total", 5), ("execution_accuracy", 99.9)]
 )
 def test_check_notices_numbers_in_the_log_that_the_outcomes_do_not_back(logged, field, value):
-    path = logged / "results/runs.json"
-    records = json.loads(path.read_text(encoding="utf-8"))
-    records[0][field] = value
-    path.write_text(json.dumps(records), encoding="utf-8")
+    edit_json(logged / "results/runs.json", lambda records: records[0].update({field: value}))
 
     (problem,) = check(logged)
 
-    assert problem.startswith("results/runs.json gives baseline ")
+    assert problem.startswith("The log gives baseline ")
     assert problem.endswith("but its outcomes.jsonl has 2 of 4 (50.0%).")
-    with pytest.raises(RunLogError, match=r"results/runs\.json gives baseline"):
+    with pytest.raises(RunLogError, match=r"The log gives baseline"):
         render(logged)
+
+
+@pytest.mark.parametrize(("field", "value"), [("model", "Other/Model"), ("generation_seconds", 1)])
+def test_check_notices_a_log_entry_edited_by_hand(logged, field, value):
+    edit_json(logged / "results/runs.json", lambda records: records[0].update({field: value}))
+
+    assert check(logged) == ["The log and summary.json disagree about baseline."]
+
+
+def test_check_notices_a_score_edited_by_hand_in_the_summary(logged):
+    summary = logged / "results/baseline/summary.json"
+    edit_json(summary, lambda data: data.update({"execution_accuracy": 55.0}))
+
+    assert check(logged) == ["The log and summary.json disagree about baseline."]
+
+
+def test_check_notices_predictions_replaced_after_logging(logged):
+    append_prediction(logged / "results/baseline/predictions.jsonl", 0, "SELECT 2")
+
+    (problem,) = check(logged)
+
+    assert problem.startswith("The files of baseline changed after it was logged.")
+
+
+def test_check_notices_the_same_run_name_twice(logged):
+    edit_json(logged / "results/runs.json", lambda records: records.append(dict(records[0])))
+
+    assert check(logged) == ["results/runs.json lists the same run name twice."]
+
+
+def test_runs_must_cover_the_same_number_of_questions(logged):
+    longer = make_run(logged / "outputs" / "sft", verdicts=("correct",) * 5)
+
+    with pytest.raises(RunLogError, match="do not all cover the same questions"):
+        add(logged, longer, "Fine-tuned", "2026-12-01")
+
+    assert [run.name for run in load_runs(logged)] == ["baseline"]
 
 
 def test_check_notices_outcomes_that_were_emptied(logged):
@@ -289,7 +352,7 @@ def test_check_notices_outcomes_that_were_emptied(logged):
 
     (problem,) = check(logged)
 
-    assert problem.endswith("but its outcomes.jsonl has 0 of 0 (0.0%).")
+    assert problem == "outcomes.jsonl does not hold exactly one outcome per question, in order."
 
 
 def test_check_reports_a_readme_without_markers(logged):
@@ -307,7 +370,9 @@ def test_command_line_adds_checks_and_renders(repo, monkeypatch, capsys):
 
     assert main(arguments) == 0
     assert capsys.readouterr().out == "Logged baseline: 50.00% (2 of 4).\n"
-    assert load_runs(repo) == [BASELINE]
+    assert [unsigned(run) for run in load_runs(repo)] == [BASELINE]
+    assert main([*arguments, "--replace"]) == 0
+    capsys.readouterr()
     assert main(["check"]) == 0
     assert capsys.readouterr().out == "The results log is up to date.\n"
 

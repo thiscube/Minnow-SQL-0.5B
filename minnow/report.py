@@ -10,7 +10,7 @@ from minnow.outcomes import Breakdown
 
 CHART_FILE = "results/chart.svg"
 _INTRO = (
-    "Execution accuracy (EX) on the Spider development set, 1,034 questions. A prediction is "
+    "Execution accuracy (EX) on the Spider development set{size}. A prediction is "
     "correct when it runs and returns the same rows as the reference query. Scoring is done by "
     "[`minnow/execution.py`](minnow/execution.py) on the original Spider databases."
 )
@@ -40,7 +40,8 @@ class Run:
     correct: int
     total: int
     execution_accuracy: float
-    generation_seconds: int
+    generation_seconds: int | None
+    fingerprint: str = ""
 
 
 def _row(cells: Sequence[str]) -> str:
@@ -74,14 +75,17 @@ def _notes(run: Run, counts: Breakdown) -> list[str]:
             f"{counts.correct_on_empty:,} of the {counts.correct:,} correct predictions matched "
             f"a reference query that returns no rows. {_EMPTY_RESULT_CAVEAT}"
         )
-    predictions = _counted(counts.total, "prediction")
-    seconds = _counted(run.generation_seconds, "second")
-    return [*notes, f"Generating all {predictions} took {seconds}."]
+    if run.generation_seconds is not None:
+        predictions = _counted(counts.total, "prediction")
+        seconds = _counted(run.generation_seconds, "second")
+        notes.append(f"Generating all {predictions} took {seconds}.")
+    return notes
 
 
 def results_markdown(runs: Sequence[Run], counts: Mapping[str, Breakdown]) -> str:
     """Return results.md: a table row per run in the order given, then notes on each run."""
-    lines = ["# Results", "", _INTRO, "", *_LOG_HEADER]
+    size = f", {runs[0].total:,} questions" if runs else ""
+    lines = ["# Results", "", _INTRO.format(size=size), "", *_LOG_HEADER]
     for run in runs:
         files = f"[results/{run.name}](results/{run.name})"
         lines.append(_row([run.date, *_model_and_change(run), *_score(run), files]))

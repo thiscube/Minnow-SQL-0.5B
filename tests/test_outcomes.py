@@ -245,3 +245,35 @@ def test_command_line_refuses_a_folder_without_predictions(spider, tmp_path, cap
     assert raised.value.code == 2
     assert "predictions.jsonl does not exist" in capsys.readouterr().err
     assert not (tmp_path / "outcomes.jsonl").exists()
+
+
+def test_outcomes_file_with_a_missing_question_is_refused(tmp_path):
+    path = tmp_path / "outcomes.jsonl"
+    save_outcomes(path, [OUTCOMES[0], OUTCOMES[2]])
+
+    with pytest.raises(ValueError, match="exactly one outcome per question"):
+        load_outcomes(path)
+
+
+def test_outcomes_file_with_a_question_twice_is_refused(tmp_path):
+    path = tmp_path / "outcomes.jsonl"
+    save_outcomes(path, [OUTCOMES[0], OUTCOMES[0], OUTCOMES[1]])
+
+    with pytest.raises(ValueError, match="exactly one outcome per question"):
+        load_outcomes(path)
+
+
+def test_empty_outcomes_file_is_refused(tmp_path):
+    path = tmp_path / "outcomes.jsonl"
+    path.write_text("", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="exactly one outcome per question"):
+        load_outcomes(path)
+
+
+def test_outcomes_file_with_an_unknown_verdict_is_refused(tmp_path):
+    path = tmp_path / "outcomes.jsonl"
+    save_outcomes(path, [Outcome(0, "probably fine", "", 1)])
+
+    with pytest.raises(ValueError, match="unknown verdict: probably fine"):
+        load_outcomes(path)

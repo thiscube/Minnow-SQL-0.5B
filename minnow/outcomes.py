@@ -102,9 +102,18 @@ def save_outcomes(path: Path, outcomes: Iterable[Outcome]) -> None:
 
 
 def load_outcomes(path: Path) -> list[Outcome]:
-    """Read the outcomes that save_outcomes wrote."""
+    """Read the outcomes that save_outcomes wrote, and refuse a file that is not whole.
+
+    A whole file has one known verdict for each question, numbered from 0 without gaps.
+    """
     lines = path.read_text(encoding="utf-8").splitlines()
-    return [Outcome(**json.loads(line)) for line in lines if line]
+    outcomes = [Outcome(**json.loads(line)) for line in lines if line]
+    if not outcomes or [outcome.index for outcome in outcomes] != list(range(len(outcomes))):
+        raise ValueError(f"{path.name} does not hold exactly one outcome per question, in order.")
+    unknown = sorted({outcome.verdict for outcome in outcomes} - {CORRECT, WRONG_ROWS, ERROR})
+    if unknown:
+        raise ValueError(f"{path.name} holds an unknown verdict: {unknown[0]}.")
+    return outcomes
 
 
 def breakdown(outcomes: Iterable[Outcome]) -> Breakdown:

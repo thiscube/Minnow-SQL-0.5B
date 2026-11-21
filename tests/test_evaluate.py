@@ -1,6 +1,7 @@
 import pytest
 
 from minnow.evaluate import (
+    add_generation_seconds,
     append_prediction,
     claim_run_folder,
     drop_unfinished_line,
@@ -40,6 +41,17 @@ def test_complete_file_is_left_alone(tmp_path):
     drop_unfinished_line(path)
 
     assert path.read_bytes() == before
+
+
+def test_generation_time_adds_up_across_a_stopped_and_resumed_run(tmp_path):
+    assert add_generation_seconds(tmp_path, 100.4) == 100
+    assert add_generation_seconds(tmp_path, 190.3) == 291
+    assert add_generation_seconds(tmp_path, 0.0) == 291
+
+
+def test_generation_time_is_unknown_when_nothing_was_ever_timed(tmp_path):
+    assert add_generation_seconds(tmp_path, 0.0) is None
+    assert not (tmp_path / "timing.json").exists()
 
 
 def test_run_folder_accepts_the_same_settings_again(tmp_path):

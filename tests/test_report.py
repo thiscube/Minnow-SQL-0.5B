@@ -117,3 +117,17 @@ def test_text_only_depends_on_the_runs():
 
     assert first == second
     assert "\r" not in first
+
+
+def test_unknown_generation_time_is_left_out_of_the_notes():
+    untimed = Run("baseline", "2026-11-21", "Qwen/Tiny", "Baseline", 469, 1034, 45.36, None)
+
+    text = results_markdown([untimed], COUNTS)
+
+    assert "took" not in text
+    assert "176 predictions ran and returned different rows." in text
+
+
+def test_intro_gives_the_number_of_questions_of_the_runs():
+    assert "development set, 1,034 questions." in results_markdown([BASELINE], COUNTS)
+    assert "development set. A prediction" in results_markdown([], {})

@@ -6,10 +6,10 @@ Run these from the repository root:
     python -m minnow.runlog render
     python -m minnow.runlog check
 
-"add" logs a run that minnow.outcomes has judged and copies its files into results/. "render"
-rewrites results.md, results/chart.svg and the results block of README.md. "check" changes
-nothing: it exits with 0 when all of that is up to date and with 1 when it is not. Exit code 2
-means the command could not do its work.
+"add" logs a run folder that holds predictions, outcomes and a summary, and copies its files
+into results/. "render" rewrites results.md, results/chart.svg and the results block of
+README.md. "check" changes nothing: it exits with 0 when all of that is up to date and with 1
+when it is not. Exit code 2 means the command could not do its work.
 """
 
 import argparse
@@ -22,8 +22,15 @@ from datetime import date
 from pathlib import Path
 
 from minnow.chart import bar_chart
-from minnow.outcomes import OUTCOMES_FILE, PREDICTIONS_FILE, Breakdown, breakdown, load_outcomes
 from minnow.report import CHART_FILE, Run, readme_block, results_markdown
+from minnow.runfiles import (
+    RUN_FILES,
+    SUMMARY_FILE,
+    RunLogError,
+    judged_run,
+    read_text,
+    verified_counts,
+)
 
 TARGET_ACCURACY = 70.0
 PUBLISHED_ACCURACY = 72.08
@@ -31,21 +38,11 @@ RESULTS_FOLDER = "results"
 RUNS_FILE = "results/runs.json"
 RESULTS_FILE = "results.md"
 README_FILE = "README.md"
-SUMMARY_FILE = "summary.json"
 BLOCK_START = "<!-- results:start -->"
 BLOCK_END = "<!-- results:end -->"
 STALE_EXIT_CODE = 1
 FAILED_EXIT_CODE = 2
 _CHART_TITLE = "Execution accuracy on Spider dev (%)"
-_RUN_FILES = (PREDICTIONS_FILE, SUMMARY_FILE, OUTCOMES_FILE)
-
-
-class RunLogError(ValueError):
-    """The results log cannot be written from the files as they are."""
-
-
-def _read(path: Path) -> str:
-    return path.read_text(encoding="utf-8") if path.is_file() else ""
 
 
 def _write(path: Path, text: str) -> None:
@@ -53,13 +50,19 @@ def _write(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8", newline="\n")
 
 
-def _accuracy(correct: int, total: int) -> float:
-    return round(100 * correct / total, 2) if total else 0.0
+def _comparable(runs: Sequence[Run]) -> list[Run]:
+    """Return the runs, refusing a log whose runs cannot be told apart or compared."""
+    if len({run.name for run in runs}) != len(runs):
+        raise RunLogError(f"{RUNS_FILE} lists the same run name twice.")
+    if len({run.total for run in runs}) > 1:
+        raise RunLogError(f"The runs in {RUNS_FILE} do not all cover the same questions.")
+    return list(runs)
 
 
 def load_runs(root: Path) -> list[Run]:
     """Read the logged runs in the order they were added; no file yet means no runs."""
-    return [Run(**record) for record in json.loads(_read(root / RUNS_FILE) or "[]")]
+    records = json.loads(read_text(root / RUNS_FILE) or "[]")
+    return _comparable([Run(**record) for record in records])
 
 
 def save_runs(root: Path, runs: Sequence[Run]) -> None:
@@ -87,28 +90,13 @@ def replace_block(readme: str, block: str) -> str:
     return f"{before}{BLOCK_START}\n\n{block}\n{BLOCK_END}{after}"
 
 
-def _counts(root: Path, run: Run) -> Breakdown:
-    path = root / RESULTS_FOLDER / run.name / OUTCOMES_FILE
-    if not path.is_file():
-        raise RunLogError(f"{path} does not exist, so {run.name} cannot be reported.")
-    counts = breakdown(load_outcomes(path))
-    logged = (run.correct, run.total, run.execution_accuracy)
-    judged = (counts.correct, counts.total, _accuracy(counts.correct, counts.total))
-    if logged != judged:
-        raise RunLogError(
-            f"{RUNS_FILE} gives {run.name} {logged[0]} of {logged[1]} correct ({logged[2]}%), "
-            f"but its {OUTCOMES_FILE} has {judged[0]} of {judged[1]} ({judged[2]}%)."
-        )
-    return counts
-
-
 def rendered(root: Path, runs: Sequence[Run]) -> dict[str, str]:
     """Return what every generated file should hold, by its path from the repository root."""
-    counts = {run.name: _counts(root, run) for run in runs}
+    counts = {run.name: verified_counts(root / RESULTS_FOLDER / run.name, run) for run in runs}
     return {
         RESULTS_FILE: results_markdown(runs, counts),
         CHART_FILE: chart_svg(runs),
-        README_FILE: replace_block(_read(root / README_FILE), readme_block(runs)),
+        README_FILE: replace_block(read_text(root / README_FILE), readme_block(runs)),
     }
 
 
@@ -136,60 +124,41 @@ def _unlogged(root: Path, runs: Sequence[Run]) -> list[str]:
 
 def check(root: Path) -> list[str]:
     """Return everything that is out of date in the results log; nothing means it is current."""
-    runs = load_runs(root)
-    problems = _unlogged(root, runs)
-    if problems:
-        return problems
     try:
+        runs = load_runs(root)
+        problems = _unlogged(root, runs)
+        if problems:
+            return problems
         expected = rendered(root, runs)
     except RunLogError as error:
         return [str(error)]
     return [
         f"{name} is out of date: run python -m minnow.runlog render"
         for name, text in expected.items()
-        if _read(root / name) != text
+        if read_text(root / name) != text
     ]
 
 
-def _judged_run(folder: Path, change: str, day: str) -> Run:
-    for name in _RUN_FILES:
-        if not (folder / name).is_file():
-            hint = " Run python -m minnow.outcomes on it first." if name == OUTCOMES_FILE else ""
-            raise RunLogError(f"{folder / name} does not exist.{hint}")
-    summary = json.loads(_read(folder / SUMMARY_FILE))
-    counts = breakdown(load_outcomes(folder / OUTCOMES_FILE))
-    if (summary["correct"], summary["total"]) != (counts.correct, counts.total):
-        raise RunLogError(
-            f"{SUMMARY_FILE} says {summary['correct']} of {summary['total']} correct, but "
-            f"{OUTCOMES_FILE} has {counts.correct} of {counts.total}. Judge the run again with "
-            "python -m minnow.outcomes."
-        )
-    return Run(
-        name=folder.resolve().name,
-        date=day,
-        model=summary["model"],
-        change=" ".join(change.split()),
-        correct=counts.correct,
-        total=counts.total,
-        execution_accuracy=_accuracy(counts.correct, counts.total),
-        generation_seconds=summary["generation_seconds_this_run"],
-    )
-
-
-def add(root: Path, folder: Path, change: str, day: str) -> Run:
+def add(root: Path, folder: Path, change: str, day: str, replace: bool = False) -> Run:
     """Log a judged run: copy its files into results/, record it and render the log."""
-    run = _judged_run(folder, change, day)
-    kept = root / RESULTS_FOLDER / run.name
-    if folder.resolve() != kept.resolve():
-        kept.mkdir(parents=True, exist_ok=True)
-        for name in _RUN_FILES:
-            shutil.copyfile(folder / name, kept / name)
+    run = judged_run(folder, change, day)
     runs = load_runs(root)
     names = [logged.name for logged in runs]
+    if run.name in names and not replace:
+        raise RunLogError(
+            f"A run named {run.name} is already logged. Give the new run's folder another "
+            "name, or pass --replace to overwrite the logged one."
+        )
     if run.name in names:
         runs[names.index(run.name)] = run
     else:
         runs.append(run)
+    _comparable(runs)
+    kept = root / RESULTS_FOLDER / run.name
+    if folder.resolve() != kept.resolve():
+        kept.mkdir(parents=True, exist_ok=True)
+        for name in RUN_FILES:
+            shutil.copyfile(folder / name, kept / name)
     files = rendered(root, runs)
     save_runs(root, runs)
     for name, text in files.items():
@@ -206,6 +175,9 @@ def _parse(argv: Sequence[str] | None) -> argparse.Namespace:
     adding.add_argument(
         "--date", type=date.fromisoformat, help="day of the run as YYYY-MM-DD (default: today)"
     )
+    adding.add_argument(
+        "--replace", action="store_true", help="overwrite the logged run with the same name"
+    )
     commands.add_parser("render", help="rewrite results.md, the chart and the README block")
     commands.add_parser("check", help="exit with 1 when the results log is out of date")
     return parser.parse_args(argv)
@@ -213,7 +185,8 @@ def _parse(argv: Sequence[str] | None) -> argparse.Namespace:
 
 def _run_command(args: argparse.Namespace, root: Path) -> int:
     if args.command == "add":
-        run = add(root, args.run, args.change, (args.date or date.today()).isoformat())
+        day = (args.date or date.today()).isoformat()
+        run = add(root, args.run, args.change, day, args.replace)
         print(f"Logged {run.name}: {run.execution_accuracy:.2f}% ({run.correct} of {run.total}).")
     elif args.command == "render":
         render(root)

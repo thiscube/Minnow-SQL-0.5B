@@ -17,6 +17,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from minnow.evaluate import (
+    add_generation_seconds,
     append_prediction,
     claim_run_folder,
     drop_unfinished_line,
@@ -98,7 +99,8 @@ def main() -> None:
                 if index not in done:
                     append_prediction(predictions_file, index, extract_sql(answer))
             print(f"{batch.stop} of {len(examples)} predicted")
-    generation_seconds = time.monotonic() - started
+    spent = time.monotonic() - started if todo else 0.0
+    generation_seconds = add_generation_seconds(args.out, spent)
 
     outcomes = judge_all(examples, load_predictions(predictions_file), args.spider)
     save_outcomes(args.out / OUTCOMES_FILE, outcomes)
@@ -110,7 +112,7 @@ def main() -> None:
         "correct": counts.correct,
         "total": counts.total,
         "execution_accuracy": round(accuracy, 2),
-        "generation_seconds_this_run": round(generation_seconds),
+        "generation_seconds": generation_seconds,
         "batch_size": args.batch_size,
         "max_new_tokens": args.max_new_tokens,
         "decoding": "greedy",

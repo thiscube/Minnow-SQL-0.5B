@@ -18,6 +18,21 @@ def claim_run_folder(folder: Path, settings: Mapping[str, object]) -> None:
         raise ValueError(f"{folder} holds a run with other settings. Use another folder.")
 
 
+def add_generation_seconds(folder: Path, seconds: float) -> int | None:
+    """Add the time one invocation spent generating to the run's total, and return the total.
+
+    A run can be stopped and resumed, so the time is summed across invocations. The total is
+    unknown, and None, when nothing was generated now and no earlier time was recorded.
+    """
+    file = folder / "timing.json"
+    if not file.exists() and not seconds:
+        return None
+    earlier = json.loads(file.read_text(encoding="utf-8"))["seconds"] if file.exists() else 0.0
+    total = earlier + seconds
+    file.write_text(json.dumps({"seconds": total}) + "\n", encoding="utf-8", newline="\n")
+    return round(total)
+
+
 def drop_unfinished_line(path: Path) -> None:
     """Remove a last line that was cut off when a run was stopped in the middle of writing."""
     if not path.exists():
