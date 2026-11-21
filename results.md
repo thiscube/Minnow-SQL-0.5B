@@ -12,6 +12,7 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 | 2026-11-21 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | LoRA fine-tuning with one example row per table in the schema: 5,259 examples, one greedy query | 61.51 | 636 / 1034 | [results/sft-rows1](results/sft-rows1) |
 | 2026-11-21 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1; vote over five candidate queries | 65.76 | 680 / 1034 | [results/sft-rows1-vote5](results/sft-rows1-vote5) |
 | 2026-11-21 | vote of sft-rows1-vote5, sft-spider-all-vote5, sft-spider-vote5 | Vote across the three fine-tuned models' voted answers (15 candidate queries per question in total) | 68.67 | 710 / 1034 | [results/vote-of-three](results/vote-of-three) |
+| 2026-11-21 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1, voting over 15 candidate queries instead of 5 | 67.02 | 693 / 1034 | [results/sft-rows1-vote15](results/sft-rows1-vote15) |
 
 ## Notes
 
@@ -69,3 +70,10 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 - 58 predictions did not run. The most common errors: `no such column` (55), `no such table` (3).
 - 266 predictions ran and returned different rows.
 - 42 of the 710 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+
+### 2026-11-21, sft-rows1-vote15
+
+- 102 predictions did not run. The most common errors: `no such column` (95), `no such table` (7).
+- 239 predictions ran and returned different rows.
+- 44 of the 693 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 3,255 seconds.

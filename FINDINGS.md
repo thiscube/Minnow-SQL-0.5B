@@ -10,6 +10,18 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-21 · Decision · Next training run mixes Spider with 6,000 databases of SynSQL
+
+- **What:** A slice of SynSQL-2.5M is added to Spider's training questions: up to two questions from each of 6,000 synthetic databases, without the ones that need extra knowledge, the hardest level, or a query that does not run. The column comments in SynSQL's table definitions are removed.
+- **Evidence:** The slice has 11,990 questions, 8,377 of them with a join. With the comments a schema is 1,580 tokens at the median and only 10% of the examples fit in 1,024 tokens. Without them the median is 1,015 and 52% fit, which gives 12,215 training examples together with Spider. The SLM-SQL paper reports 65.31% on Spider dev for the same base model after training on 916,156 SynSQL examples, with 16-candidate voting.
+- **So what:** The model sees 43 times more databases than Spider alone has, and most new questions are joins, the mistake that hurts `car_1` and `world_1`. One update takes about 5.5 seconds instead of 2.5 because the examples are longer, so the run uses 2 epochs.
+
+### 2026-11-21 · Finding · Fifteen candidates beat five by 1.3 points at three times the cost
+
+- **What:** The best single model voting over 15 candidate queries per question instead of 5.
+- **Evidence:** 67.02% (693 of 1,034) against 65.76%. 20 questions fixed, 7 broken. Queries that do not run fell from 127 to 102. Generation took 3,255 seconds.
+- **So what:** The gain is just above the one-point noise and each extra candidate buys less. Published work uses 16 to 30 candidates, so 15 is kept for final scores only, and 5 for comparing training runs.
+
 ### 2026-11-21 · Improvement · Voting across three fine-tuned models reaches 68.67%
 
 - **What:** The voted answers of the three fine-tuned models are combined with the same rule: run them, keep the result most of them agree on. That is 15 candidate queries per question in total.

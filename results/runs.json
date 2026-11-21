@@ -86,5 +86,16 @@
     "execution_accuracy": 68.67,
     "generation_seconds": null,
     "fingerprint": "f263ff76affaec58afea1145a801c6934123d08ba69c7f728357b023b2adf6db"
+  },
+  {
+    "name": "sft-rows1-vote15",
+    "date": "2026-11-21",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-rows1",
+    "change": "Same model as sft-rows1, voting over 15 candidate queries instead of 5",
+    "correct": 693,
+    "total": 1034,
+    "execution_accuracy": 67.02,
+    "generation_seconds": 3255,
+    "fingerprint": "8ecc76dd398d2bdbaf5037f145bf945a26b116102804a2cf02517a19026b759b"
   }
 ]
