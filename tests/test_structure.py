@@ -4,6 +4,8 @@ import ast
 import os
 from pathlib import Path
 
+from minnow.runlog import PUBLISHED_ACCURACY, TARGET_ACCURACY
+
 ROOT = Path(__file__).resolve().parent.parent
 # folders that hold tests, downloads or output, not our source code
 SKIPPED_FOLDERS = {
@@ -123,3 +125,12 @@ def test_every_module_has_its_own_test_file():
         if not (ROOT / "tests" / f"test_{path.stem}.py").exists()
     ]
     assert not offenders, f"These modules have no tests/test_<name>.py: {offenders}"
+
+
+def test_chart_reference_lines_match_the_numbers_in_the_readme():
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert (
+        f"| SLM-SQL-0.5B | SFT and RL on SynSQL-derived data | {PUBLISHED_ACCURACY:.2f} |" in readme
+    )
+    assert f"Reach at least {TARGET_ACCURACY:g}% execution accuracy" in readme
