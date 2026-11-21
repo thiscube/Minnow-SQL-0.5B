@@ -22,7 +22,7 @@ Measured in this repository. Every run is logged in [results.md](results.md), wi
 | Qwen2.5-Coder-0.5B-Instruct | none (baseline) | 45.36 | 469 / 1034 |
 | Minnow-SQL-0.5B | | not yet trained | |
 
-Of the 565 baseline errors, 389 are queries that do not run, and 356 of those name a column that does not exist.
+Of the 565 baseline errors, 389 are queries that do not run, and 356 of those name a column that does not exist. Of the 469 correct predictions, 30 match a reference query that returns no rows; with one database per question, a wrong query that also returns nothing is counted as correct, so the figure is slightly optimistic.
 
 ### Published results for comparison
 

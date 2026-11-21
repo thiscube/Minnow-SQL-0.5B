@@ -23,6 +23,12 @@ def test_slow_query_is_stopped(database):
         run_query(database, endless, timeout=0.2)
 
 
+def test_query_with_too_many_rows_is_a_query_error(database):
+    assert len(run_query(database, "SELECT * FROM singer", max_rows=3)) == 3
+    with pytest.raises(QueryError, match="more than 2 rows"):
+        run_query(database, "SELECT * FROM singer", max_rows=2)
+
+
 def test_query_cannot_change_the_database(database):
     with pytest.raises(QueryError):
         run_query(database, "DELETE FROM singer")

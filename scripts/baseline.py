@@ -14,8 +14,14 @@ from pathlib import Path
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from minnow.evaluate import append_prediction, load_predictions, score
-from minnow.prompt import build_messages, extract_sql
+from minnow.evaluate import (
+    append_prediction,
+    claim_run_folder,
+    drop_unfinished_line,
+    load_predictions,
+    score,
+)
+from minnow.prompt import SYSTEM, build_messages, extract_sql
 from minnow.schema import create_statements
 from minnow.spider import database_path, load_split
 
@@ -47,8 +53,15 @@ def generate(
 def main() -> None:
     """Generate any missing predictions, then score them all."""
     args = parse_args()
-    args.out.mkdir(parents=True, exist_ok=True)
+    settings = {
+        "model": args.model,
+        "batch_size": args.batch_size,
+        "max_new_tokens": args.max_new_tokens,
+        "system_prompt": SYSTEM,
+    }
+    claim_run_folder(args.out, settings)
     predictions_file = args.out / "predictions.jsonl"
+    drop_unfinished_line(predictions_file)
     examples = load_split(args.spider, "dev.json")
     done = load_predictions(predictions_file)
     todo = [index for index in range(len(examples)) if index not in done]
@@ -64,8 +77,12 @@ def main() -> None:
             db_id: create_statements(database_path(args.spider, db_id))
             for db_id in {e.db_id for e in examples}
         }
-        for start in range(0, len(todo), args.batch_size):
-            batch = todo[start : start + args.batch_size]
+        # The answers depend a little on which questions share a batch, so batches are fixed
+        # blocks of the split. A resumed run redoes a block exactly as a single run would.
+        for start in range(0, len(examples), args.batch_size):
+            batch = range(start, min(start + args.batch_size, len(examples)))
+            if all(index in done for index in batch):
+                continue
             prompts = [
                 tokenizer.apply_chat_template(
                     build_messages(schemas[examples[i].db_id], examples[i].question),
@@ -74,11 +91,11 @@ def main() -> None:
                 )
                 for i in batch
             ]
-            for index, answer in zip(
-                batch, generate(model, tokenizer, prompts, args.max_new_tokens), strict=True
-            ):
-                append_prediction(predictions_file, index, extract_sql(answer))
-            print(f"{start + len(batch)} of {len(todo)} predicted")
+            answers = generate(model, tokenizer, prompts, args.max_new_tokens)
+            for index, answer in zip(batch, answers, strict=True):
+                if index not in done:
+                    append_prediction(predictions_file, index, extract_sql(answer))
+            print(f"{batch.stop} of {len(examples)} predicted")
     generation_seconds = time.monotonic() - started
 
     result = score(examples, load_predictions(predictions_file), args.spider)

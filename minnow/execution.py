@@ -28,18 +28,27 @@ class QueryError(RuntimeError):
     """The query failed, or ran longer than allowed."""
 
 
-def run_query(database: Path, sql: str, timeout: float = 10.0) -> list[Row]:
-    """Run a query on a read-only copy of the database and return all rows."""
+def run_query(
+    database: Path, sql: str, timeout: float = 10.0, max_rows: int = 1_000_000
+) -> list[Row]:
+    """Run a query on a read-only copy of the database and return all rows.
+
+    A query that fails, runs longer than the timeout or returns more than max_rows rows
+    raises QueryError, so a runaway query can't hang the run or fill the memory.
+    """
     connection = connect_read_only(database)
     connection.text_factory = lambda raw: raw.decode("utf-8", errors="replace")
     deadline = time.monotonic() + timeout
     connection.set_progress_handler(lambda: int(time.monotonic() > deadline), _PROGRESS_STEPS)
     try:
-        return [tuple(row) for row in connection.execute(sql).fetchall()]
+        rows = connection.execute(sql).fetchmany(max_rows + 1)
     except sqlite3.Error as error:
         raise QueryError(str(error)) from error
     finally:
         connection.close()
+    if len(rows) > max_rows:
+        raise QueryError(f"more than {max_rows} rows")
+    return rows
 
 
 def _columns_reordered(rows: Sequence[Row], order: Sequence[int]) -> list[Row]:

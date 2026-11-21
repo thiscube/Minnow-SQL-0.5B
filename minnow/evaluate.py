@@ -22,6 +22,27 @@ class Score:
         return 100 * self.correct / self.total
 
 
+def claim_run_folder(folder: Path, settings: Mapping[str, object]) -> None:
+    """Tie a folder to one set of run settings, so a resumed run can't mix two setups."""
+    folder.mkdir(parents=True, exist_ok=True)
+    file = folder / "settings.json"
+    if not file.exists():
+        file.write_text(json.dumps(dict(settings), indent=2) + "\n", encoding="utf-8")
+        return
+    saved = json.loads(file.read_text(encoding="utf-8"))
+    if saved != dict(settings):
+        raise ValueError(f"{folder} holds a run with other settings. Use another folder.")
+
+
+def drop_unfinished_line(path: Path) -> None:
+    """Remove a last line that was cut off when a run was stopped in the middle of writing."""
+    if not path.exists():
+        return
+    data = path.read_bytes()
+    if data and not data.endswith(b"\n"):
+        path.write_bytes(data[: data.rfind(b"\n") + 1])
+
+
 def load_predictions(path: Path) -> dict[int, str]:
     """Read saved predictions, keyed by the question's position in the split."""
     if not path.exists():
