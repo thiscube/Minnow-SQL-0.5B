@@ -110,6 +110,15 @@ def test_other_rows_are_wrong_rows_not_an_error(database):
     assert outcome == Outcome(0, "wrong_rows", "", 3)
 
 
+def test_row_order_only_matters_when_the_reference_sorts(database):
+    backwards = "SELECT name FROM singer ORDER BY name DESC"
+
+    assert judge(database, backwards, "SELECT name FROM singer").verdict == "correct"
+    assert judge(database, backwards, "SELECT name FROM singer ORDER BY name").verdict == (
+        "wrong_rows"
+    )
+
+
 @pytest.mark.parametrize(
     ("sql", "kind"),
     [
