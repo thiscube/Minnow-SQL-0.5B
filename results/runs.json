@@ -20,5 +20,16 @@
     "execution_accuracy": 60.64,
     "generation_seconds": 182,
     "fingerprint": "5ac67bbcee664ab79cbbfc9a5d79e1fac1ddb9d190ee754760eef53a611c0d41"
+  },
+  {
+    "name": "sft-spider-vote5",
+    "date": "2026-11-21",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-spider",
+    "change": "Same model as sft-spider; five candidate queries per question, keeping the result most candidates agree on",
+    "correct": 665,
+    "total": 1034,
+    "execution_accuracy": 64.31,
+    "generation_seconds": 979,
+    "fingerprint": "2c15d79cfff61a98e3392622496287c3ce3ef8c0d07d9f97f6bd9f79715d1f78"
   }
 ]

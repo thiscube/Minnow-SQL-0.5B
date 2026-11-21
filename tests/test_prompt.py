@@ -1,6 +1,19 @@
 import pytest
 
-from minnow.prompt import SYSTEM, build_messages, extract_sql
+from minnow.prompt import SYSTEM, build_messages, chat_prompt, extract_sql
+
+
+class FakeTokenizer:
+    def apply_chat_template(self, messages, tokenize, add_generation_prompt):
+        assert (tokenize, add_generation_prompt) == (False, True)
+        return "|".join(message["content"] for message in messages) + "|answer:"
+
+
+def test_chat_prompt_ends_where_the_answer_begins():
+    prompt = chat_prompt(FakeTokenizer(), "CREATE TABLE t (a INT)", "How many rows?")
+
+    assert prompt.startswith(SYSTEM)
+    assert prompt.endswith("Question: How many rows?|answer:")
 
 
 def test_messages_hold_the_schema_and_the_question():

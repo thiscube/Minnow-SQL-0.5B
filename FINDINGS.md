@@ -10,6 +10,12 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-21 · Improvement · Voting over five candidate queries adds 3.7 points without training
+
+- **What:** For each question the fine-tuned model writes one greedy query and four sampled ones (temperature 0.8). Each is run on the database, and the result most candidates agree on is kept. No reference query is used.
+- **Evidence:** 64.31% (665 of 1,034), up from 60.64% for the same model with one greedy query. 42 questions fixed, 4 broken. Queries that do not run fell from 208 to 130. Generation took 979 seconds instead of about 300.
+- **So what:** The gain is well above the one-point noise, so voting stays on for the best score. It mostly rescues queries that crash. Queries that run but return different rows rose from 199 to 239, so wrong-but-runnable answers are now the largest group and need better training data, not more voting.
+
 ### 2026-11-21 · Finding · Fine-tuning on Spider lifts the score from 45.36% to 60.64%
 
 - **What:** LoRA fine-tuning on 6,142 Spider training examples for 3 epochs, 47 minutes on one RTX 3060 Ti with 5.1 GB of GPU memory.
