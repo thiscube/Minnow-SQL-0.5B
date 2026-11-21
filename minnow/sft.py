@@ -20,7 +20,9 @@ def _for_guard(examples: list[SpiderExample]) -> list[Example]:
     return [Example(example.question, example.db_id) for example in examples]
 
 
-def checked_training_examples(spider: Path) -> list[SpiderExample]:
+def checked_training_examples(
+    spider: Path, files: tuple[str, ...] = (TRAIN_FILE,)
+) -> list[SpiderExample]:
     """Load Spider's training questions without the ones that are worded like a dev question.
 
     A few generic questions, such as "How many employees are there?", appear in both sets on
@@ -29,7 +31,7 @@ def checked_training_examples(spider: Path) -> list[SpiderExample]:
     """
     dev = _for_guard(load_split(spider, DEV_FILE))
     dev_questions = {normalize(example.question) for example in dev}
-    train = load_split(spider, TRAIN_FILE)
+    train = [example for name in files for example in load_split(spider, name)]
     kept = [example for example in train if normalize(example.question) not in dev_questions]
     assert_no_leak(_for_guard(kept), dev)
     return kept
