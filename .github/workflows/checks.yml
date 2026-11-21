@@ -28,7 +28,9 @@ jobs:
         run: python -m minnow.guard tests/fixtures/train_clean.json tests/fixtures/dev.json
       - name: Leak guard catches a planted leak
         run: |
-          if python -m minnow.guard tests/fixtures/train_leaky.json tests/fixtures/dev.json; then
-            echo "The planted leak was not caught."
+          code=0
+          python -m minnow.guard tests/fixtures/train_leaky.json tests/fixtures/dev.json || code=$?
+          if [ "$code" -ne 3 ]; then
+            echo "A leak should exit with 3, but the guard exited with $code."
             exit 1
           fi

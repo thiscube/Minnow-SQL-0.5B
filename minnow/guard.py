@@ -7,7 +7,8 @@ Check two JSON files, each a list of objects with "question" and "db_id":
 
     python -m minnow.guard train.json dev.json
 
-The exit code is 0 when the data is clean and 1 when it leaks.
+The exit code is 0 when the data is clean and 3 when it leaks. Any other code
+means the check itself could not run.
 """
 
 import argparse
@@ -20,6 +21,7 @@ from pathlib import Path
 
 _NOT_A_WORD = re.compile(r"[\W_]+")
 _SHOWN_PER_KIND = 5
+LEAK_EXIT_CODE = 3
 
 
 class LeakError(ValueError):
@@ -28,7 +30,7 @@ class LeakError(ValueError):
 
 @dataclass(frozen=True)
 class Example:
-    """One question and the database it is asked about."""
+    """One raw question (not a formatted prompt) and the database it is asked about."""
 
     question: str
     db_id: str
@@ -54,14 +56,16 @@ def normalize(text: str) -> str:
 
 def find_leaks(train: Iterable[Example], dev: Iterable[Example]) -> LeakReport:
     """Return every training question and database that the dev set also has."""
+    train_examples = list(train)
     dev_examples = list(dev)
-    if not dev_examples:
-        raise ValueError("The dev set is empty, so there is nothing to check against.")
+    for name, examples in (("training", train_examples), ("dev", dev_examples)):
+        if not examples:
+            raise ValueError(f"The {name} set is empty, so there is nothing to check.")
     dev_questions = {normalize(example.question) for example in dev_examples}
     dev_databases = {normalize(example.db_id) for example in dev_examples}
     questions: set[str] = set()
     databases: set[str] = set()
-    for example in train:
+    for example in train_examples:
         if normalize(example.question) in dev_questions:
             questions.add(example.question)
         if normalize(example.db_id) in dev_databases:
@@ -104,7 +108,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         assert_no_leak(train, dev)
     except LeakError as error:
         print(error)
-        return 1
+        return LEAK_EXIT_CODE
     print(f"No leak: {len(train)} training examples checked against {len(dev)} dev examples.")
     return 0
 

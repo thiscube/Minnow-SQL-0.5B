@@ -39,7 +39,7 @@ A wrong score is worse than no score, so every change has to pass the same check
 - **Format and lint** with [ruff](https://docs.astral.sh/ruff/): no unused or commented-out code, type hints and docstrings on public functions, and limits on how large or tangled a function may get.
 - **Tests** with pytest. At least 90% of `minnow/` has to be covered, so new logic can't arrive without tests.
 - **A data-leak guard** ([`minnow/guard.py`](minnow/guard.py)). Training data may not contain a Spider dev question or use a Spider dev database. The guard is run against a planted leak on every check, so it can't quietly stop working.
-- **Structure tests.** Any file that starts training has to call the leak guard, and no source file may grow past 300 lines.
+- **Structure tests.** Any file that starts training has to call the leak guard, every module needs its own test file, and files have size limits (300 lines, 150 for scripts, since scripts are not covered by tests).
 
 Run them all on Windows with:
 

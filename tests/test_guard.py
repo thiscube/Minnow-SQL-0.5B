@@ -76,8 +76,13 @@ def test_assert_no_leak_says_what_leaked():
 
 
 def test_empty_dev_set_is_an_error_not_a_pass():
-    with pytest.raises(ValueError, match="empty"):
+    with pytest.raises(ValueError, match="dev set is empty"):
         assert_no_leak(TRAIN_CLEAN, [])
+
+
+def test_empty_training_set_is_an_error_not_a_pass():
+    with pytest.raises(ValueError, match="training set is empty"):
+        assert_no_leak([], DEV)
 
 
 def test_load_examples_reads_question_and_database():
@@ -94,8 +99,8 @@ def test_command_line_reports_clean_data(capsys):
     assert "No leak: 3 training examples checked against 3 dev examples." in capsys.readouterr().out
 
 
-def test_command_line_fails_on_leaky_data(capsys):
+def test_command_line_exits_with_3_on_leaky_data(capsys):
     exit_code = main([str(FIXTURES / "train_leaky.json"), str(FIXTURES / "dev.json")])
 
-    assert exit_code == 1
+    assert exit_code == 3
     assert "1 question(s), 1 database(s)" in capsys.readouterr().out
