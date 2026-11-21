@@ -63,6 +63,10 @@ Step 'leak guard' {
     $global:LASTEXITCODE = [int](-not ($cleanPassed -and $leakCaught))
 }
 
+# every score in results.md, the chart and the README comes from the runs' own files; this fails
+# when one of them is out of date or a run under results/ was never logged
+Step 'results log' { & $py -m minnow.runlog check }
+
 if ($Full) {
     # what someone who clones the repo gets: only the committed files, a new environment, the
     # pinned tools, the tests. Catches tests that only pass because of files that are not in git.
@@ -77,10 +81,9 @@ if ($Full) {
                     python -m venv .venv
                     $freshPy = Join-Path $fresh '.venv\Scripts\python.exe'
                     & $freshPy -m pip install -q --disable-pip-version-check -e '.[dev]'
-                    if ($LASTEXITCODE -eq 0) {
-                        & $freshPy -m pytest -p no:cacheprovider
-                        $result = $LASTEXITCODE
-                    }
+                    if ($LASTEXITCODE -eq 0) { & $freshPy -m pytest -p no:cacheprovider }
+                    if ($LASTEXITCODE -eq 0) { & $freshPy -m minnow.runlog check }
+                    $result = $LASTEXITCODE
                 } finally {
                     Pop-Location
                 }
