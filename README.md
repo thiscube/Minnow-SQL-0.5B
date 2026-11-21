@@ -22,6 +22,7 @@ Measured in this repository. The table and chart below are generated from the ru
 | Model | Change | Spider dev EX (%) | Correct |
 | --- | --- | ---: | ---: |
 | Qwen2.5-Coder-0.5B-Instruct | Baseline: no training, greedy decoding, CREATE TABLE statements as the schema | 45.36 | 469 / 1034 |
+| Qwen2.5-Coder-0.5B-Instruct + sft-spider | LoRA fine-tuning on Spider train: 6,142 examples of at most 1,024 tokens, 3 epochs | 60.64 | 627 / 1034 |
 
 ![Execution accuracy by run](results/chart.svg)
 

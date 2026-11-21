@@ -10,6 +10,12 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-21 · Finding · Fine-tuning on Spider lifts the score from 45.36% to 60.64%
+
+- **What:** LoRA fine-tuning on 6,142 Spider training examples for 3 epochs, 47 minutes on one RTX 3060 Ti with 5.1 GB of GPU memory.
+- **Evidence:** 627 of 1,034 correct, up from 469. Against the baseline, 221 questions were fixed and 63 broke. Queries naming a column that does not exist fell from 356 to 189. Queries that run but return different rows rose from 176 to 199. The training loss fell from 0.38 to 0.03.
+- **So what:** Training fixes about half of the column mistakes, and 208 answers still do not run at all. The weakest databases are `car_1` (20%), `real_estate_properties` (25%) and `world_1` (39%), and `pets_1` got worse (55% to 45%). A loss of 0.03 on the training set with 60% on dev suggests the model is memorising, so more varied data should help more than more epochs.
+
 ### 2026-11-21 · Decision · First training run leaves out the longest examples
 
 - **What:** Fine-tune with LoRA on Spider's training questions that are at most 1,024 tokens long, one example at a time with 16 examples per weight update.

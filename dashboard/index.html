@@ -248,6 +248,21 @@ function compare() {
   $("cmp-a").onchange = $("cmp-b").onchange = draw; draw();
 }
 
+function training(logs) {
+  const shown = state.runs.map((run, i) => [run, logs[i]]).filter(([, log]) => log);
+  if (!shown.length) return;
+  $("training").className = "";
+  $("training").innerHTML = shown.map(([run, log]) => {
+    const points = log.steps.filter((step) => "loss" in step);
+    const top = Math.max(...points.map((p) => p.loss)), last = points.at(-1);
+    const line = points.map((p) => `${((p.step / last.step) * 600).toFixed(1)},${(150 - (p.loss / top) * 140).toFixed(1)}`).join(" ");
+    const facts = [[log.examples, "practice questions"], [Math.round(log.training_seconds / 60) + " min", "training time"], [log.peak_gpu_gb + " GB", "GPU memory"], [`${points[0].loss.toFixed(2)} → ${last.loss.toFixed(2)}`, "loss, start to end"]];
+    return `<h3 class="caption">${esc(run.name)}: how wrong the model was on its practice questions, over ${last.step} updates (lower is better)</h3>
+      <svg viewBox="0 0 600 160" style="width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px"><polyline points="${line}" fill="none" stroke="var(--green)" stroke-width="2"/></svg>
+      <div class="cards" style="margin-top:12px">${facts.map(([n, l]) => `<div class="card"><b>${n}</b><span>${l}</span></div>`).join("")}</div>`;
+  }).join("");
+}
+
 function timeline(markdown) {
   const rich = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`(.+?)`/g, "<code>$1</code>").replace(/\[(.+?)\]\(.+?\)/g, "$1");
   const entries = markdown.split(/^### /m).slice(1).map((block) => {
@@ -276,6 +291,7 @@ async function start() {
   state.run = state.runs.at(-1).name; $("run-pick").value = state.run;
   if (dev) $("f-db").innerHTML += [...new Set(dev.map((e) => e.db_id))].sort().map((d) => `<option>${esc(d)}</option>`).join("");
   breakdown(); compare();
+  Promise.all(state.runs.map((r) => optional(json(`results/${r.name}/training_log.json`)))).then(training);
   $("roadmap").innerHTML = [...readme.matchAll(/^- \[( |x)\] (.+)$/gm)].map((m) => `<li class="${m[1] === "x" ? "done" : ""}">${esc(m[2].replace(/\[([^\]]+)\]\[[^\]]*\]/g, "$1"))}</li>`).join("");
   const cap = Number(readme.match(/at most \$(\d+)/)?.[1] ?? 0), spent = (spend ?? []).reduce((sum, item) => sum + item.dollars, 0);
   $("money").innerHTML = `<div class="bars"><span>Rented GPU time</span><div class="bar"><i style="width:${pct(spent, cap)}%"></i></div><span class="num">$${spent.toFixed(2)}</span></div><p class="note">$${spent.toFixed(2)} of the $${cap} budget spent. Everything so far ran on the local GPU.</p>`;

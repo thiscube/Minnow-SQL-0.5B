@@ -9,5 +9,16 @@
     "execution_accuracy": 45.36,
     "generation_seconds": 291,
     "fingerprint": "9b1bb154583dbbcbf590003d46a57136e3a6f7fbc88dc20185f68c2d1cabbbf2"
+  },
+  {
+    "name": "sft-spider",
+    "date": "2026-11-21",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-spider",
+    "change": "LoRA fine-tuning on Spider train: 6,142 examples of at most 1,024 tokens, 3 epochs",
+    "correct": 627,
+    "total": 1034,
+    "execution_accuracy": 60.64,
+    "generation_seconds": 182,
+    "fingerprint": "5ac67bbcee664ab79cbbfc9a5d79e1fac1ddb9d190ee754760eef53a611c0d41"
   }
 ]
