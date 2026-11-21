@@ -53,5 +53,38 @@
     "execution_accuracy": 65.09,
     "generation_seconds": 991,
     "fingerprint": "76004a18fa4ec8c6ce3ecdd4fda784e9fe84f55d072d35225ef10e850c86e1a1"
+  },
+  {
+    "name": "sft-rows1",
+    "date": "2026-11-21",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-rows1",
+    "change": "LoRA fine-tuning with one example row per table in the schema: 5,259 examples, one greedy query",
+    "correct": 636,
+    "total": 1034,
+    "execution_accuracy": 61.51,
+    "generation_seconds": 199,
+    "fingerprint": "122c2dc347e10fd9ffed09baf7479cf257f46cb38810e28f60cea089fdea494f"
+  },
+  {
+    "name": "sft-rows1-vote5",
+    "date": "2026-11-21",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-rows1",
+    "change": "Same model as sft-rows1; vote over five candidate queries",
+    "correct": 680,
+    "total": 1034,
+    "execution_accuracy": 65.76,
+    "generation_seconds": 1017,
+    "fingerprint": "e2e1889aff01633ced21eb1aea4e4510ec1189a9903dfbb9d5613e86a6b551f6"
+  },
+  {
+    "name": "vote-of-three",
+    "date": "2026-11-21",
+    "model": "vote of sft-rows1-vote5, sft-spider-all-vote5, sft-spider-vote5",
+    "change": "Vote across the three fine-tuned models' voted answers (15 candidate queries per question in total)",
+    "correct": 710,
+    "total": 1034,
+    "execution_accuracy": 68.67,
+    "generation_seconds": null,
+    "fingerprint": "f263ff76affaec58afea1145a801c6934123d08ba69c7f728357b023b2adf6db"
   }
 ]

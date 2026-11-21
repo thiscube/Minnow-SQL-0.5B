@@ -10,6 +10,18 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-21 · Improvement · Voting across three fine-tuned models reaches 68.67%
+
+- **What:** The voted answers of the three fine-tuned models are combined with the same rule: run them, keep the result most of them agree on. That is 15 candidate queries per question in total.
+- **Evidence:** 710 of 1,034, up from 680 for the best single model with voting. 52 questions fixed, 22 broken. Queries that do not run fell from 127 to 58. For 794 questions (76.79%) at least one of the three models has a correct answer.
+- **So what:** This is the best score so far and a clear gain of 2.9 points, at three times the cost of answering a question. It is three adapters on one base model, not one model, which has to be said wherever the number is shown. The 76.79% is what a perfect way of choosing between the three could reach, so better selection is worth more than another similar training run.
+
+### 2026-11-21 · Finding · One example row per table helps only slightly, and hurts the weakest database
+
+- **What:** Retraining with one row of real data shown under each table in the prompt.
+- **Evidence:** 61.51% with one greedy query (60.64% without rows) and 65.76% with five-candidate voting (64.31% without). `pets_1` rose from 60% to 76% and `wta_1` from 50% to 60%, but `car_1`, the database the change was aimed at, fell from 20% to 14%.
+- **So what:** The gain of about one point is at the edge of the noise, and the run trained on 5,259 examples instead of 6,142 because the prompts are longer. Example rows do not fix the model putting columns on the wrong table. That mistake needs training data with more multi-table joins.
+
 ### 2026-11-21 · Decision · Next run shows the model one example row per table
 
 - **What:** The schema in the prompt gets a comment after each table with the column names and one row of real data, and the model is retrained with that prompt.
