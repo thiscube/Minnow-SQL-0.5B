@@ -1,0 +1,5 @@
+[
+  {"question": "How many apple trees are in each orchard?", "db_id": "orchard"},
+  {"question": "What is the average ticket price for each museum?", "db_id": "museum_tickets"},
+  {"question": "List the titles of films released before 1990.", "db_id": "film_archive"}
+]

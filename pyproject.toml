@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minnow-sql"
+version = "0.1.0"
+description = "A small text-to-SQL model fine-tuned from Qwen2.5-Coder-0.5B."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+# Kept empty on purpose: everything in minnow/ runs without a GPU or heavy
+# libraries, so the checks stay fast. Training libraries go in their own extra.
+dependencies = []
+
+[project.optional-dependencies]
+# Pinned so the checks give the same answer on every machine.
+dev = ["ruff==0.17.6", "pytest==9.2.0", "pytest-cov==7.1.0"]
+
+[tool.setuptools]
+packages = ["minnow"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F",  # style errors and plain mistakes (unused imports, undefined names)
+    "I",            # sorted imports
+    "N",            # naming
+    "B", "A",       # likely bugs, shadowed builtins
+    "UP", "SIM",    # modern and simpler ways to write the same thing
+    "ANN",          # type hints on every function
+    "D1",           # a docstring on every public module, class and function
+    "ARG", "ERA",   # no unused arguments, no commented-out code
+    "C90",          # no tangled functions
+    "PLR0912", "PLR0913", "PLR0915",  # no oversized functions
+    "PT", "RUF",
+]
+ignore = ["D105", "D107"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D", "ANN"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pylint]
+max-args = 6
+max-branches = 12
+max-statements = 50
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "-q",
+    "-W", "error",
+    "--strict-markers",
+    "--cov=minnow",
+    "--cov-branch",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-fail-under=90",
+]
+
+[tool.coverage.report]
+exclude_also = ['if __name__ == "__main__":']

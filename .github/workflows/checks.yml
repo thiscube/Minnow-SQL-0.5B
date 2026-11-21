@@ -1,0 +1,36 @@
+# A backup for scripts/verify.ps1, which is what decides a merge. Runs after merging to main.
+name: checks
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install the pinned tools
+        run: pip install -e ".[dev]"
+      - name: Format
+        run: ruff format --check .
+      - name: Lint
+        run: ruff check .
+      - name: Tests
+        run: pytest
+      - name: Leak guard passes clean data
+        run: python -m minnow.guard tests/fixtures/train_clean.json tests/fixtures/dev.json
+      - name: Leak guard catches a planted leak
+        run: |
+          code=0
+          python -m minnow.guard tests/fixtures/train_leaky.json tests/fixtures/dev.json || code=$?
+          if [ "$code" -ne 3 ]; then
+            echo "A leak should exit with 3, but the guard exited with $code."
+            exit 1
+          fi

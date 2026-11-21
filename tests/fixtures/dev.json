@@ -1,0 +1,5 @@
+[
+  {"question": "How many loaves were sold on Monday?", "db_id": "bakery"},
+  {"question": "List the names of all bakers hired after 2020.", "db_id": "bakery"},
+  {"question": "Which platform has the most departures per day?", "db_id": "train_station"}
+]
