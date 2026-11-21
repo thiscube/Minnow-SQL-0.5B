@@ -78,6 +78,11 @@ def results_match(predicted: Sequence[Row], gold: Sequence[Row], ordered: bool) 
     )
 
 
+def reference_is_ordered(sql: str) -> bool:
+    """True when the reference query sorts its rows, so a prediction must match their order."""
+    return bool(_ORDER_BY.search(sql))
+
+
 def execution_match(database: Path, predicted_sql: str, gold_sql: str) -> bool:
     """True when the predicted query runs and returns the same rows as the reference query."""
     gold = run_query(database, gold_sql)
@@ -85,4 +90,4 @@ def execution_match(database: Path, predicted_sql: str, gold_sql: str) -> bool:
         predicted = run_query(database, predicted_sql)
     except QueryError:
         return False
-    return results_match(predicted, gold, ordered=bool(_ORDER_BY.search(gold_sql)))
+    return results_match(predicted, gold, ordered=reference_is_ordered(gold_sql))
