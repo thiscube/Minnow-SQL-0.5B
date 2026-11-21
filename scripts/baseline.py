@@ -27,9 +27,8 @@ from minnow.evaluate import (
 from minnow.execution import run_query
 from minnow.outcomes import OUTCOMES_FILE, breakdown, format_breakdown, judge_all, save_outcomes
 from minnow.prompt import SYSTEM, chat_prompt, extract_sql
-from minnow.schema import create_statements
 from minnow.select import pick
-from minnow.spider import database_path, load_split
+from minnow.spider import database_path, load_split, schemas
 
 MODEL = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
 
@@ -43,6 +42,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--out", type=Path, default=Path("outputs/baseline"))
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--max-new-tokens", type=int, default=256)
+    parser.add_argument("--sample-rows", type=int, default=0, help="example rows per table")
     parser.add_argument("--samples", type=int, default=1, help="candidate queries per question")
     parser.add_argument("--temperature", type=float, default=0.8, help="for the extra candidates")
     return parser.parse_args()
@@ -73,6 +73,7 @@ def main() -> None:
         "batch_size": args.batch_size,
         "max_new_tokens": args.max_new_tokens,
         "samples": args.samples,
+        "sample_rows": args.sample_rows,
         "temperature": args.temperature,
         "system_prompt": SYSTEM,
     }
@@ -92,10 +93,7 @@ def main() -> None:
         )
         if args.adapter:
             model = PeftModel.from_pretrained(model, args.adapter)
-        schemas = {
-            db_id: create_statements(database_path(args.spider, db_id))
-            for db_id in {e.db_id for e in examples}
-        }
+        schema_of = schemas(args.spider, examples, args.sample_rows)
         # The answers depend a little on which questions share a batch, so batches are fixed
         # blocks of the split. A resumed run redoes a block exactly as a single run would.
         for start in range(0, len(examples), args.batch_size):
@@ -103,7 +101,7 @@ def main() -> None:
             if all(index in done for index in batch):
                 continue
             prompts = [
-                chat_prompt(tokenizer, schemas[examples[i].db_id], examples[i].question)
+                chat_prompt(tokenizer, schema_of[examples[i].db_id], examples[i].question)
                 for i in batch
             ]
             # One greedy answer, then sampled ones. The answer most candidates agree on when

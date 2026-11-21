@@ -10,6 +10,18 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-21 · Decision · Next run shows the model one example row per table
+
+- **What:** The schema in the prompt gets a comment after each table with the column names and one row of real data, and the model is retrained with that prompt.
+- **Evidence:** The two weakest large databases fail in ways example rows should help. In `car_1` (25%, 92 questions) the model puts columns on the wrong table, such as horsepower on `car_names` when it lives in `cars_data`. In `world_1` (41%, 120 questions) it confuses what a column holds, such as filtering `Code = "Angola"` where the name is in `Name`. All dev schemas are at most 838 tokens, so leaving long examples out of training is not what hurts.
+- **So what:** Two rows per table would be better but make training 3.5 times slower on an 8 GB card (8.8 against 2.7 seconds per update). One row keeps the speed, at the cost of training on 5,259 examples instead of 6,142.
+
+### 2026-11-21 · Finding · 1,659 more Spider training examples do not clearly help
+
+- **What:** Training on `train_spider.json` plus `train_others.json` (7,800 examples) instead of `train_spider.json` alone (6,142).
+- **Evidence:** With one greedy query 59.77% against 60.64%. With five-candidate voting 65.09% against 64.31%. Both differences are inside the one-point noise. Between the two models 73 questions were fixed and 82 broke with greedy decoding, so about 15% of the questions flip from one training run to the next.
+- **So what:** More data of the same kind is not the lever. The large churn between two similar models means single runs have to be compared with care, and that combining models could help later.
+
 ### 2026-11-21 · Improvement · Voting over five candidate queries adds 3.7 points without training
 
 - **What:** For each question the fine-tuned model writes one greedy query and four sampled ones (temperature 0.8). Each is run on the database, and the result most candidates agree on is kept. No reference query is used.

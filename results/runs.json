@@ -31,5 +31,27 @@
     "execution_accuracy": 64.31,
     "generation_seconds": 979,
     "fingerprint": "2c15d79cfff61a98e3392622496287c3ce3ef8c0d07d9f97f6bd9f79715d1f78"
+  },
+  {
+    "name": "sft-spider-all",
+    "date": "2026-11-21",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-spider-all",
+    "change": "LoRA fine-tuning on Spider train plus train_others: 7,800 examples, 3 epochs, one greedy query",
+    "correct": 618,
+    "total": 1034,
+    "execution_accuracy": 59.77,
+    "generation_seconds": 191,
+    "fingerprint": "755f1e9661565dcb0dd0b6f18074b22a3ec3c69eac91953ecd9aaf56065481dd"
+  },
+  {
+    "name": "sft-spider-all-vote5",
+    "date": "2026-11-21",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-spider-all",
+    "change": "Same model as sft-spider-all; vote over five candidate queries",
+    "correct": 673,
+    "total": 1034,
+    "execution_accuracy": 65.09,
+    "generation_seconds": 991,
+    "fingerprint": "76004a18fa4ec8c6ce3ecdd4fda784e9fe84f55d072d35225ef10e850c86e1a1"
   }
 ]
