@@ -1,6 +1,6 @@
 # Minnow-SQL-0.5B
 
-[![checks](https://github.com/thiscube/minnow-sql/actions/workflows/checks.yml/badge.svg)](https://github.com/thiscube/minnow-sql/actions/workflows/checks.yml)
+[![checks](https://github.com/thiscube/Minnow-SQL-0.5B/actions/workflows/checks.yml/badge.svg)](https://github.com/thiscube/Minnow-SQL-0.5B/actions/workflows/checks.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)
 
