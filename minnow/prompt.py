@@ -1,6 +1,7 @@
 """Build the chat prompt for a question and read the SQL back out of the answer."""
 
 import re
+from typing import Any
 
 SYSTEM = (
     "You are an expert in SQLite. Given a database schema and a question, write one SQLite "
@@ -15,6 +16,12 @@ def build_messages(schema: str, question: str) -> list[dict[str, str]]:
     """Return the chat messages that ask the model to answer the question with SQL."""
     user = f"Database schema:\n{schema}\n\nQuestion: {question}"
     return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
+
+
+def chat_prompt(tokenizer: Any, schema: str, question: str) -> str:  # noqa: ANN401
+    """Return the full prompt text, ending where the model's answer begins."""
+    messages = build_messages(schema, question)
+    return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
 
 
 def _from_query_start(text: str) -> str:

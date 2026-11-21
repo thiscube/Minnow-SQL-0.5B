@@ -24,9 +24,11 @@ from minnow.evaluate import (
     drop_unfinished_line,
     load_predictions,
 )
+from minnow.execution import run_query
 from minnow.outcomes import OUTCOMES_FILE, breakdown, format_breakdown, judge_all, save_outcomes
-from minnow.prompt import SYSTEM, build_messages, extract_sql
+from minnow.prompt import SYSTEM, chat_prompt, extract_sql
 from minnow.schema import create_statements
+from minnow.select import pick
 from minnow.spider import database_path, load_split
 
 MODEL = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
@@ -41,16 +43,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--out", type=Path, default=Path("outputs/baseline"))
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--max-new-tokens", type=int, default=256)
+    parser.add_argument("--samples", type=int, default=1, help="candidate queries per question")
+    parser.add_argument("--temperature", type=float, default=0.8, help="for the extra candidates")
     return parser.parse_args()
 
 
 def generate(
-    model: AutoModelForCausalLM, tokenizer: AutoTokenizer, prompts: list[str], max_new_tokens: int
+    model: AutoModelForCausalLM,
+    tokenizer: AutoTokenizer,
+    prompts: list[str],
+    max_new_tokens: int,
+    temperature: float | None = None,
 ) -> list[str]:
-    """Answer a batch of prompts with greedy decoding."""
+    """Answer a batch of prompts: greedy, or sampled when a temperature is given."""
     inputs = tokenizer(prompts, return_tensors="pt", padding=True).to(model.device)
+    how = {"do_sample": True, "temperature": temperature} if temperature else {"do_sample": False}
     with torch.inference_mode():
-        output = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False)
+        output = model.generate(**inputs, max_new_tokens=max_new_tokens, **how)
     new_tokens = output[:, inputs["input_ids"].shape[1] :]
     return tokenizer.batch_decode(new_tokens, skip_special_tokens=True)
 
@@ -63,6 +72,8 @@ def main() -> None:
         "model": name,
         "batch_size": args.batch_size,
         "max_new_tokens": args.max_new_tokens,
+        "samples": args.samples,
+        "temperature": args.temperature,
         "system_prompt": SYSTEM,
     }
     claim_run_folder(args.out, settings)
@@ -92,17 +103,22 @@ def main() -> None:
             if all(index in done for index in batch):
                 continue
             prompts = [
-                tokenizer.apply_chat_template(
-                    build_messages(schemas[examples[i].db_id], examples[i].question),
-                    tokenize=False,
-                    add_generation_prompt=True,
-                )
+                chat_prompt(tokenizer, schemas[examples[i].db_id], examples[i].question)
                 for i in batch
             ]
-            answers = generate(model, tokenizer, prompts, args.max_new_tokens)
-            for index, answer in zip(batch, answers, strict=True):
+            # One greedy answer, then sampled ones. The answer most candidates agree on when
+            # they are run on the database is kept; no reference query is involved.
+            tokens, heat = args.max_new_tokens, args.temperature
+            rounds = [generate(model, tokenizer, prompts, tokens)]
+            for sample in range(1, args.samples):
+                torch.manual_seed(1000 * start + sample)
+                rounds.append(generate(model, tokenizer, prompts, tokens, heat))
+            for position, index in enumerate(batch):
                 if index not in done:
-                    append_prediction(predictions_file, index, extract_sql(answer))
+                    database = database_path(args.spider, examples[index].db_id)
+                    options = [extract_sql(answers[position]) for answers in rounds]
+                    chosen = pick(options, lambda sql, db=database: run_query(db, sql))
+                    append_prediction(predictions_file, index, chosen)
             print(f"{batch.stop} of {len(examples)} predicted")
     spent = time.monotonic() - started if todo else 0.0
     generation_seconds = add_generation_seconds(args.out, spent)
@@ -120,7 +136,7 @@ def main() -> None:
         "generation_seconds": generation_seconds,
         "batch_size": args.batch_size,
         "max_new_tokens": args.max_new_tokens,
-        "decoding": "greedy",
+        "decoding": "greedy" if args.samples == 1 else f"vote over {args.samples} candidates",
         "torch": torch.__version__,
     }
     text = json.dumps(summary, indent=2) + "\n"

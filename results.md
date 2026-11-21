@@ -6,6 +6,7 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 | --- | --- | --- | ---: | ---: | --- |
 | 2026-11-21 | Qwen2.5-Coder-0.5B-Instruct | Baseline: no training, greedy decoding, CREATE TABLE statements as the schema | 45.36 | 469 / 1034 | [results/baseline](results/baseline) |
 | 2026-11-21 | Qwen2.5-Coder-0.5B-Instruct + sft-spider | LoRA fine-tuning on Spider train: 6,142 examples of at most 1,024 tokens, 3 epochs | 60.64 | 627 / 1034 | [results/sft-spider](results/sft-spider) |
+| 2026-11-21 | Qwen2.5-Coder-0.5B-Instruct + sft-spider | Same model as sft-spider; five candidate queries per question, keeping the result most candidates agree on | 64.31 | 665 / 1034 | [results/sft-spider-vote5](results/sft-spider-vote5) |
 
 ## Notes
 
@@ -22,3 +23,10 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 - 199 predictions ran and returned different rows.
 - 40 of the 627 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
 - Generating all 1,034 predictions took 182 seconds.
+
+### 2026-11-21, sft-spider-vote5
+
+- 130 predictions did not run. The most common errors: `no such column` (120), `no such table` (6), `syntax error` (2).
+- 239 predictions ran and returned different rows.
+- 42 of the 665 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 979 seconds.

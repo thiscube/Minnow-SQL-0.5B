@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" role="img" aria-labelledby="chart-title chart-desc" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
 <title id="chart-title">Execution accuracy on Spider dev (%)</title>
-<desc id="chart-desc">baseline: 45.36%; sft-spider: 60.64%; target 70%; SLM-SQL-0.5B, published 72.08%</desc>
+<desc id="chart-desc">baseline: 45.36%; sft-spider: 60.64%; sft-spider-vote5: 64.31%; target 70%; SLM-SQL-0.5B, published 72.08%</desc>
 <rect x="0.5" y="0.5" width="719" height="359" rx="6" fill="#fcfcfb" stroke="#e1e0d9"/>
 <text x="16" y="32" font-size="14" font-weight="600" fill="#0b0b0b">Execution accuracy on Spider dev (%)</text>
 <g font-size="11" fill="#898781" text-anchor="end" shape-rendering="crispEdges">
@@ -20,6 +20,7 @@
 <g fill="#2a78d6">
 <path d="M88.00 310 V200.60 Q88.00 196.60 92.00 196.60 H108.00 Q112.00 196.60 112.00 200.60 V310 Z"/>
 <path d="M184.00 310 V162.40 Q184.00 158.40 188.00 158.40 H204.00 Q208.00 158.40 208.00 162.40 V310 Z"/>
+<path d="M280.00 310 V153.22 Q280.00 149.22 284.00 149.22 H300.00 Q304.00 149.22 304.00 153.22 V310 Z"/>
 </g>
 <g stroke="#52514e" stroke-dasharray="5 4">
 <line x1="52" y1="135.00" x2="704" y2="135.00"/>
@@ -32,9 +33,11 @@
 <g font-size="12" font-weight="600" fill="#0b0b0b" text-anchor="middle" stroke="#fcfcfb" stroke-width="3" paint-order="stroke">
 <text x="100.00" y="189.60">45.36%</text>
 <text x="196.00" y="151.40">60.64%</text>
+<text x="292.00" y="142.22">64.31%</text>
 </g>
 <g font-size="11" fill="#52514e" text-anchor="middle">
 <text x="100.00" y="330">baseline</text>
 <text x="196.00" y="330">sft-spider</text>
+<text x="292.00" y="330">sft-spider-vote5</text>
 </g>
 </svg>
