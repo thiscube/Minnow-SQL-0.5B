@@ -14,6 +14,7 @@ import time
 from pathlib import Path
 
 import torch
+from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from minnow.evaluate import (
@@ -35,6 +36,7 @@ def parse_args() -> argparse.Namespace:
     """Read the command-line options."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--model", default=MODEL)
+    parser.add_argument("--adapter", type=Path, help="folder of a trained LoRA adapter to load")
     parser.add_argument("--spider", type=Path, default=Path("data/spider"))
     parser.add_argument("--out", type=Path, default=Path("outputs/baseline"))
     parser.add_argument("--batch-size", type=int, default=16)
@@ -56,8 +58,9 @@ def generate(
 def main() -> None:
     """Generate any missing predictions, then score them all."""
     args = parse_args()
+    name = f"{args.model} + {args.adapter.parent.name}" if args.adapter else args.model
     settings = {
-        "model": args.model,
+        "model": name,
         "batch_size": args.batch_size,
         "max_new_tokens": args.max_new_tokens,
         "system_prompt": SYSTEM,
@@ -76,6 +79,8 @@ def main() -> None:
         model = AutoModelForCausalLM.from_pretrained(
             args.model, dtype=torch.bfloat16, device_map="cuda"
         )
+        if args.adapter:
+            model = PeftModel.from_pretrained(model, args.adapter)
         schemas = {
             db_id: create_statements(database_path(args.spider, db_id))
             for db_id in {e.db_id for e in examples}
@@ -107,7 +112,7 @@ def main() -> None:
     counts = breakdown(outcomes)
     accuracy = 100 * counts.correct / counts.total
     summary = {
-        "model": args.model,
+        "model": name,
         "split": "dev",
         "correct": counts.correct,
         "total": counts.total,

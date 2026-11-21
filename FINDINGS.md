@@ -1,0 +1,77 @@
+# Findings
+
+A timeline of what was learned while building Minnow-SQL-0.5B, newest first. An entry belongs here only if it changed a decision or would change one. Scores of individual runs are in [results.md](results.md).
+
+Each entry has a kind:
+
+- **Finding**: something measured about the model, the data or the evaluation.
+- **Improvement**: a change that made results better or more trustworthy.
+- **Decision**: a choice between options, with the reason.
+
+## Timeline
+
+### 2026-11-21 · Decision · First training run leaves out the longest examples
+
+- **What:** Fine-tune with LoRA on Spider's training questions that are at most 1,024 tokens long, one example at a time with 16 examples per weight update.
+- **Evidence:** Memory grows with the square of an example's length. With examples up to 1,536 tokens the run needed 8.0 GB and took 8.7 seconds per update. With a limit of 1,024 tokens it needs 5.1 GB and 2.5 seconds per update. The limit keeps 6,142 of 6,994 examples.
+- **So what:** The first run takes about 50 minutes instead of 3 hours and leaves room on an 8 GB card. The 852 long examples are the ones with the largest schemas, so a later run should test whether leaving them out costs accuracy on large databases.
+
+### 2026-11-21 · Improvement · Training loss is computed on the answer only
+
+- **What:** The loss is calculated from the positions of the SQL answer, not from every position of the prompt.
+- **Evidence:** The standard loss scores all positions against the 151,936-token vocabulary and then ignores the prompt, which costs gigabytes on a long schema. Both ways give the same loss on real examples (0.2450 and 0.2450).
+- **So what:** Same training signal, far less memory. Without this the run did not fit in 8 GB at all.
+
+### 2026-11-21 · Finding · Six training questions are worded exactly like dev questions
+
+- **What:** The leak guard stopped the first training attempt.
+- **Evidence:** Six generic questions, such as "How many employees are there?" and "How many flights do we have?", appear in both Spider's training set and its dev set, on different databases.
+- **So what:** The six are left out of training, which leaves 6,994 of 7,000 examples. No training example uses a dev database.
+
+### 2026-11-21 · Decision · First training run uses Spider's training questions only
+
+- **What:** Stage 2 trains on `train_spider.json` and nothing else.
+- **Evidence:** The set has 7,000 examples over 140 databases, and none of those databases is in the dev set. Examples are 381 tokens long at the median, 1,104 at the 90th percentile and 2,324 at most.
+- **So what:** This gives a clean first comparison with the baseline before any synthetic data is added.
+
+### 2026-11-21 · Finding · One mistake causes a third of all failures
+
+- **What:** 356 of the 1,034 baseline answers do not run because they name a column that does not exist.
+- **Evidence:** Baseline run: 469 correct, 176 ran with different rows, 389 did not run. Of the 389, 356 are `no such column` and 15 are `no such table`.
+- **So what:** Fixing this one mistake is worth up to 34 points, which would put the ceiling near 80%. It is the first thing training has to fix.
+
+### 2026-11-21 · Finding · Accuracy differs widely between databases
+
+- **What:** The baseline scores between 13% and 87% depending on the database.
+- **Evidence:** Per-database accuracy over the 20 dev databases, shown in the dashboard. Best: `employee_hire_evaluation` at 87%. Worst: `course_teach` at 13%.
+- **So what:** An average hides weak topics. Later runs are compared per database as well as overall.
+
+### 2026-11-21 · Finding · About one point of score is noise
+
+- **What:** The answers depend slightly on how many questions are generated at once.
+- **Evidence:** Redoing every fifth question one at a time changed the answer text for 21 of 200 questions and the verdict for 3 of 200 (88 correct with batch size 16, 87 one at a time).
+- **So what:** Every scored run uses batch size 16 in fixed blocks. A difference of about one point between two runs is not counted as an improvement.
+
+### 2026-11-21 · Finding · The baseline figure is slightly optimistic
+
+- **What:** A wrong query can be counted as correct when both it and the reference return no rows.
+- **Evidence:** 30 of the 469 correct baseline answers match a reference query that returns nothing. A manual read of those 30 found at least 16 that are plainly wrong queries.
+- **So what:** The honest baseline is nearer 44% than 45.36%. The official single-database evaluation has the same weakness, so numbers stay comparable. The count is reported with every run.
+
+### 2026-11-21 · Finding · The untouched base model scores 45.36%
+
+- **What:** Qwen2.5-Coder-0.5B-Instruct, no training, greedy decoding, schema given as `CREATE TABLE` statements.
+- **Evidence:** 469 of 1,034 on Spider dev, generated in 291 seconds on one RTX 3060 Ti. Scoring the reference queries against themselves gives 1,034 of 1,034, and an independent re-score gave the same 469.
+- **So what:** This is the number every later run has to beat. It is close to the 44.07% the SLM-SQL paper reports for the same model.
+
+### 2026-11-21 · Improvement · Every reported number is generated from the runs' files
+
+- **What:** The results page, the chart and the README table are written by a tool, and a check refuses anything edited by hand.
+- **Evidence:** Nine result files were tampered with one at a time (scores, a swapped answer, a flipped verdict, a removed verdict, an edited model name). All nine were refused.
+- **So what:** A wrong or outdated score can no longer reach the README by accident.
+
+### 2026-11-21 · Finding · Two reference numbers in the original plan were wrong
+
+- **What:** The best published 0.5B result on Spider dev is 72.08%, not 73.5%, and the base model's published starting point is 44.07%, not 34.5%.
+- **Evidence:** In the SLM-SQL paper, 73.50% is the Spider test score and 72.08% the dev score. The 34.5% figure comes from a model card that used the non-instruct base model.
+- **So what:** The stretch goal is 72.08% on dev. Numbers quoted from other work are checked at the source before they are used.
