@@ -137,7 +137,7 @@
 {"index": 136, "verdict": "error", "error": "no such column", "gold_rows": 1}
 {"index": 137, "verdict": "error", "error": "no such column", "gold_rows": 1}
 {"index": 138, "verdict": "error", "error": "no such column", "gold_rows": 1}
-{"index": 139, "verdict": "error", "error": "Incorrect number of bindings supplied. The current statement uses 1, and there are 0 supplied.", "gold_rows": 5}
+{"index": 139, "verdict": "error", "error": "unfilled placeholder", "gold_rows": 5}
 {"index": 140, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
 {"index": 141, "verdict": "error", "error": "no such column", "gold_rows": 1}
 {"index": 142, "verdict": "correct", "error": "", "gold_rows": 1}
@@ -908,8 +908,8 @@
 {"index": 907, "verdict": "error", "error": "no such column", "gold_rows": 1}
 {"index": 908, "verdict": "wrong_rows", "error": "", "gold_rows": 0}
 {"index": 909, "verdict": "error", "error": "no such column", "gold_rows": 0}
-{"index": 910, "verdict": "error", "error": "misuse of aggregate function COUNT()", "gold_rows": 5}
-{"index": 911, "verdict": "error", "error": "misuse of aggregate function COUNT()", "gold_rows": 5}
+{"index": 910, "verdict": "error", "error": "misuse of aggregate", "gold_rows": 5}
+{"index": 911, "verdict": "error", "error": "misuse of aggregate", "gold_rows": 5}
 {"index": 912, "verdict": "correct", "error": "", "gold_rows": 1}
 {"index": 913, "verdict": "correct", "error": "", "gold_rows": 1}
 {"index": 914, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
@@ -1011,7 +1011,7 @@
 {"index": 1010, "verdict": "correct", "error": "", "gold_rows": 1}
 {"index": 1011, "verdict": "correct", "error": "", "gold_rows": 1}
 {"index": 1012, "verdict": "correct", "error": "", "gold_rows": 5}
-{"index": 1013, "verdict": "error", "error": "Incorrect number of bindings supplied. The current statement uses 1, and there are 0 supplied.", "gold_rows": 5}
+{"index": 1013, "verdict": "error", "error": "unfilled placeholder", "gold_rows": 5}
 {"index": 1014, "verdict": "correct", "error": "", "gold_rows": 1}
 {"index": 1015, "verdict": "correct", "error": "", "gold_rows": 1}
 {"index": 1016, "verdict": "correct", "error": "", "gold_rows": 5}

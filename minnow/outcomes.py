@@ -52,13 +52,23 @@ class Breakdown:
     correct_on_empty: int
 
 
+_ERROR_KINDS = (
+    ("interrupted", "timeout"),
+    ("more than", "too many rows"),
+    ("misuse of aggregate", "misuse of aggregate"),
+    ("incorrect number of bindings", "unfilled placeholder"),
+)
+
+
 def error_class(message: str) -> str:
     """Shorten a SQLite error message to its kind, without the names from the query."""
-    if message == "interrupted":
-        return "timeout"
     if "syntax error" in message:
         return "syntax error"
-    return message.split(":", 1)[0]
+    kind = message.split(":", 1)[0]
+    for start, name in _ERROR_KINDS:
+        if kind.lower().startswith(start):
+            return name
+    return kind
 
 
 def judge(database: Path, predicted_sql: str | None, gold_sql: str, index: int = 0) -> Outcome:

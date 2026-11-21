@@ -1,16 +1,11 @@
-import shutil
-
 import pytest
 
 from minnow.evaluate import (
-    Score,
     append_prediction,
     claim_run_folder,
     drop_unfinished_line,
     load_predictions,
-    score,
 )
-from minnow.spider import SpiderExample
 
 
 def test_predictions_survive_a_restart(tmp_path):
@@ -21,6 +16,7 @@ def test_predictions_survive_a_restart(tmp_path):
     append_prediction(path, 1, 'SELECT "a;b"')
 
     assert load_predictions(path) == {0: "SELECT 1", 1: 'SELECT "a;b"'}
+    assert b"\r" not in path.read_bytes()
 
 
 def test_line_cut_off_by_a_stopped_run_is_dropped_and_redone(tmp_path):
@@ -62,25 +58,3 @@ def test_run_folder_refuses_other_settings(tmp_path):
 
     with pytest.raises(ValueError, match="other settings"):
         claim_run_folder(folder, {"model": "b", "max_new_tokens": 256})
-
-
-def test_scores_by_execution_and_counts_missing_predictions_as_wrong(tmp_path, database):
-    spider = tmp_path / "spider"
-    (spider / "database" / "concert").mkdir(parents=True)
-    shutil.copy(database, spider / "database" / "concert" / "concert.sqlite")
-    examples = [
-        SpiderExample("How many singers?", "SELECT count(*) FROM singer", "concert"),
-        SpiderExample("Oldest age?", "SELECT max(age) FROM singer", "concert"),
-        SpiderExample("Names?", "SELECT name FROM singer", "concert"),
-        SpiderExample("Concerts?", "SELECT count(*) FROM concert", "concert"),
-    ]
-    predictions = {
-        0: "SELECT COUNT(name) FROM singer",
-        1: "SELECT min(age) FROM singer",
-        2: "SELECT nme FROM singer",
-    }
-
-    result = score(examples, predictions, spider)
-
-    assert result == Score(correct=1, total=4)
-    assert result.accuracy == 25.0

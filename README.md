@@ -7,7 +7,7 @@
 Minnow-SQL-0.5B is a text-to-SQL model in the 0.5B-parameter class, fine-tuned from [Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct). Given a natural-language question and a database schema, it produces a SQL query.
 
 > [!NOTE]
-> This project is in progress. The baseline is measured (45.36% on Spider dev), training has not started, and no model has been released. See the [roadmap](#roadmap).
+> This project is in progress. The baseline is measured (see [results](#results)), training has not started, and no model has been released. See the [roadmap](#roadmap).
 
 ## Goal
 
@@ -15,14 +15,23 @@ Reach at least 70% execution accuracy on the [Spider][spider] development set (1
 
 ## Results
 
-Measured in this repository. Every run is logged in [results.md](results.md), with its predictions under [results/](results).
+Measured in this repository. The table and chart below are generated from the runs' own files, and [results.md](results.md) breaks each run down by kind of error.
 
-| Model | Training | Spider dev EX (%) | Correct |
+<!-- results:start -->
+
+| Model | Change | Spider dev EX (%) | Correct |
 | --- | --- | ---: | ---: |
-| Qwen2.5-Coder-0.5B-Instruct | none (baseline) | 45.36 | 469 / 1034 |
-| Minnow-SQL-0.5B | | not yet trained | |
+| Qwen2.5-Coder-0.5B-Instruct | Baseline: no training, greedy decoding, CREATE TABLE statements as the schema | 45.36 | 469 / 1034 |
 
-Of the 565 baseline errors, 389 are queries that do not run, and 356 of those name a column that does not exist. Of the 469 correct predictions, 30 match a reference query that returns no rows; with one database per question, a wrong query that also returns nothing is counted as correct, so the figure is slightly optimistic.
+![Execution accuracy by run](results/chart.svg)
+
+<!-- results:end -->
+
+### How results are measured
+
+- A prediction is correct when it runs and returns the same rows as the reference query, in the same order when the reference query sorts, with columns in any order.
+- Each question is scored on its one original Spider database. A wrong query can therefore be counted as correct when both it and the reference return no rows; results.md reports how many correct predictions are of this kind.
+- Decoding is greedy, in fixed batches of 16. The batch size affects a few answers: redoing 200 baseline questions one at a time changed the verdict for 3 of them. Differences of about one point between runs are within this noise.
 
 ### Published results for comparison
 
@@ -38,7 +47,7 @@ None of the published rows has been reproduced here, and they are not directly c
 ## Roadmap
 
 - [x] Tooling: linting, tests, a train/dev leakage guard, continuous integration
-- [x] Baseline: the unmodified base model scores 45.36% on Spider dev
+- [x] Baseline: the unmodified base model, evaluated on Spider dev
 - [ ] Supervised fine-tuning on the Spider training set (about 7,000 examples)
 - [ ] Improvements: a subset of [SynSQL-2.5M][omnisql], LoRA configuration, schema serialization, and execution-guided selection among sampled queries
 - [ ] Release: model weights on Hugging Face, a demo, and a write-up of the results
@@ -55,8 +64,8 @@ None of the published rows has been reproduced here, and they are not directly c
 minnow/       library code; imports without a GPU or deep-learning dependencies
 tests/        unit tests and structure tests
 scripts/      entry points and the local check runner
-results/      predictions and score summary of each logged run
-results.md    the log of measured runs
+results/      predictions, verdicts and score summary of each logged run
+results.md    the log of measured runs, generated from results/
 ```
 
 ## Reproducing the baseline
@@ -79,6 +88,18 @@ Requires a CUDA GPU with about 3 GB of free memory. The run takes about 5 minute
 
 Predictions are written to `outputs/baseline/` after every batch, so an interrupted run continues where it stopped.
 
+## Results log
+
+No score in this repository is typed by hand. A run writes its predictions, a verdict for every question and a summary. Three small tools turn those files into everything that is reported:
+
+```bash
+python -m minnow.outcomes outputs/run --spider data/spider    # judge a run again and count its errors
+python -m minnow.compare results/baseline outputs/run         # which questions a change fixed or broke
+python -m minnow.runlog add outputs/run --change "..."        # log the run and regenerate the reports
+```
+
+`runlog add` copies the run into `results/`, records it in `results/runs.json`, and regenerates `results.md`, the chart and the results table in this README. `python -m minnow.runlog check` fails when any of them is out of date or a run under `results/` is not logged, and it is part of the checks below.
+
 ## Development
 
 Requires Python 3.12 or later.
@@ -95,6 +116,7 @@ Run the checks:
 ruff format --check .
 ruff check .
 pytest
+python -m minnow.runlog check
 ```
 
 On Windows, `powershell -File scripts/verify.ps1` runs all of them in one step. The same checks run in CI on every push to `main`. They cover:
@@ -102,6 +124,7 @@ On Windows, `powershell -File scripts/verify.ps1` runs all of them in one step. 
 - formatting and linting with [ruff](https://docs.astral.sh/ruff/), including limits on function length and complexity
 - unit tests with a 90% coverage floor on `minnow/`
 - structure tests: every module has a test file, source files stay under a size limit, and any file that starts training must call the leakage guard
+- the results log: every reported number matches the runs' files
 
 ### Data leakage guard
 

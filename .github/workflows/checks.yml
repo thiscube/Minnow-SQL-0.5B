@@ -34,3 +34,5 @@ jobs:
             echo "A leak should exit with 3, but the guard exited with $code."
             exit 1
           fi
+      - name: Results log is up to date
+        run: python -m minnow.runlog check

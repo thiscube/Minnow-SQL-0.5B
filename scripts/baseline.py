@@ -3,6 +3,8 @@
     python scripts/baseline.py
 
 Predictions are saved after every batch, so a stopped run continues where it left off.
+The run folder ends up with predictions.jsonl, outcomes.jsonl and summary.json, ready for
+python -m minnow.runlog add.
 Needs the model extra (pip install -e ".[model]") and Spider unpacked in data/spider.
 """
 
@@ -19,8 +21,8 @@ from minnow.evaluate import (
     claim_run_folder,
     drop_unfinished_line,
     load_predictions,
-    score,
 )
+from minnow.outcomes import OUTCOMES_FILE, breakdown, format_breakdown, judge_all, save_outcomes
 from minnow.prompt import SYSTEM, build_messages, extract_sql
 from minnow.schema import create_statements
 from minnow.spider import database_path, load_split
@@ -98,21 +100,27 @@ def main() -> None:
             print(f"{batch.stop} of {len(examples)} predicted")
     generation_seconds = time.monotonic() - started
 
-    result = score(examples, load_predictions(predictions_file), args.spider)
+    outcomes = judge_all(examples, load_predictions(predictions_file), args.spider)
+    save_outcomes(args.out / OUTCOMES_FILE, outcomes)
+    counts = breakdown(outcomes)
+    accuracy = 100 * counts.correct / counts.total
     summary = {
         "model": args.model,
         "split": "dev",
-        "correct": result.correct,
-        "total": result.total,
-        "execution_accuracy": round(result.accuracy, 2),
+        "correct": counts.correct,
+        "total": counts.total,
+        "execution_accuracy": round(accuracy, 2),
         "generation_seconds_this_run": round(generation_seconds),
         "batch_size": args.batch_size,
         "max_new_tokens": args.max_new_tokens,
         "decoding": "greedy",
         "torch": torch.__version__,
     }
-    (args.out / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
-    print(f"Execution accuracy: {result.accuracy:.2f}% ({result.correct} of {result.total})")
+    text = json.dumps(summary, indent=2) + "\n"
+    (args.out / "summary.json").write_text(text, encoding="utf-8", newline="\n")
+    print(format_breakdown(counts))
+    print(f"Execution accuracy: {accuracy:.2f}% ({counts.correct} of {counts.total})")
+    print(f'Log it with: python -m minnow.runlog add {args.out} --change "what changed"')
 
 
 if __name__ == "__main__":

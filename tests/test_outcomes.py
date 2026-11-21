@@ -3,7 +3,7 @@ import shutil
 
 import pytest
 
-from minnow.evaluate import append_prediction, score
+from minnow.evaluate import append_prediction
 from minnow.execution import execution_match
 from minnow.outcomes import (
     Breakdown,
@@ -88,6 +88,13 @@ def run_folder(tmp_path):
         ("no such column: T1.nme", "no such column"),
         ("no such table: nowhere", "no such table"),
         ("misuse of aggregate: count()", "misuse of aggregate"),
+        ("misuse of aggregate function COUNT()", "misuse of aggregate"),
+        (
+            "Incorrect number of bindings supplied. The current statement uses 1, and there "
+            "are 0 supplied.",
+            "unfilled placeholder",
+        ),
+        ("more than 1000000 rows", "too many rows"),
         ('near "SELEC": syntax error', "syntax error"),
         ("interrupted", "timeout"),
         ("no such column: interrupted", "no such column"),
@@ -147,11 +154,11 @@ def test_the_agreement_cases_cover_every_verdict(database):
     assert verdicts == {"correct", "wrong_rows", "error"}
 
 
-def test_judges_a_whole_split_and_agrees_with_the_score(spider):
+def test_judges_a_whole_split(spider):
     outcomes = judge_all(EXAMPLES, PREDICTIONS, spider)
 
     assert outcomes == OUTCOMES
-    assert breakdown(outcomes).correct == score(EXAMPLES, PREDICTIONS, spider).correct == 2
+    assert breakdown(outcomes).correct == 2
 
 
 def test_outcomes_are_saved_sorted_with_unix_line_endings(tmp_path):
