@@ -1,4 +1,4 @@
-# Ships the current branch (the `github` skill; copy this file into a repo's scripts/ unchanged):
+# Ships the current branch:
 # makes sure scripts/verify.ps1 passed on exactly this commit and that the branch already holds
 # the latest default branch, pushes, opens or updates the PR, squash-merges exactly that commit,
 # and brings the default branch up to date here. Never waits for remote CI.
