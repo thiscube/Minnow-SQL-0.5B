@@ -57,6 +57,14 @@
   .pill { font-size: 12px; padding: 2px 9px; border-radius: 999px; background: var(--green-soft); color: var(--green); }
   .pill.wrong_rows { background: #f7ecd2; color: var(--amber); }
   .pill.error { background: var(--red-soft); color: var(--red); }
+  .entry { border-left: 2px solid var(--line); padding: 2px 0 18px 20px; position: relative; }
+  .entry::before { content: ""; position: absolute; left: -6px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+  .entry.Decision::before { background: var(--amber); }
+  .entry.Improvement::before { background: #3a6fb0; }
+  .entry h3 { font: 500 18px/1.3 var(--serif); margin: 2px 0 6px; }
+  .entry ul { margin: 0; padding-left: 18px; font-size: 15px; }
+  .entry li { margin: 3px 0; }
+  .entry code { font: 13px var(--mono); background: #f0ede3; padding: 1px 4px; border-radius: 4px; }
   .empty { border: 1px dashed var(--line); border-radius: 10px; padding: 18px; color: var(--soft); font-size: 15px; }
   .todo li { list-style: none; margin: 6px 0; padding-left: 28px; position: relative; }
   .todo { padding: 0; }
@@ -80,6 +88,10 @@
   </section>
   <hr class="rule">
   <div class="cards" id="cards"></div>
+
+  <h2>Timeline</h2>
+  <p class="note">What was learned, newest first. Only things that changed a decision. Show: <select id="t-kind"><option value="">Everything</option><option>Finding</option><option>Improvement</option><option>Decision</option></select></p>
+  <div id="timeline"></div>
 
   <h2>Runs</h2>
   <p class="note">Every time the model was measured on the 1,034 test questions.</p>
@@ -236,7 +248,22 @@ function compare() {
   $("cmp-a").onchange = $("cmp-b").onchange = draw; draw();
 }
 
+function timeline(markdown) {
+  const rich = (s) => esc(s).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>").replace(/`(.+?)`/g, "<code>$1</code>").replace(/\[(.+?)\]\(.+?\)/g, "$1");
+  const entries = markdown.split(/^### /m).slice(1).map((block) => {
+    const [head, ...rest] = block.trim().split("\n");
+    const [date, kind, ...title] = head.split(" · ");
+    return { date, kind, title: title.join(" · "), points: rest.filter((l) => l.startsWith("- ")).map((l) => l.slice(2)) };
+  });
+  const draw = () => {
+    const kind = $("t-kind").value;
+    $("timeline").innerHTML = entries.filter((e) => !kind || e.kind === kind).map((e) => `<div class="entry ${esc(e.kind)}"><div class="caption">${esc(e.date)} · ${esc(e.kind)}</div><h3>${rich(e.title)}</h3><ul>${e.points.map((p) => `<li>${rich(p)}</li>`).join("")}</ul></div>`).join("");
+  };
+  $("t-kind").onchange = draw; draw();
+}
+
 async function start() {
+  optional(text("FINDINGS.md")).then((markdown) => markdown && timeline(markdown));
   state.runs = await json("results/runs.json");
   if (!state.runs.length) throw new Error("No runs are logged yet.");
   await Promise.all(state.runs.map(async (r) => { state.data[r.name] = await loadRun(r.name); }));
