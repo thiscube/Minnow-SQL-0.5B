@@ -59,6 +59,15 @@ def test_stream_gives_the_same_items_as_loading(tmp_path, monkeypatch):
         assert list(read_items(path)) == json.loads(text)
 
 
+@pytest.mark.parametrize("text", ['[{"a": 1}, {"b": 2', '[{"a": 1}, {"b": tru }, {"c": 3}]'])
+def test_cut_off_or_damaged_file_is_an_error_not_a_short_list(tmp_path, text):
+    path = tmp_path / "data.json"
+    path.write_text(text, encoding="utf-8")
+
+    with pytest.raises(ValueError, match="cut off"):
+        list(read_items(path))
+
+
 def test_query_is_written_on_one_line_without_semicolon():
     assert one_line("SELECT a,\n  b\nFROM t ;\n") == "SELECT a, b FROM t"
 
