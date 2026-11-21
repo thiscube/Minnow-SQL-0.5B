@@ -49,6 +49,8 @@ def read_items(path: Path) -> Iterator[dict]:
             except json.JSONDecodeError:
                 more = file.read(_CHUNK)
                 if not more:
+                    if buffer[position:].strip() not in ("", "]"):
+                        raise ValueError(f"{path} is cut off or is not a JSON list.") from None
                     return
                 buffer, position = buffer[position:] + more, 0
                 continue
