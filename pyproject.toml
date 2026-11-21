@@ -16,6 +16,8 @@ dependencies = []
 [project.optional-dependencies]
 # Pinned so the checks give the same answer on every machine.
 dev = ["ruff==0.17.6", "pytest==9.2.0", "pytest-cov==7.1.0"]
+# Running the model. Install PyTorch with CUDA first, from https://pytorch.org.
+model = ["torch==2.11.0", "transformers==5.23.0", "accelerate==1.16.0"]
 
 [tool.setuptools]
 packages = ["minnow"]
