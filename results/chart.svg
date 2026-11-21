@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" role="img" aria-labelledby="chart-title chart-desc" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
 <title id="chart-title">Execution accuracy on Spider dev (%)</title>
-<desc id="chart-desc">baseline: 45.36%; sft-spider: 60.64%; sft-spider-vote5: 64.31%; sft-spider-all: 59.77%; sft-spider-all-vote5: 65.09%; target 70%; SLM-SQL-0.5B, published 72.08%</desc>
+<desc id="chart-desc">baseline: 45.36%; sft-spider: 60.64%; sft-spider-vote5: 64.31%; sft-spider-all: 59.77%; sft-spider-all-vote5: 65.09%; sft-rows1: 61.51%; sft-rows1-vote5: 65.76%; vote-of-three: 68.67%; target 70%; SLM-SQL-0.5B, published 72.08%</desc>
 <rect x="0.5" y="0.5" width="719" height="359" rx="6" fill="#fcfcfb" stroke="#e1e0d9"/>
 <text x="16" y="32" font-size="14" font-weight="600" fill="#0b0b0b">Execution accuracy on Spider dev (%)</text>
 <g font-size="11" fill="#898781" text-anchor="end" shape-rendering="crispEdges">
@@ -18,11 +18,14 @@
 <text x="44" y="64.00">100</text>
 </g>
 <g fill="#2a78d6">
-<path d="M82.80 310 V200.60 Q82.80 196.60 86.80 196.60 H102.80 Q106.80 196.60 106.80 200.60 V310 Z"/>
-<path d="M168.40 310 V162.40 Q168.40 158.40 172.40 158.40 H188.40 Q192.40 158.40 192.40 162.40 V310 Z"/>
-<path d="M254.00 310 V153.22 Q254.00 149.22 258.00 149.22 H274.00 Q278.00 149.22 278.00 153.22 V310 Z"/>
-<path d="M339.60 310 V164.57 Q339.60 160.57 343.60 160.57 H359.60 Q363.60 160.57 363.60 164.57 V310 Z"/>
-<path d="M425.20 310 V151.28 Q425.20 147.28 429.20 147.28 H445.20 Q449.20 147.28 449.20 151.28 V310 Z"/>
+<path d="M66.75 310 V200.60 Q66.75 196.60 70.75 196.60 H86.75 Q90.75 196.60 90.75 200.60 V310 Z"/>
+<path d="M120.25 310 V162.40 Q120.25 158.40 124.25 158.40 H140.25 Q144.25 158.40 144.25 162.40 V310 Z"/>
+<path d="M173.75 310 V153.22 Q173.75 149.22 177.75 149.22 H193.75 Q197.75 149.22 197.75 153.22 V310 Z"/>
+<path d="M227.25 310 V164.57 Q227.25 160.57 231.25 160.57 H247.25 Q251.25 160.57 251.25 164.57 V310 Z"/>
+<path d="M280.75 310 V151.28 Q280.75 147.28 284.75 147.28 H300.75 Q304.75 147.28 304.75 151.28 V310 Z"/>
+<path d="M334.25 310 V160.22 Q334.25 156.22 338.25 156.22 H354.25 Q358.25 156.22 358.25 160.22 V310 Z"/>
+<path d="M387.75 310 V149.60 Q387.75 145.60 391.75 145.60 H407.75 Q411.75 145.60 411.75 149.60 V310 Z"/>
+<path d="M441.25 310 V142.32 Q441.25 138.32 445.25 138.32 H461.25 Q465.25 138.32 465.25 142.32 V310 Z"/>
 </g>
 <g stroke="#52514e" stroke-dasharray="5 4">
 <line x1="52" y1="135.00" x2="704" y2="135.00"/>
@@ -33,17 +36,23 @@
 <text x="704" y="123.80">SLM-SQL-0.5B, published 72.08%</text>
 </g>
 <g font-size="12" font-weight="600" fill="#0b0b0b" text-anchor="middle" stroke="#fcfcfb" stroke-width="3" paint-order="stroke">
-<text x="94.80" y="189.60">45.36%</text>
-<text x="180.40" y="151.40">60.64%</text>
-<text x="266.00" y="142.22">64.31%</text>
-<text x="351.60" y="153.57">59.77%</text>
-<text x="437.20" y="140.28">65.09%</text>
+<text x="78.75" y="189.60">45.36%</text>
+<text x="132.25" y="151.40">60.64%</text>
+<text x="185.75" y="142.22">64.31%</text>
+<text x="239.25" y="153.57">59.77%</text>
+<text x="292.75" y="140.28">65.09%</text>
+<text x="346.25" y="149.22">61.51%</text>
+<text x="399.75" y="138.60">65.76%</text>
+<text x="453.25" y="131.32">68.67%</text>
 </g>
 <g font-size="11" fill="#52514e" text-anchor="middle">
-<text x="94.80" y="330">baseline</text>
-<text x="180.40" y="330">sft-spider</text>
-<text x="266.00" y="330">sft-spider-vote5</text>
-<text x="351.60" y="330">sft-spider-all</text>
-<text x="437.20" y="330">sft-spider-all-vote5</text>
+<text x="78.75" y="330">baseline</text>
+<text x="132.25" y="330">sft-spider</text>
+<text x="185.75" y="330">sft-spider-vote5</text>
+<text x="239.25" y="330">sft-spider-all</text>
+<text x="292.75" y="330">sft-spider-all-vote5</text>
+<text x="346.25" y="330">sft-rows1</text>
+<text x="399.75" y="330">sft-rows1-vote5</text>
+<text x="453.25" y="330">vote-of-three</text>
 </g>
 </svg>

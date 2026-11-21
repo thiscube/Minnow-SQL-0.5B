@@ -1,0 +1,9 @@
+{
+  "model": "vote of sft-rows1-vote5, sft-spider-all-vote5, sft-spider-vote5",
+  "split": "dev",
+  "correct": 710,
+  "total": 1034,
+  "execution_accuracy": 68.67,
+  "generation_seconds": null,
+  "decoding": "vote over 3 runs"
+}
