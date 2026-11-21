@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Minnow-SQL-0.5B notebook</title>
+<style>
+  :root {
+    --paper: #faf8f3; --card: #ffffff; --ink: #23221f; --soft: #6b6962; --line: #dcd8cc;
+    --green: #0f6e56; --green-soft: #d9efe7; --amber: #b0700f; --red: #a3352f; --red-soft: #f6dedb;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: system-ui, "Segoe UI", sans-serif; --mono: ui-monospace, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.6 var(--sans); }
+  main { max-width: 1040px; margin: 0 auto; padding: 48px 24px 96px; }
+  h1 { font: 500 34px/1.15 var(--serif); margin: 0; letter-spacing: -0.01em; }
+  h2 { font: 500 24px/1.2 var(--serif); margin: 64px 0 4px; }
+  .lede, .note { color: var(--soft); margin: 4px 0 20px; max-width: 64ch; }
+  .rule { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+  .hero { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: end; margin-top: 32px; }
+  .big { font: 500 96px/0.95 var(--serif); letter-spacing: -0.03em; color: var(--green); }
+  .big small { font-size: 36px; color: var(--ink); }
+  .caption { color: var(--soft); font-size: 14px; }
+  .track { position: relative; height: 10px; background: #ebe7da; border-radius: 5px; margin: 34px 0 30px; }
+  .track .fill { position: absolute; inset: 0 auto 0 0; background: var(--green); border-radius: 5px; }
+  .mark { position: absolute; top: -8px; bottom: -8px; border-left: 2px solid var(--ink); }
+  .mark span { position: absolute; top: -24px; left: -2px; white-space: nowrap; font-size: 12px; color: var(--soft); }
+  .mark.low span { top: auto; bottom: -24px; }
+  .mark.right span { left: auto; right: 0; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+  .card b { display: block; font: 500 30px/1.1 var(--serif); }
+  .card span { color: var(--soft); font-size: 14px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th { text-align: left; font-weight: 500; color: var(--soft); font-size: 13px; border-bottom: 1px solid var(--ink); padding: 8px 10px 8px 0; }
+  td { border-bottom: 1px solid var(--line); padding: 10px 10px 10px 0; vertical-align: top; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bars { display: grid; grid-template-columns: minmax(120px, 220px) 1fr 56px; gap: 8px 12px; align-items: center; font-size: 14px; }
+  .bar { height: 12px; background: #ebe7da; border-radius: 6px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--green); }
+  .bar.bad i { background: var(--red); }
+  .stack { display: flex; height: 22px; border-radius: 6px; overflow: hidden; margin: 12px 0 8px; }
+  .stack i { display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 14px; color: var(--soft); }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+  .tools { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 16px; }
+  select, input, button { font: inherit; font-size: 14px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); }
+  input { flex: 1; min-width: 180px; }
+  button { cursor: pointer; }
+  button:disabled { opacity: 0.4; cursor: default; }
+  .q { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .q p { margin: 0 0 8px; }
+  .q .meta { font-size: 13px; color: var(--soft); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 6px; }
+  pre { margin: 4px 0 0; font: 13px/1.5 var(--mono); white-space: pre-wrap; word-break: break-word; background: #f4f1e8; border-radius: 6px; padding: 8px 10px; }
+  .lab { font-size: 12px; color: var(--soft); margin-top: 8px; }
+  .pill { font-size: 12px; padding: 2px 9px; border-radius: 999px; background: var(--green-soft); color: var(--green); }
+  .pill.wrong_rows { background: #f7ecd2; color: var(--amber); }
+  .pill.error { background: var(--red-soft); color: var(--red); }
+  .empty { border: 1px dashed var(--line); border-radius: 10px; padding: 18px; color: var(--soft); font-size: 15px; }
+  .todo li { list-style: none; margin: 6px 0; padding-left: 28px; position: relative; }
+  .todo { padding: 0; }
+  .todo li::before { content: ""; position: absolute; left: 0; top: 5px; width: 15px; height: 15px; border: 1.5px solid var(--soft); border-radius: 4px; }
+  .todo li.done::before { background: var(--green); border-color: var(--green); }
+  .todo li.done::after { content: ""; position: absolute; left: 5px; top: 7px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #error { background: var(--red-soft); color: var(--red); padding: 14px; border-radius: 10px; display: none; margin-top: 20px; }
+  @media (max-width: 640px) { .hero { grid-template-columns: 1fr; gap: 8px; } .big { font-size: 68px; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="caption">Lab notebook</div>
+  <h1>Minnow-SQL-0.5B</h1>
+  <p class="lede">A small model that turns English questions into database queries. Everything on this page is read from the project's saved files.</p>
+  <div id="error"></div>
+
+  <section class="hero">
+    <div><div class="big" id="best">–</div><div class="caption" id="best-caption"></div></div>
+    <div><div class="track" id="track"></div><div class="caption" id="gap"></div></div>
+  </section>
+  <hr class="rule">
+  <div class="cards" id="cards"></div>
+
+  <h2>Runs</h2>
+  <p class="note">Every time the model was measured on the 1,034 test questions.</p>
+  <table id="runs"></table>
+
+  <h2>Where the answers go wrong</h2>
+  <p class="note">Each answer is either right, runs but gives the wrong rows, or crashes. Showing: <select id="run-pick"></select></p>
+  <div class="stack" id="stack"></div><div class="legend" id="legend"></div>
+  <h3 class="caption" style="margin-top:24px">Why answers crashed</h3>
+  <div class="bars" id="errors"></div>
+
+  <h2>Score by database</h2>
+  <p class="note">The test covers 20 different databases. This shows which topics the model handles well.</p>
+  <div class="bars" id="databases"></div>
+
+  <h2>Compare two runs</h2>
+  <div id="compare"></div>
+
+  <h2>Every question</h2>
+  <p class="note">What was asked, what the model wrote, and the correct answer.</p>
+  <div class="tools">
+    <select id="f-verdict"><option value="">All verdicts</option><option value="correct">Right</option><option value="wrong_rows">Wrong rows</option><option value="error">Crashed</option></select>
+    <select id="f-db"><option value="">All databases</option></select>
+    <select id="f-error"><option value="">All crash reasons</option></select>
+    <input id="f-text" placeholder="Search questions and queries">
+  </div>
+  <div class="caption" id="count"></div>
+  <div id="questions"></div>
+  <div class="tools"><button id="prev">Previous</button><button id="next">Next</button></div>
+
+  <h2>Training</h2>
+  <div class="empty" id="training">No training run yet. The learning curve, save points and GPU hours appear here after the first one.</div>
+
+  <h2>Money</h2>
+  <div id="money"></div>
+
+  <h2>Roadmap</h2>
+  <ul class="todo" id="roadmap"></ul>
+
+  <h2>Run settings</h2>
+  <table id="settings"></table>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (text) => String(text ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pct = (part, whole) => (whole ? (100 * part) / whole : 0);
+const VERDICT = { correct: "Right", wrong_rows: "Wrong rows", error: "Crashed" };
+const COLOR = { correct: "var(--green)", wrong_rows: "#d9a53a", error: "var(--red)" };
+const PAGE = 20;
+const state = { runs: [], data: {}, dev: null, page: 0, run: null };
+
+async function text(path) {
+  const reply = await fetch("../" + path, { cache: "no-store" });
+  if (!reply.ok) throw new Error(path + " could not be read");
+  return reply.text();
+}
+const json = async (path) => JSON.parse(await text(path));
+const lines = async (path) => (await text(path)).split("\n").filter(Boolean).map((line) => JSON.parse(line));
+const optional = (promise) => promise.catch(() => null);
+
+async function loadRun(name) {
+  const [outcomes, predictions, summary] = await Promise.all([
+    lines(`results/${name}/outcomes.jsonl`), lines(`results/${name}/predictions.jsonl`), json(`results/${name}/summary.json`),
+  ]);
+  const sql = Object.fromEntries(predictions.map((p) => [p.index, p.sql]));
+  return { outcomes, sql, summary };
+}
+
+function hero(target, published) {
+  const best = state.runs.reduce((a, b) => (b.execution_accuracy > a.execution_accuracy ? b : a));
+  $("best").innerHTML = `${best.execution_accuracy.toFixed(2)}<small>%</small>`;
+  $("best-caption").textContent = `Best score so far: ${best.name}, ${best.date}`;
+  const mark = (value, label, cls) => `<div class="mark ${cls}" style="left:${value}%"><span>${label}</span></div>`;
+  $("track").innerHTML = `<div class="fill" style="width:${best.execution_accuracy}%"></div>`
+    + mark(target, `goal ${target}%`, "right") + mark(published, `best published ${published}%`, "low");
+  $("gap").textContent = `${(target - best.execution_accuracy).toFixed(2)} points to the goal.`;
+  const d = state.data[best.name], b = count(d.outcomes);
+  const seconds = best.generation_seconds;
+  $("cards").innerHTML = [
+    [b.correct, "answers right"], [b.wrong_rows, "ran, wrong rows"], [b.error, "crashed"],
+    [seconds == null ? "–" : (seconds / best.total).toFixed(2) + " s", "per question"], [state.runs.length, state.runs.length === 1 ? "run logged" : "runs logged"],
+  ].map(([n, label]) => `<div class="card"><b>${n}</b><span>${label}</span></div>`).join("");
+}
+
+function count(outcomes) {
+  const c = { correct: 0, wrong_rows: 0, error: 0, kinds: {} };
+  for (const o of outcomes) { c[o.verdict]++; if (o.verdict === "error") c.kinds[o.error] = (c.kinds[o.error] || 0) + 1; }
+  return c;
+}
+
+function runsTable() {
+  $("runs").innerHTML = "<tr><th>Date</th><th>Run</th><th>What changed</th><th class='num'>Score</th><th class='num'>Right</th></tr>"
+    + state.runs.map((r) => `<tr><td>${esc(r.date)}</td><td>${esc(r.name)}</td><td>${esc(r.change)}</td><td class="num">${r.execution_accuracy.toFixed(2)}%</td><td class="num">${r.correct} / ${r.total}</td></tr>`).join("");
+}
+
+function breakdown() {
+  const { outcomes } = state.data[state.run], c = count(outcomes), total = outcomes.length;
+  $("stack").innerHTML = Object.keys(VERDICT).map((v) => `<i style="width:${pct(c[v], total)}%;background:${COLOR[v]}" title="${VERDICT[v]}: ${c[v]}"></i>`).join("");
+  $("legend").innerHTML = Object.keys(VERDICT).map((v) => `<span><i class="dot" style="background:${COLOR[v]}"></i>${VERDICT[v]}: ${c[v]} (${pct(c[v], total).toFixed(1)}%)</span>`).join("");
+  const kinds = Object.entries(c.kinds).sort((a, b) => b[1] - a[1]);
+  $("errors").innerHTML = kinds.map(([kind, n]) => `<span>${esc(kind)}</span><div class="bar bad"><i style="width:${pct(n, kinds[0][1])}%"></i></div><span class="num">${n}</span>`).join("") || "<span>No crashes.</span>";
+  $("f-error").innerHTML = "<option value=''>All crash reasons</option>" + kinds.map(([kind]) => `<option>${esc(kind)}</option>`).join("");
+  databases(); settings(); state.page = 0; questions();
+}
+
+function databases() {
+  if (!state.dev) { $("databases").innerHTML = "<span>Needs the Spider data in data/spider.</span>"; return; }
+  const by = {};
+  for (const o of state.data[state.run].outcomes) {
+    const db = state.dev[o.index].db_id; by[db] ??= [0, 0]; by[db][1]++; if (o.verdict === "correct") by[db][0]++;
+  }
+  const rows = Object.entries(by).map(([db, [ok, all]]) => [db, pct(ok, all), ok, all]).sort((a, b) => b[1] - a[1]);
+  $("databases").innerHTML = rows.map(([db, p, ok, all]) => `<span>${esc(db)}</span><div class="bar"><i style="width:${p}%"></i></div><span class="num" title="${ok} of ${all}">${p.toFixed(0)}%</span>`).join("");
+}
+
+function settings() {
+  const s = state.data[state.run].summary;
+  $("settings").innerHTML = Object.entries(s).map(([k, v]) => `<tr><td>${esc(k.replaceAll("_", " "))}</td><td>${esc(v)}</td></tr>`).join("");
+}
+
+function questions() {
+  const { outcomes, sql } = state.data[state.run];
+  const verdict = $("f-verdict").value, db = $("f-db").value, kind = $("f-error").value, needle = $("f-text").value.toLowerCase();
+  const found = outcomes.filter((o) => {
+    const ex = state.dev?.[o.index];
+    if (verdict && o.verdict !== verdict) return false;
+    if (kind && o.error !== kind) return false;
+    if (db && ex?.db_id !== db) return false;
+    return !needle || `${ex?.question} ${ex?.query} ${sql[o.index]}`.toLowerCase().includes(needle);
+  });
+  const pages = Math.max(1, Math.ceil(found.length / PAGE));
+  state.page = Math.min(state.page, pages - 1);
+  $("count").textContent = `${found.length} questions, page ${state.page + 1} of ${pages}`;
+  $("prev").disabled = state.page === 0; $("next").disabled = state.page >= pages - 1;
+  $("questions").innerHTML = found.slice(state.page * PAGE, (state.page + 1) * PAGE).map((o) => {
+    const ex = state.dev?.[o.index];
+    return `<div class="q"><div class="meta"><span>#${o.index + 1}</span><span>${esc(ex?.db_id ?? "")}</span><span class="pill ${o.verdict}">${VERDICT[o.verdict]}${o.error ? ": " + esc(o.error) : ""}</span></div>
+      <p>${esc(ex?.question ?? "Question text needs the Spider data in data/spider.")}</p>
+      <div class="lab">The model wrote</div><pre>${esc(sql[o.index] ?? "(nothing)")}</pre>
+      ${ex ? `<div class="lab">Correct answer</div><pre>${esc(ex.query)}</pre>` : ""}</div>`;
+  }).join("");
+}
+
+function compare() {
+  if (state.runs.length < 2) { $("compare").innerHTML = "<div class='empty'>Needs two runs. After the first training run, this shows which questions it fixed and which it broke.</div>"; return; }
+  const names = state.runs.map((r) => r.name), pick = (id, i) => `<select id="${id}">${names.map((n, j) => `<option ${j === i ? "selected" : ""}>${esc(n)}</option>`).join("")}</select>`;
+  $("compare").innerHTML = `<div class="tools">${pick("cmp-a", names.length - 2)} <span>then</span> ${pick("cmp-b", names.length - 1)}</div><div class="cards" id="cmp-out"></div>`;
+  const draw = () => {
+    const a = state.data[$("cmp-a").value].outcomes, b = state.data[$("cmp-b").value].outcomes;
+    let fixed = 0, broken = 0, both = 0;
+    a.forEach((o, i) => { const x = o.verdict === "correct", y = b[i].verdict === "correct"; if (!x && y) fixed++; else if (x && !y) broken++; else if (x) both++; });
+    $("cmp-out").innerHTML = [[fixed, "fixed"], [broken, "broken"], [both, "right in both"], [(fixed - broken > 0 ? "+" : "") + (fixed - broken), "net change"]].map(([n, l]) => `<div class="card"><b>${n}</b><span>${l}</span></div>`).join("");
+  };
+  $("cmp-a").onchange = $("cmp-b").onchange = draw; draw();
+}
+
+async function start() {
+  state.runs = await json("results/runs.json");
+  if (!state.runs.length) throw new Error("No runs are logged yet.");
+  await Promise.all(state.runs.map(async (r) => { state.data[r.name] = await loadRun(r.name); }));
+  const [dev, readme, runlog, spend] = await Promise.all([optional(json("data/spider/dev.json")), text("README.md"), text("minnow/runlog.py"), optional(json("results/spend.json"))]);
+  state.dev = dev;
+  const constant = (name) => Number(runlog.match(new RegExp(name + "\\s*=\\s*([0-9.]+)"))[1]);
+  hero(constant("TARGET_ACCURACY"), constant("PUBLISHED_ACCURACY"));
+  runsTable();
+  $("run-pick").innerHTML = state.runs.map((r) => `<option>${esc(r.name)}</option>`).join("");
+  state.run = state.runs.at(-1).name; $("run-pick").value = state.run;
+  if (dev) $("f-db").innerHTML += [...new Set(dev.map((e) => e.db_id))].sort().map((d) => `<option>${esc(d)}</option>`).join("");
+  breakdown(); compare();
+  $("roadmap").innerHTML = [...readme.matchAll(/^- \[( |x)\] (.+)$/gm)].map((m) => `<li class="${m[1] === "x" ? "done" : ""}">${esc(m[2].replace(/\[([^\]]+)\]\[[^\]]*\]/g, "$1"))}</li>`).join("");
+  const cap = Number(readme.match(/at most \$(\d+)/)?.[1] ?? 0), spent = (spend ?? []).reduce((sum, item) => sum + item.dollars, 0);
+  $("money").innerHTML = `<div class="bars"><span>Rented GPU time</span><div class="bar"><i style="width:${pct(spent, cap)}%"></i></div><span class="num">$${spent.toFixed(2)}</span></div><p class="note">$${spent.toFixed(2)} of the $${cap} budget spent. Everything so far ran on the local GPU.</p>`;
+  $("run-pick").onchange = () => { state.run = $("run-pick").value; breakdown(); };
+  for (const id of ["f-verdict", "f-db", "f-error"]) $(id).onchange = () => { state.page = 0; questions(); };
+  $("f-text").oninput = () => { state.page = 0; questions(); };
+  $("prev").onclick = () => { state.page--; questions(); }; $("next").onclick = () => { state.page++; questions(); };
+}
+start().catch((error) => { $("error").style.display = "block"; $("error").textContent = `${error.message}. Start the page with: python scripts/dashboard.py`; });
+</script>
+</body>
+</html>
