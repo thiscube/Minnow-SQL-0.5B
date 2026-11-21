@@ -1,0 +1,12 @@
+[
+  {
+    "name": "baseline",
+    "date": "2026-11-21",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "change": "Baseline: no training, greedy decoding, CREATE TABLE statements as the schema",
+    "correct": 469,
+    "total": 1034,
+    "execution_accuracy": 45.36,
+    "generation_seconds": 291
+  }
+]
