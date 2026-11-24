@@ -36,6 +36,7 @@ Measured in this repository. The table and chart below are generated from the ru
 | vote of sft-synsql-hints, sft-rows1-vote15, sft-spider-all-vote5 | Several models: vote across three fine-tuned adapters (sft-synsql with value hints, sft-rows1 with 15 candidates, sft-spider-all with 5), same majority rule as before | 71.18 | 736 / 1034 |
 | Qwen2.5-Coder-0.5B-Instruct + grpo-synsql | RL pilot: GRPO from sft-synsql on 600 fresh SynSQL questions (only 252 fit 900 prompt tokens), lr 2e-5, value hints, one greedy query | 63.64 | 658 / 1034 |
 | Qwen2.5-Coder-0.5B-Instruct + grpo-spider | RL pilot: GRPO from sft-synsql on 600 Spider train questions, lr 2e-5, value hints, one greedy query | 64.89 | 671 / 1034 |
+| Qwen2.5-Coder-0.5B-Instruct + grpo-spider-lr5 | GRPO from sft-synsql on 2,400 Spider train questions, lr 5e-6, value hints, one greedy query (65.38% at 800, 65.76% at 1,600) | 66.92 | 692 / 1034 |
 
 ![Execution accuracy by run](results/chart.svg)
 

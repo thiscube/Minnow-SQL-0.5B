@@ -10,6 +10,12 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-25 · Improvement · Reinforcement learning at a lower learning rate lifts the best single model to 66.92%
+
+- **What:** GRPO from the SynSQL model on Spider training questions with value hints, learning rate 5e-6 instead of 2e-5, scored on dev every 800 questions.
+- **Evidence:** 65.38% after 800 questions, 65.76% after 1,600 and 66.92% (692 of 1,034) after 2,400, against 64.70% at the start: 52 fixed, 29 broken. Queries that do not run fell from 197 to 143. Training takes 1.7 seconds per question and 4.6 GB.
+- **So what:** Three rising checkpoints in a row make this the first single-model gain from reinforcement learning, at no cost beyond local GPU time. The run continues through all 6,994 Spider training questions, scored every 1,200. In the three-model vote this model gives 741 of 1,034 (71.66%) instead of 736, not yet logged.
+
 ### 2026-11-24 · Finding · Short reinforcement-learning pilots move many answers but not the score
 
 - **What:** Two GRPO pilots of 600 questions each from the SynSQL model, with value hints: one on fresh SynSQL questions, one on Spider training questions. Learning rate 2e-5.

@@ -19,6 +19,7 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 | 2026-11-24 | vote of sft-synsql-hints, sft-rows1-vote15, sft-spider-all-vote5 | Several models: vote across three fine-tuned adapters (sft-synsql with value hints, sft-rows1 with 15 candidates, sft-spider-all with 5), same majority rule as before | 71.18 | 736 / 1034 | [results/vote-hints-three](results/vote-hints-three) |
 | 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + grpo-synsql | RL pilot: GRPO from sft-synsql on 600 fresh SynSQL questions (only 252 fit 900 prompt tokens), lr 2e-5, value hints, one greedy query | 63.64 | 658 / 1034 | [results/grpo600-hints](results/grpo600-hints) |
 | 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + grpo-spider | RL pilot: GRPO from sft-synsql on 600 Spider train questions, lr 2e-5, value hints, one greedy query | 64.89 | 671 / 1034 | [results/grpo-spider600-hints](results/grpo-spider600-hints) |
+| 2026-11-25 | Qwen2.5-Coder-0.5B-Instruct + grpo-spider-lr5 | GRPO from sft-synsql on 2,400 Spider train questions, lr 5e-6, value hints, one greedy query (65.38% at 800, 65.76% at 1,600) | 66.92 | 692 / 1034 | [results/grpo-lr5-2400-hints](results/grpo-lr5-2400-hints) |
 
 ## Notes
 
@@ -124,3 +125,10 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 - 220 predictions ran and returned different rows.
 - 39 of the 671 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
 - Generating all 1,034 predictions took 192 seconds.
+
+### 2026-11-25, grpo-lr5-2400-hints
+
+- 143 predictions did not run. The most common errors: `no such column` (131), `misuse of aggregate` (5), `no such table` (4).
+- 199 predictions ran and returned different rows.
+- 38 of the 692 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 184 seconds.
