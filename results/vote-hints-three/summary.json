@@ -1,0 +1,9 @@
+{
+  "model": "vote of sft-synsql-hints, sft-rows1-vote15, sft-spider-all-vote5",
+  "split": "dev",
+  "correct": 736,
+  "total": 1034,
+  "execution_accuracy": 71.18,
+  "generation_seconds": null,
+  "decoding": "vote over the candidates of 3 runs"
+}

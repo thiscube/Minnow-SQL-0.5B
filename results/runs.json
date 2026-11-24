@@ -130,5 +130,16 @@
     "execution_accuracy": 62.28,
     "generation_seconds": 209,
     "fingerprint": "93c475eb1cce0248e436465aa49dcec9ff22e47761d6176c2562d294c898b337"
+  },
+  {
+    "name": "vote-hints-three",
+    "date": "2026-11-24",
+    "model": "vote of sft-synsql-hints, sft-rows1-vote15, sft-spider-all-vote5",
+    "change": "Several models: vote across three fine-tuned adapters (sft-synsql with value hints, sft-rows1 with 15 candidates, sft-spider-all with 5), same majority rule as before",
+    "correct": 736,
+    "total": 1034,
+    "execution_accuracy": 71.18,
+    "generation_seconds": null,
+    "fingerprint": "63184ed496e18ab91655ba992a2ad7e93ef4290a665666ffa6e4c1e081fa736e"
   }
 ]

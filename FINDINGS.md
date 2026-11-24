@@ -10,6 +10,12 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-24 · Improvement · Three models voting, one with value hints, pass 70%: 71.18%
+
+- **What:** The same majority vote as before over three fine-tuned adapters on one base model: the SynSQL model with value hints (greedy), the example-row model (15 candidates) and the Spider-plus-others model (5 candidates).
+- **Evidence:** 736 of 1,034, up from 710 for the earlier three-model vote: 50 fixed, 24 broken. Putting empty and all-NULL results last would give 751 (72.63%), but that rule was found by looking at dev and is not used until it is confirmed on the held-out test half.
+- **So what:** The 70% goal is reached by several models voting, not by one model; the best single model is 64.70%. Which three runs to combine was also chosen on dev, so the final claim must be repeated on the untouched test half.
+
 ### 2026-11-24 · Improvement · Listing the values a question mentions adds 2.9 points without retraining
 
 - **What:** Before the question, the prompt lists words from the question that appear as text values in the database, with the table and column that hold them, for example `country.Name = 'Angola'`. The model was never trained with this list.
