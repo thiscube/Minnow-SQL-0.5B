@@ -1,11 +1,8 @@
-"""Score an untouched model on Spider dev by execution accuracy.
-
-    python scripts/baseline.py
+"""Score a model on Spider dev by execution accuracy: python scripts/baseline.py
 
 Predictions are saved after every batch, so a stopped run continues where it left off.
-The run folder ends up with predictions.jsonl, outcomes.jsonl and summary.json, ready for
-python -m minnow.runlog add.
-Needs the model extra (pip install -e ".[model]") and Spider unpacked in data/spider.
+The folder gets predictions.jsonl, outcomes.jsonl and summary.json for minnow.runlog, and
+candidates.jsonl with every candidate query. Needs the model extra and Spider in data/spider.
 """
 
 import argparse
@@ -18,7 +15,9 @@ from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from minnow.evaluate import (
+    CANDIDATES_FILE,
     add_generation_seconds,
+    append_candidates,
     append_prediction,
     claim_run_folder,
     drop_unfinished_line,
@@ -80,6 +79,7 @@ def main() -> None:
     claim_run_folder(args.out, settings)
     predictions_file = args.out / "predictions.jsonl"
     drop_unfinished_line(predictions_file)
+    drop_unfinished_line(args.out / CANDIDATES_FILE)
     examples = load_split(args.spider, "dev.json")
     done = load_predictions(predictions_file)
     todo = [index for index in range(len(examples)) if index not in done]
@@ -116,6 +116,7 @@ def main() -> None:
                     database = database_path(args.spider, examples[index].db_id)
                     options = [extract_sql(answers[position]) for answers in rounds]
                     chosen = pick(options, lambda sql, db=database: run_query(db, sql))
+                    append_candidates(args.out / CANDIDATES_FILE, index, options)
                     append_prediction(predictions_file, index, chosen)
             print(f"{batch.stop} of {len(examples)} predicted")
     spent = time.monotonic() - started if todo else 0.0

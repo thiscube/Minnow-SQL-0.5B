@@ -2,11 +2,24 @@ import pytest
 
 from minnow.evaluate import (
     add_generation_seconds,
+    append_candidates,
     append_prediction,
     claim_run_folder,
     drop_unfinished_line,
+    load_candidates,
     load_predictions,
 )
+
+
+def test_candidates_survive_a_restart_in_order(tmp_path):
+    path = tmp_path / "candidates.jsonl"
+
+    assert load_candidates(path) == {}
+    append_candidates(path, 3, ("SELECT 1", "SELECT 2"))
+    append_candidates(path, 0, ["SELECT 'x;y'"])
+
+    assert load_candidates(path) == {3: ["SELECT 1", "SELECT 2"], 0: ["SELECT 'x;y'"]}
+    assert b"\r" not in path.read_bytes()
 
 
 def test_predictions_survive_a_restart(tmp_path):
