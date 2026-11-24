@@ -16,7 +16,8 @@ TRAIN_FILE = "train_spider.json"
 DEV_FILE = "dev.json"
 
 
-def _for_guard(examples: list[SpiderExample]) -> list[Example]:
+def for_guard(examples: list[SpiderExample]) -> list[Example]:
+    """Return the questions and database ids the leak guard checks."""
     return [Example(example.question, example.db_id) for example in examples]
 
 
@@ -29,11 +30,11 @@ def checked_training_examples(
     different databases. They are left out. A training example on a dev database is never
     acceptable and still raises LeakError.
     """
-    dev = _for_guard(load_split(spider, DEV_FILE))
+    dev = for_guard(load_split(spider, DEV_FILE))
     dev_questions = {normalize(example.question) for example in dev}
     train = [example for name in files for example in load_split(spider, name)]
     kept = [example for example in train if normalize(example.question) not in dev_questions]
-    assert_no_leak(_for_guard(kept), dev)
+    assert_no_leak(for_guard(kept), dev)
     return kept
 
 

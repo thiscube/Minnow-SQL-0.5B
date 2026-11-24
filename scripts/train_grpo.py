@@ -14,9 +14,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from minnow import grpo
 from minnow.evaluate import add_generation_seconds, claim_run_folder
-from minnow.guard import Example, assert_no_leak
+from minnow.guard import assert_no_leak
 from minnow.prompt import SYSTEM, chat_prompt, extract_sql
-from minnow.sft import checked_training_examples
+from minnow.sft import checked_training_examples, for_guard
 from minnow.spider import load_split, schemas
 
 MODEL = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
@@ -31,21 +31,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train-files", nargs="+", default=["train_spider.json"])
     parser.add_argument("--sample-rows", type=int, default=0, help="example rows per table")
     parser.add_argument("--group", type=int, default=8, help="queries written per question")
-    parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--learning-rate", type=float, default=1e-5)
     parser.add_argument("--per-update", type=int, default=4, help="questions with a signal")
     parser.add_argument("--max-questions", type=int, default=-1, help="stop early, for a test")
-    parser.add_argument("--save-every", type=int, default=25, help="questions between saves")
     return parser.parse_args()
 
 
 def log_prob(model: PeftModel, prompt: torch.Tensor, answer: torch.Tensor) -> torch.Tensor:
-    """Return the mean log-probability of the answer tokens after the prompt."""
+    """Return the answer tokens' summed log-probability over a fixed length (not its own)."""
     ids = torch.cat([prompt, answer]).unsqueeze(0)
     base = model.get_base_model()
     hidden = base.model(input_ids=ids).last_hidden_state[0, len(prompt) - 1 : -1]
     logits = base.lm_head(hidden).float()
-    return torch.log_softmax(logits, -1).gather(1, answer.unsqueeze(1)).mean()
+    picked = torch.log_softmax(logits, -1).gather(1, answer.unsqueeze(1))
+    return picked.sum() / grpo.MAX_NEW_TOKENS
 
 
 def sample(model: PeftModel, prompt: torch.Tensor, args: argparse.Namespace) -> torch.Tensor:
@@ -54,9 +53,7 @@ def sample(model: PeftModel, prompt: torch.Tensor, args: argparse.Namespace) -> 
         output = model.generate(
             input_ids=prompt.repeat(args.group, 1),
             attention_mask=torch.ones(args.group, len(prompt), device=model.device),
-            do_sample=True,
-            temperature=args.temperature,
-            max_new_tokens=grpo.MAX_NEW_TOKENS,
+            **grpo.SAMPLING,
         )
     return output[:, len(prompt) :]
 
@@ -82,6 +79,14 @@ def load(args: argparse.Namespace) -> tuple[PeftModel, torch.optim.Optimizer]:
     return model, optimizer
 
 
+def step(model: PeftModel, optimizer: torch.optim.Optimizer, progress: grpo.Progress) -> None:
+    """Apply the gradients gathered so far."""
+    torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+    optimizer.step()
+    optimizer.zero_grad()
+    progress.updates += 1
+
+
 def save(
     model: PeftModel, optimizer: torch.optim.Optimizer, progress: grpo.Progress, out: Path
 ) -> None:
@@ -98,10 +103,7 @@ def main() -> None:
     claim_run_folder(args.out, {**settings, "system_prompt": SYSTEM})
     examples = checked_training_examples(args.spider, tuple(args.train_files))
     dev = load_split(args.spider, "dev.json")
-    assert_no_leak(
-        [Example(e.question, e.db_id) for e in examples],
-        [Example(e.question, e.db_id) for e in dev],
-    )
+    assert_no_leak(for_guard(examples), for_guard(dev))
     tokenizer = AutoTokenizer.from_pretrained(MODEL, padding_side="left")
     schema_of = schemas(args.spider, examples, args.sample_rows)
     stops = {tokenizer.eos_token_id, tokenizer.pad_token_id}
@@ -115,30 +117,28 @@ def main() -> None:
         example = examples[order[position]]
         text = chat_prompt(tokenizer, schema_of[example.db_id], example.question)
         prompt = tokenizer(text, return_tensors="pt")["input_ids"][0].to(model.device)
-        weights, rewards = None, [0.0]
+        weights, rewards = None, None
         if len(prompt) <= grpo.MAX_PROMPT_TOKENS:
             torch.manual_seed(position)
             rows = sample(model, prompt, args)
             answers = [row[: grpo.answer_length(row.tolist(), stops)] for row in rows]
-            texts = tokenizer.batch_decode(answers, skip_special_tokens=True)
-            rewards = [grpo.reward(args.spider, example, extract_sql(t)) for t in texts]
-            weights = grpo.advantages(rewards)
+            sqls = [extract_sql(t) for t in tokenizer.batch_decode(answers, True)]
+            rewards = grpo.group_rewards(args.spider, example, sqls)
+            weights = grpo.advantages(rewards) if rewards else None
         if weights is not None:
             learn(model, prompt, answers, [w / args.per_update for w in weights])
             signals += 1
             if signals % args.per_update == 0:
-                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-                optimizer.step()
-                optimizer.zero_grad()
-                progress.updates += 1
-        progress.record(sum(rewards) / len(rewards), learned=weights is not None)
-        if progress.position % args.save_every == 0:
+                step(model, optimizer, progress)
+        progress.record(sum(rewards) / len(rewards) if rewards else None, weights is not None)
+        if progress.position % grpo.SAVE_EVERY == 0 or progress.position == stop:
+            if signals % args.per_update:
+                signals = 0
+                step(model, optimizer, progress)
             save(model, optimizer, progress, args.out)
         if progress.position % 10 == 0:
             each = (time.monotonic() - started) / (progress.position - first)
-            peak = torch.cuda.max_memory_allocated() / 1e9
-            print(progress.report(len(order), each, peak), flush=True)
-    save(model, optimizer, progress, args.out)
+            print(progress.report(len(order), each, torch.cuda.max_memory_allocated() / 1e9))
     add_generation_seconds(args.out, time.monotonic() - started)
     if progress.position >= len(order):
         model.save_pretrained(args.out / "adapter")

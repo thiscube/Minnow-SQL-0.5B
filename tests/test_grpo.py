@@ -2,7 +2,7 @@ import shutil
 
 import pytest
 
-from minnow.grpo import Progress, advantages, answer_length, reward, training_order
+from minnow.grpo import Progress, advantages, answer_length, group_rewards, training_order
 from minnow.spider import SpiderExample
 
 EXAMPLE = SpiderExample("How many singers?", "SELECT count(*) FROM singer", "concert")
@@ -17,9 +17,22 @@ def spider(tmp_path, database):
 
 
 def test_reward_prefers_right_over_running_over_broken(spider):
-    assert reward(spider, EXAMPLE, "SELECT COUNT(name) FROM singer") == 1.0
-    assert reward(spider, EXAMPLE, "SELECT 99") == 0.1
-    assert reward(spider, EXAMPLE, "SELECT nothing FROM singer") == 0.0
+    sqls = ["SELECT COUNT(name) FROM singer", "SELECT 99", "SELECT nothing FROM singer"]
+
+    assert group_rewards(spider, EXAMPLE, sqls) == [1.0, 0.1, 0.0]
+
+
+def test_ordered_reference_needs_the_same_order(spider):
+    example = SpiderExample("Ages?", "SELECT age FROM singer ORDER BY age", "concert")
+    sqls = ["SELECT age FROM singer ORDER BY age", "SELECT age FROM singer ORDER BY age DESC"]
+
+    assert group_rewards(spider, example, sqls) == [1.0, 0.1]
+
+
+def test_broken_reference_gives_no_rewards(spider):
+    broken = SpiderExample("?", "SELECT x FROM missing_table", "concert")
+
+    assert group_rewards(spider, broken, ["SELECT 1"]) is None
 
 
 def test_advantages_center_the_group_and_skip_equal_groups():
@@ -46,6 +59,7 @@ def test_progress_survives_a_restart(tmp_path):
     assert Progress.load(tmp_path) == Progress()
     progress = Progress()
     progress.record(0.5, learned=True)
+    progress.record(None, learned=False)
     progress.record(1.0, learned=False)
     progress.updates = 1
     progress.save(tmp_path)
@@ -53,9 +67,9 @@ def test_progress_survives_a_restart(tmp_path):
     loaded = Progress.load(tmp_path)
 
     assert loaded == progress
-    assert loaded.position == 2
+    assert loaded.position == 3
     assert loaded.recent_reward() == 0.75
     assert loaded.report(10, 3.25, 5.0) == (
-        "2/10 reward 0.750 updates 1 3.2 s/question peak 5.00 GB"
+        "3/10 reward 0.750 updates 1 3.2 s/question peak 5.00 GB"
     )
     assert Progress().recent_reward() == 0.0
