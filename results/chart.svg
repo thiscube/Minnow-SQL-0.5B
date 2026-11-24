@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" role="img" aria-labelledby="chart-title chart-desc" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
 <title id="chart-title">Execution accuracy on Spider dev (%)</title>
-<desc id="chart-desc">baseline: 45.36%; sft-spider: 60.64%; sft-spider-vote5: 64.31%; sft-spider-all: 59.77%; sft-spider-all-vote5: 65.09%; sft-rows1: 61.51%; sft-rows1-vote5: 65.76%; vote-of-three: 68.67%; sft-rows1-vote15: 67.02%; target 70%; SLM-SQL-0.5B, published 72.08%</desc>
+<desc id="chart-desc">baseline: 45.36%; sft-spider: 60.64%; sft-spider-vote5: 64.31%; sft-spider-all: 59.77%; sft-spider-all-vote5: 65.09%; sft-rows1: 61.51%; sft-rows1-vote5: 65.76%; vote-of-three: 68.67%; sft-rows1-vote15: 67.02%; sft-synsql: 61.80%; sft-synsql-hints: 64.70%; sft-rows1-hints: 62.28%; target 70%; SLM-SQL-0.5B, published 72.08%</desc>
 <rect x="0.5" y="0.5" width="719" height="359" rx="6" fill="#fcfcfb" stroke="#e1e0d9"/>
 <text x="16" y="32" font-size="14" font-weight="600" fill="#0b0b0b">Execution accuracy on Spider dev (%)</text>
 <g font-size="11" fill="#898781" text-anchor="end" shape-rendering="crispEdges">
@@ -18,15 +18,18 @@
 <text x="44" y="64.00">100</text>
 </g>
 <g fill="#2a78d6">
-<path d="M63.89 310 V200.60 Q63.89 196.60 67.89 196.60 H83.67 Q87.67 196.60 87.67 200.60 V310 Z"/>
-<path d="M111.44 310 V162.40 Q111.44 158.40 115.44 158.40 H131.22 Q135.22 158.40 135.22 162.40 V310 Z"/>
-<path d="M159.00 310 V153.22 Q159.00 149.22 163.00 149.22 H178.78 Q182.78 149.22 182.78 153.22 V310 Z"/>
-<path d="M206.56 310 V164.57 Q206.56 160.57 210.56 160.57 H226.33 Q230.33 160.57 230.33 164.57 V310 Z"/>
-<path d="M254.11 310 V151.28 Q254.11 147.28 258.11 147.28 H273.89 Q277.89 147.28 277.89 151.28 V310 Z"/>
-<path d="M301.67 310 V160.22 Q301.67 156.22 305.67 156.22 H321.44 Q325.44 156.22 325.44 160.22 V310 Z"/>
-<path d="M349.22 310 V149.60 Q349.22 145.60 353.22 145.60 H369.00 Q373.00 145.60 373.00 149.60 V310 Z"/>
-<path d="M396.78 310 V142.32 Q396.78 138.32 400.78 138.32 H416.56 Q420.56 138.32 420.56 142.32 V310 Z"/>
-<path d="M444.33 310 V146.45 Q444.33 142.45 448.33 142.45 H464.11 Q468.11 142.45 468.11 146.45 V310 Z"/>
+<path d="M60.92 310 V200.60 Q60.92 196.60 64.92 196.60 H74.75 Q78.75 196.60 78.75 200.60 V310 Z"/>
+<path d="M96.58 310 V162.40 Q96.58 158.40 100.58 158.40 H110.42 Q114.42 158.40 114.42 162.40 V310 Z"/>
+<path d="M132.25 310 V153.22 Q132.25 149.22 136.25 149.22 H146.08 Q150.08 149.22 150.08 153.22 V310 Z"/>
+<path d="M167.92 310 V164.57 Q167.92 160.57 171.92 160.57 H181.75 Q185.75 160.57 185.75 164.57 V310 Z"/>
+<path d="M203.58 310 V151.28 Q203.58 147.28 207.58 147.28 H217.42 Q221.42 147.28 221.42 151.28 V310 Z"/>
+<path d="M239.25 310 V160.22 Q239.25 156.22 243.25 156.22 H253.08 Q257.08 156.22 257.08 160.22 V310 Z"/>
+<path d="M274.92 310 V149.60 Q274.92 145.60 278.92 145.60 H288.75 Q292.75 145.60 292.75 149.60 V310 Z"/>
+<path d="M310.58 310 V142.32 Q310.58 138.32 314.58 138.32 H324.42 Q328.42 138.32 328.42 142.32 V310 Z"/>
+<path d="M346.25 310 V146.45 Q346.25 142.45 350.25 142.45 H360.08 Q364.08 142.45 364.08 146.45 V310 Z"/>
+<path d="M381.92 310 V159.50 Q381.92 155.50 385.92 155.50 H395.75 Q399.75 155.50 399.75 159.50 V310 Z"/>
+<path d="M417.58 310 V152.25 Q417.58 148.25 421.58 148.25 H431.42 Q435.42 148.25 435.42 152.25 V310 Z"/>
+<path d="M453.25 310 V158.30 Q453.25 154.30 457.25 154.30 H467.08 Q471.08 154.30 471.08 158.30 V310 Z"/>
 </g>
 <g stroke="#52514e" stroke-dasharray="5 4">
 <line x1="52" y1="135.00" x2="704" y2="135.00"/>
@@ -37,25 +40,31 @@
 <text x="704" y="123.80">SLM-SQL-0.5B, published 72.08%</text>
 </g>
 <g font-size="12" font-weight="600" fill="#0b0b0b" text-anchor="middle" stroke="#fcfcfb" stroke-width="3" paint-order="stroke">
-<text x="75.78" y="189.60">45.36%</text>
-<text x="123.33" y="151.40">60.64%</text>
-<text x="170.89" y="142.22">64.31%</text>
-<text x="218.44" y="153.57">59.77%</text>
-<text x="266.00" y="140.28">65.09%</text>
-<text x="313.56" y="149.22">61.51%</text>
-<text x="361.11" y="138.60">65.76%</text>
-<text x="408.67" y="131.32">68.67%</text>
-<text x="456.22" y="135.45">67.02%</text>
+<text x="69.83" y="189.60">45.36%</text>
+<text x="105.50" y="151.40">60.64%</text>
+<text x="141.17" y="142.22">64.31%</text>
+<text x="176.83" y="153.57">59.77%</text>
+<text x="212.50" y="140.28">65.09%</text>
+<text x="248.17" y="149.22">61.51%</text>
+<text x="283.83" y="138.60">65.76%</text>
+<text x="319.50" y="131.32">68.67%</text>
+<text x="355.17" y="135.45">67.02%</text>
+<text x="390.83" y="148.50">61.80%</text>
+<text x="426.50" y="141.25">64.70%</text>
+<text x="462.17" y="147.30">62.28%</text>
 </g>
 <g font-size="11" fill="#52514e" text-anchor="middle">
-<text x="75.78" y="330">baseline</text>
-<text x="123.33" y="330">sft-spider</text>
-<text x="170.89" y="330">sft-spider-vote5</text>
-<text x="218.44" y="330">sft-spider-all</text>
-<text x="266.00" y="330">sft-spider-all-vote5</text>
-<text x="313.56" y="330">sft-rows1</text>
-<text x="361.11" y="330">sft-rows1-vote5</text>
-<text x="408.67" y="330">vote-of-three</text>
-<text x="456.22" y="330">sft-rows1-vote15</text>
+<text x="69.83" y="330">baseline</text>
+<text x="105.50" y="330">sft-spider</text>
+<text x="141.17" y="330">sft-spider-vote5</text>
+<text x="176.83" y="330">sft-spider-all</text>
+<text x="212.50" y="330">sft-spider-all-vote5</text>
+<text x="248.17" y="330">sft-rows1</text>
+<text x="283.83" y="330">sft-rows1-vote5</text>
+<text x="319.50" y="330">vote-of-three</text>
+<text x="355.17" y="330">sft-rows1-vote15</text>
+<text x="390.83" y="330">sft-synsql</text>
+<text x="426.50" y="330">sft-synsql-hints</text>
+<text x="462.17" y="330">sft-rows1-hints</text>
 </g>
 </svg>

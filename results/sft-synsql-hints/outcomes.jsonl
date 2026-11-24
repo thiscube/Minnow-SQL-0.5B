@@ -1,0 +1,1034 @@
+{"index": 0, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 2, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 3, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 4, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 5, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 6, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 7, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 8, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 9, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 10, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 11, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 12, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 13, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 14, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 15, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 16, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 17, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 18, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 19, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 20, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 21, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 22, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 23, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 24, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 25, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 26, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 27, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 28, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 29, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 30, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 31, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 32, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 33, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 34, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 35, "verdict": "error", "error": "no such column", "gold_rows": 5}
+{"index": 36, "verdict": "error", "error": "no such column", "gold_rows": 5}
+{"index": 37, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 38, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 39, "verdict": "error", "error": "no such table", "gold_rows": 1}
+{"index": 40, "verdict": "error", "error": "no such table", "gold_rows": 1}
+{"index": 41, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 42, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 43, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 44, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 45, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 46, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 47, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 48, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 49, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 50, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 51, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 52, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 53, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 54, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 55, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 56, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 57, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 58, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 59, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 60, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 61, "verdict": "wrong_rows", "error": "", "gold_rows": 33}
+{"index": 62, "verdict": "wrong_rows", "error": "", "gold_rows": 33}
+{"index": 63, "verdict": "error", "error": "no such column", "gold_rows": 33}
+{"index": 64, "verdict": "error", "error": "no such column", "gold_rows": 33}
+{"index": 65, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 66, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 67, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 68, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 69, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 70, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 71, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 72, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 73, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 74, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 75, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 76, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 77, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 78, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 79, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 80, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 81, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 82, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 83, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 84, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 85, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 86, "verdict": "error", "error": "ambiguous column name", "gold_rows": 1}
+{"index": 87, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 88, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 89, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
+{"index": 90, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
+{"index": 91, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 92, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 93, "verdict": "error", "error": "no such column", "gold_rows": 22}
+{"index": 94, "verdict": "wrong_rows", "error": "", "gold_rows": 22}
+{"index": 95, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 96, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 97, "verdict": "error", "error": "no such column", "gold_rows": 230}
+{"index": 98, "verdict": "error", "error": "no such column", "gold_rows": 230}
+{"index": 99, "verdict": "error", "error": "no such column", "gold_rows": 11}
+{"index": 100, "verdict": "error", "error": "no such column", "gold_rows": 11}
+{"index": 101, "verdict": "error", "error": "no such column", "gold_rows": 35}
+{"index": 102, "verdict": "error", "error": "no such column", "gold_rows": 35}
+{"index": 103, "verdict": "error", "error": "no such column", "gold_rows": 21}
+{"index": 104, "verdict": "error", "error": "no such column", "gold_rows": 21}
+{"index": 105, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 106, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 107, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 108, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 109, "verdict": "error", "error": "no such column", "gold_rows": 22}
+{"index": 110, "verdict": "correct", "error": "", "gold_rows": 22}
+{"index": 111, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 112, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 113, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 114, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 115, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 116, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 117, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 118, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 119, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 120, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 121, "verdict": "error", "error": "no such column", "gold_rows": 36}
+{"index": 122, "verdict": "error", "error": "no such column", "gold_rows": 36}
+{"index": 123, "verdict": "error", "error": "no such column", "gold_rows": 8}
+{"index": 124, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 125, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 126, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 127, "verdict": "correct", "error": "", "gold_rows": 13}
+{"index": 128, "verdict": "correct", "error": "", "gold_rows": 13}
+{"index": 129, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 130, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 131, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 132, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 133, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 134, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 135, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 136, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 137, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 138, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 139, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 140, "verdict": "error", "error": "no such column", "gold_rows": 5}
+{"index": 141, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 142, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 143, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 144, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 145, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 146, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 147, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 148, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 149, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 150, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 151, "verdict": "error", "error": "no such column", "gold_rows": 13}
+{"index": 152, "verdict": "error", "error": "no such column", "gold_rows": 13}
+{"index": 153, "verdict": "wrong_rows", "error": "", "gold_rows": 13}
+{"index": 154, "verdict": "correct", "error": "", "gold_rows": 13}
+{"index": 155, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 156, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 157, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 158, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 159, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 160, "verdict": "error", "error": "misuse of aggregate", "gold_rows": 1}
+{"index": 161, "verdict": "error", "error": "no such column", "gold_rows": 4}
+{"index": 162, "verdict": "error", "error": "no such column", "gold_rows": 4}
+{"index": 163, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 164, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 165, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 166, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 167, "verdict": "error", "error": "no such column", "gold_rows": 3}
+{"index": 168, "verdict": "error", "error": "no such column", "gold_rows": 3}
+{"index": 169, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 170, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 171, "verdict": "error", "error": "no such column", "gold_rows": 26}
+{"index": 172, "verdict": "error", "error": "no such column", "gold_rows": 26}
+{"index": 173, "verdict": "error", "error": "no such column", "gold_rows": 7}
+{"index": 174, "verdict": "error", "error": "no such column", "gold_rows": 7}
+{"index": 175, "verdict": "wrong_rows", "error": "", "gold_rows": 6}
+{"index": 176, "verdict": "wrong_rows", "error": "", "gold_rows": 6}
+{"index": 177, "verdict": "error", "error": "no such column", "gold_rows": 4}
+{"index": 178, "verdict": "error", "error": "no such column", "gold_rows": 4}
+{"index": 179, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 180, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 181, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 182, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 183, "verdict": "error", "error": "no such column", "gold_rows": 12}
+{"index": 184, "verdict": "error", "error": "no such column", "gold_rows": 12}
+{"index": 185, "verdict": "error", "error": "no such table", "gold_rows": 0}
+{"index": 186, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 187, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 188, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 189, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 190, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 191, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 192, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 193, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 194, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 195, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 196, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 197, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 198, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 199, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 200, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 201, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 202, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 203, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 204, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 205, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 206, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 207, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 208, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 209, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 210, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 211, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 212, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 213, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 214, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 215, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 216, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 217, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 218, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 219, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 220, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 221, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 222, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 223, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 224, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 225, "verdict": "error", "error": "no such column", "gold_rows": 0}
+{"index": 226, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 227, "verdict": "wrong_rows", "error": "", "gold_rows": 0}
+{"index": 228, "verdict": "wrong_rows", "error": "", "gold_rows": 0}
+{"index": 229, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 230, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 231, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 232, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 233, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 234, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 235, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 236, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 237, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 238, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 239, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 240, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 241, "verdict": "wrong_rows", "error": "", "gold_rows": 12}
+{"index": 242, "verdict": "wrong_rows", "error": "", "gold_rows": 12}
+{"index": 243, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 244, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 245, "verdict": "wrong_rows", "error": "", "gold_rows": 100}
+{"index": 246, "verdict": "wrong_rows", "error": "", "gold_rows": 100}
+{"index": 247, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 248, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 249, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 250, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 251, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 252, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 253, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 254, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 255, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 256, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 257, "verdict": "correct", "error": "", "gold_rows": 100}
+{"index": 258, "verdict": "wrong_rows", "error": "", "gold_rows": 100}
+{"index": 259, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 260, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 261, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 262, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 263, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 264, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 265, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 266, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 267, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 268, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 269, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 270, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 271, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 272, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 273, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 274, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 275, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 276, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 277, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 278, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 279, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 280, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 281, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 282, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 283, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 284, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 285, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 286, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 287, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 288, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 289, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 290, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 291, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 292, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 293, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 294, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 295, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 296, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 297, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 298, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 299, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 300, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 301, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 302, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 303, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 304, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 305, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 306, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 307, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 308, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 309, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 310, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 311, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 312, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 313, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 314, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 315, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 316, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 317, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 318, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 319, "verdict": "correct", "error": "", "gold_rows": 20}
+{"index": 320, "verdict": "correct", "error": "", "gold_rows": 20}
+{"index": 321, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 322, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 323, "verdict": "wrong_rows", "error": "", "gold_rows": 9}
+{"index": 324, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 325, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 326, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 327, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 328, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 329, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 330, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 331, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 332, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 333, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 334, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 335, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 336, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 337, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 338, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 339, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 340, "verdict": "error", "error": "no such column", "gold_rows": 5}
+{"index": 341, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 342, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 343, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 344, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 345, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 346, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 347, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 348, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 349, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 350, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 351, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 352, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 353, "verdict": "error", "error": "no such column", "gold_rows": 4}
+{"index": 354, "verdict": "wrong_rows", "error": "", "gold_rows": 4}
+{"index": 355, "verdict": "error", "error": "no such column", "gold_rows": 3}
+{"index": 356, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 357, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 358, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 359, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 360, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 361, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 362, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 363, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 364, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 365, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 366, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 367, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 368, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 369, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 370, "verdict": "wrong_rows", "error": "", "gold_rows": 10}
+{"index": 371, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 372, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 373, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 374, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 375, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 376, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 377, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 378, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 379, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 380, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 381, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 382, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 383, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 384, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 385, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 386, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 387, "verdict": "wrong_rows", "error": "", "gold_rows": 7}
+{"index": 388, "verdict": "wrong_rows", "error": "", "gold_rows": 7}
+{"index": 389, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 390, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 391, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 392, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 393, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 394, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 395, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 396, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 397, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 398, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 399, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 400, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 401, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 402, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 403, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 404, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 405, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 406, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 407, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 408, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 409, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 410, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 411, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 412, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 413, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 414, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 415, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 416, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 417, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 418, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 419, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 420, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 421, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 422, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 423, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 424, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 425, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 426, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 427, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 428, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 429, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 430, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 431, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 432, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 433, "verdict": "correct", "error": "", "gold_rows": 2217}
+{"index": 434, "verdict": "correct", "error": "", "gold_rows": 2217}
+{"index": 435, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 436, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 437, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 438, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 439, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 440, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 441, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 442, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 443, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 444, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 445, "verdict": "error", "error": "no such table", "gold_rows": 9}
+{"index": 446, "verdict": "error", "error": "no such table", "gold_rows": 9}
+{"index": 447, "verdict": "error", "error": "no such column", "gold_rows": 5}
+{"index": 448, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
+{"index": 449, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 450, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 451, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 452, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 453, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 454, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 455, "verdict": "correct", "error": "", "gold_rows": 20662}
+{"index": 456, "verdict": "correct", "error": "", "gold_rows": 20662}
+{"index": 457, "verdict": "correct", "error": "", "gold_rows": 487}
+{"index": 458, "verdict": "correct", "error": "", "gold_rows": 487}
+{"index": 459, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 460, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 461, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 462, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 463, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 464, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 465, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 466, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 467, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 468, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 469, "verdict": "wrong_rows", "error": "", "gold_rows": 1580}
+{"index": 470, "verdict": "wrong_rows", "error": "", "gold_rows": 1580}
+{"index": 471, "verdict": "error", "error": "no such column", "gold_rows": 1580}
+{"index": 472, "verdict": "wrong_rows", "error": "", "gold_rows": 1580}
+{"index": 473, "verdict": "correct", "error": "", "gold_rows": 153}
+{"index": 474, "verdict": "correct", "error": "", "gold_rows": 153}
+{"index": 475, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 476, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 477, "verdict": "correct", "error": "", "gold_rows": 65}
+{"index": 478, "verdict": "correct", "error": "", "gold_rows": 65}
+{"index": 479, "verdict": "wrong_rows", "error": "", "gold_rows": 1504}
+{"index": 480, "verdict": "wrong_rows", "error": "", "gold_rows": 1504}
+{"index": 481, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 482, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 483, "verdict": "error", "error": "no such column", "gold_rows": 3}
+{"index": 484, "verdict": "error", "error": "no such column", "gold_rows": 3}
+{"index": 485, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 486, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 487, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 488, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 489, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 490, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 491, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 492, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 493, "verdict": "wrong_rows", "error": "", "gold_rows": 8}
+{"index": 494, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 495, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 496, "verdict": "error", "error": "no such column", "gold_rows": 11}
+{"index": 497, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 498, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 499, "verdict": "error", "error": "no such column", "gold_rows": 3}
+{"index": 500, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 501, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 502, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 503, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 504, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 505, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 506, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 507, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 508, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 509, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 510, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 511, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 512, "verdict": "error", "error": "no such table", "gold_rows": 1}
+{"index": 513, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 514, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 515, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 516, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 517, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 518, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 519, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 520, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 521, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 522, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 523, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 524, "verdict": "wrong_rows", "error": "", "gold_rows": 15}
+{"index": 525, "verdict": "wrong_rows", "error": "", "gold_rows": 11}
+{"index": 526, "verdict": "wrong_rows", "error": "", "gold_rows": 11}
+{"index": 527, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 528, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 529, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 530, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 531, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 532, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 533, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 534, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 535, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
+{"index": 536, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
+{"index": 537, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 538, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 539, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 540, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 541, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 542, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 543, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 544, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 545, "verdict": "wrong_rows", "error": "", "gold_rows": 10}
+{"index": 546, "verdict": "wrong_rows", "error": "", "gold_rows": 10}
+{"index": 547, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 548, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 549, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 550, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 551, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 552, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 553, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 554, "verdict": "error", "error": "no such table", "gold_rows": 0}
+{"index": 555, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 556, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 557, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 558, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 559, "verdict": "wrong_rows", "error": "", "gold_rows": 14}
+{"index": 560, "verdict": "correct", "error": "", "gold_rows": 14}
+{"index": 561, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 562, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 563, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 564, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 565, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 566, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 567, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 568, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 569, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 570, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 571, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 572, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 573, "verdict": "error", "error": "misuse of aggregate", "gold_rows": 1}
+{"index": 574, "verdict": "error", "error": "misuse of aggregate", "gold_rows": 1}
+{"index": 575, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 576, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 577, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 578, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 579, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 580, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 581, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 582, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 583, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 584, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 585, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 586, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 587, "verdict": "wrong_rows", "error": "", "gold_rows": 4}
+{"index": 588, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 589, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 590, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 591, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 592, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 593, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 594, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 595, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 596, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 597, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 598, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 599, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 600, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 601, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 602, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 603, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 604, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 605, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 606, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 607, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 608, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 609, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 610, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 611, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 612, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 613, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 614, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 615, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 616, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 617, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 618, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 619, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 620, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 621, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 622, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 623, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 624, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 625, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 626, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 627, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 628, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 629, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 630, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 631, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 632, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 633, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 634, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 635, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 636, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 637, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 638, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 639, "verdict": "wrong_rows", "error": "", "gold_rows": 12}
+{"index": 640, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 641, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 642, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 643, "verdict": "correct", "error": "", "gold_rows": 11}
+{"index": 644, "verdict": "correct", "error": "", "gold_rows": 11}
+{"index": 645, "verdict": "error", "error": "no such column", "gold_rows": 11}
+{"index": 646, "verdict": "error", "error": "no such column", "gold_rows": 11}
+{"index": 647, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 648, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 649, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 650, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 651, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 652, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 653, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 654, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 655, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 656, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 657, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 658, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 659, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 660, "verdict": "error", "error": "no such column", "gold_rows": 5}
+{"index": 661, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 662, "verdict": "error", "error": "no such column", "gold_rows": 2}
+{"index": 663, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 664, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 665, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 666, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 667, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 668, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 669, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 670, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 671, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 672, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 673, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 674, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 675, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 676, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 677, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 678, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 679, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 680, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 681, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 682, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 683, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 684, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 685, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 686, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 687, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 688, "verdict": "correct", "error": "", "gold_rows": 11}
+{"index": 689, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 690, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 691, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 692, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 693, "verdict": "error", "error": "no such column", "gold_rows": 4}
+{"index": 694, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 695, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 696, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 697, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 698, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 699, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 700, "verdict": "correct", "error": "", "gold_rows": 14}
+{"index": 701, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 702, "verdict": "error", "error": "no such column", "gold_rows": 110}
+{"index": 703, "verdict": "correct", "error": "", "gold_rows": 110}
+{"index": 704, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 705, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 706, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 707, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 708, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 709, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 710, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 711, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 712, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 713, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 714, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 715, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 716, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 717, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 718, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 719, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 720, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 721, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 722, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 723, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 724, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 725, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 726, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 727, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 728, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 729, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 730, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 731, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 732, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 733, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 734, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 735, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 736, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 737, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 738, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 739, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 740, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 741, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 742, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 743, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 744, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 745, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 746, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 747, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 748, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 749, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 750, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 751, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 752, "verdict": "error", "error": "no such column", "gold_rows": 20}
+{"index": 753, "verdict": "error", "error": "no such column", "gold_rows": 20}
+{"index": 754, "verdict": "error", "error": "no such column", "gold_rows": 0}
+{"index": 755, "verdict": "error", "error": "no such column", "gold_rows": 48}
+{"index": 756, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 757, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 758, "verdict": "wrong_rows", "error": "", "gold_rows": 258}
+{"index": 759, "verdict": "wrong_rows", "error": "", "gold_rows": 258}
+{"index": 760, "verdict": "error", "error": "syntax error", "gold_rows": 1}
+{"index": 761, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 762, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 763, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 764, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 765, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 766, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 767, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 768, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 769, "verdict": "wrong_rows", "error": "", "gold_rows": 4}
+{"index": 770, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 771, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 772, "verdict": "wrong_rows", "error": "", "gold_rows": 238}
+{"index": 773, "verdict": "correct", "error": "", "gold_rows": 238}
+{"index": 774, "verdict": "wrong_rows", "error": "", "gold_rows": 58}
+{"index": 775, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
+{"index": 776, "verdict": "wrong_rows", "error": "", "gold_rows": 6}
+{"index": 777, "verdict": "wrong_rows", "error": "", "gold_rows": 51}
+{"index": 778, "verdict": "error", "error": "no such column", "gold_rows": 173}
+{"index": 779, "verdict": "error", "error": "no such column", "gold_rows": 173}
+{"index": 780, "verdict": "wrong_rows", "error": "", "gold_rows": 223}
+{"index": 781, "verdict": "wrong_rows", "error": "", "gold_rows": 223}
+{"index": 782, "verdict": "wrong_rows", "error": "", "gold_rows": 69}
+{"index": 783, "verdict": "wrong_rows", "error": "", "gold_rows": 69}
+{"index": 784, "verdict": "wrong_rows", "error": "", "gold_rows": 753}
+{"index": 785, "verdict": "wrong_rows", "error": "", "gold_rows": 753}
+{"index": 786, "verdict": "wrong_rows", "error": "", "gold_rows": 0}
+{"index": 787, "verdict": "correct", "error": "", "gold_rows": 359}
+{"index": 788, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 789, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 790, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 791, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 792, "verdict": "correct", "error": "", "gold_rows": 149}
+{"index": 793, "verdict": "correct", "error": "", "gold_rows": 149}
+{"index": 794, "verdict": "correct", "error": "", "gold_rows": 539}
+{"index": 795, "verdict": "correct", "error": "", "gold_rows": 539}
+{"index": 796, "verdict": "wrong_rows", "error": "", "gold_rows": 17}
+{"index": 797, "verdict": "correct", "error": "", "gold_rows": 17}
+{"index": 798, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 799, "verdict": "wrong_rows", "error": "", "gold_rows": 4}
+{"index": 800, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 801, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
+{"index": 802, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 803, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 804, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 805, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 806, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 807, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 808, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 809, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 810, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 811, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 812, "verdict": "wrong_rows", "error": "", "gold_rows": 1860}
+{"index": 813, "verdict": "correct", "error": "", "gold_rows": 1860}
+{"index": 814, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 815, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 816, "verdict": "wrong_rows", "error": "", "gold_rows": 233}
+{"index": 817, "verdict": "error", "error": "no such column", "gold_rows": 233}
+{"index": 818, "verdict": "wrong_rows", "error": "", "gold_rows": 28}
+{"index": 819, "verdict": "wrong_rows", "error": "", "gold_rows": 28}
+{"index": 820, "verdict": "wrong_rows", "error": "", "gold_rows": 28}
+{"index": 821, "verdict": "wrong_rows", "error": "", "gold_rows": 28}
+{"index": 822, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 823, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 824, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 825, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 826, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 827, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 828, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 829, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 830, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 831, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 832, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 833, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 834, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 835, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 836, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 837, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 838, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 839, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 840, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 841, "verdict": "correct", "error": "", "gold_rows": 12}
+{"index": 842, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 843, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 844, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 845, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 846, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 847, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 848, "verdict": "correct", "error": "", "gold_rows": 11}
+{"index": 849, "verdict": "correct", "error": "", "gold_rows": 11}
+{"index": 850, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 851, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 852, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 853, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 854, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 855, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 856, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 857, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 858, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 859, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 860, "verdict": "wrong_rows", "error": "", "gold_rows": 0}
+{"index": 861, "verdict": "wrong_rows", "error": "", "gold_rows": 0}
+{"index": 862, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 863, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 864, "verdict": "correct", "error": "", "gold_rows": 16}
+{"index": 865, "verdict": "correct", "error": "", "gold_rows": 16}
+{"index": 866, "verdict": "wrong_rows", "error": "", "gold_rows": 16}
+{"index": 867, "verdict": "correct", "error": "", "gold_rows": 16}
+{"index": 868, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 869, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 870, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 871, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 872, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 873, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 874, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 875, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 876, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 877, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 878, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 879, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 880, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 881, "verdict": "correct", "error": "", "gold_rows": 4}
+{"index": 882, "verdict": "correct", "error": "", "gold_rows": 14}
+{"index": 883, "verdict": "error", "error": "no such column", "gold_rows": 14}
+{"index": 884, "verdict": "correct", "error": "", "gold_rows": 14}
+{"index": 885, "verdict": "correct", "error": "", "gold_rows": 14}
+{"index": 886, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 887, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 888, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 889, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 890, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 891, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 892, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 893, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 894, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 895, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 896, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 897, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 898, "verdict": "error", "error": "a JOIN clause is required before ON", "gold_rows": 8}
+{"index": 899, "verdict": "wrong_rows", "error": "", "gold_rows": 8}
+{"index": 900, "verdict": "wrong_rows", "error": "", "gold_rows": 8}
+{"index": 901, "verdict": "wrong_rows", "error": "", "gold_rows": 8}
+{"index": 902, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 903, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 904, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 905, "verdict": "correct", "error": "", "gold_rows": 10}
+{"index": 906, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 907, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 908, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 909, "verdict": "correct", "error": "", "gold_rows": 0}
+{"index": 910, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 911, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 912, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 913, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 914, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 915, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 916, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 917, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 918, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 919, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 920, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 921, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 922, "verdict": "error", "error": "no such column", "gold_rows": 3}
+{"index": 923, "verdict": "error", "error": "no such table", "gold_rows": 3}
+{"index": 924, "verdict": "wrong_rows", "error": "", "gold_rows": 12}
+{"index": 925, "verdict": "error", "error": "no such column", "gold_rows": 12}
+{"index": 926, "verdict": "error", "error": "no such column", "gold_rows": 30}
+{"index": 927, "verdict": "error", "error": "no such column", "gold_rows": 30}
+{"index": 928, "verdict": "error", "error": "no such column", "gold_rows": 7}
+{"index": 929, "verdict": "error", "error": "no such column", "gold_rows": 7}
+{"index": 930, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 931, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 932, "verdict": "error", "error": "no such column", "gold_rows": 6}
+{"index": 933, "verdict": "wrong_rows", "error": "", "gold_rows": 6}
+{"index": 934, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 935, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 936, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 937, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 938, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 939, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 940, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 941, "verdict": "error", "error": "no such column", "gold_rows": 1}
+{"index": 942, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 943, "verdict": "wrong_rows", "error": "", "gold_rows": 6}
+{"index": 944, "verdict": "wrong_rows", "error": "", "gold_rows": 15}
+{"index": 945, "verdict": "wrong_rows", "error": "", "gold_rows": 15}
+{"index": 946, "verdict": "error", "error": "no such column", "gold_rows": 15}
+{"index": 947, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 948, "verdict": "error", "error": "no such column", "gold_rows": 15}
+{"index": 949, "verdict": "error", "error": "no such column", "gold_rows": 15}
+{"index": 950, "verdict": "wrong_rows", "error": "", "gold_rows": 15}
+{"index": 951, "verdict": "wrong_rows", "error": "", "gold_rows": 15}
+{"index": 952, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 953, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 954, "verdict": "error", "error": "no such column", "gold_rows": 5}
+{"index": 955, "verdict": "error", "error": "no such column", "gold_rows": 5}
+{"index": 956, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 957, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 958, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 959, "verdict": "correct", "error": "", "gold_rows": 9}
+{"index": 960, "verdict": "error", "error": "no such column", "gold_rows": 3}
+{"index": 961, "verdict": "wrong_rows", "error": "", "gold_rows": 3}
+{"index": 962, "verdict": "wrong_rows", "error": "", "gold_rows": 2}
+{"index": 963, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 964, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 965, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 966, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 967, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 968, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 969, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 970, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 971, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 972, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 973, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 974, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 975, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 976, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 977, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 978, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 979, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 980, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 981, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 982, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 983, "verdict": "wrong_rows", "error": "", "gold_rows": 1}
+{"index": 984, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 985, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 986, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 987, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 988, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 989, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 990, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 991, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 992, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 993, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 994, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 995, "verdict": "correct", "error": "", "gold_rows": 15}
+{"index": 996, "verdict": "wrong_rows", "error": "", "gold_rows": 7}
+{"index": 997, "verdict": "error", "error": "no such column", "gold_rows": 7}
+{"index": 998, "verdict": "error", "error": "no such column", "gold_rows": 12}
+{"index": 999, "verdict": "error", "error": "no such column", "gold_rows": 12}
+{"index": 1000, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1001, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1002, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 1003, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 1004, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 1005, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 1006, "verdict": "correct", "error": "", "gold_rows": 7}
+{"index": 1007, "verdict": "wrong_rows", "error": "", "gold_rows": 7}
+{"index": 1008, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 1009, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 1010, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1011, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1012, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 1013, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 1014, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1015, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1016, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 1017, "verdict": "correct", "error": "", "gold_rows": 5}
+{"index": 1018, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 1019, "verdict": "correct", "error": "", "gold_rows": 8}
+{"index": 1020, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 1021, "verdict": "correct", "error": "", "gold_rows": 3}
+{"index": 1022, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 1023, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 1024, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 1025, "verdict": "correct", "error": "", "gold_rows": 6}
+{"index": 1026, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 1027, "verdict": "correct", "error": "", "gold_rows": 2}
+{"index": 1028, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1029, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1030, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1031, "verdict": "correct", "error": "", "gold_rows": 1}
+{"index": 1032, "verdict": "wrong_rows", "error": "", "gold_rows": 5}
+{"index": 1033, "verdict": "wrong_rows", "error": "", "gold_rows": 8}

@@ -13,6 +13,9 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 | 2026-11-21 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1; vote over five candidate queries | 65.76 | 680 / 1034 | [results/sft-rows1-vote5](results/sft-rows1-vote5) |
 | 2026-11-21 | vote of sft-rows1-vote5, sft-spider-all-vote5, sft-spider-vote5 | Vote across the three fine-tuned models' voted answers (15 candidate queries per question in total) | 68.67 | 710 / 1034 | [results/vote-of-three](results/vote-of-three) |
 | 2026-11-21 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1, voting over 15 candidate queries instead of 5 | 67.02 | 693 / 1034 | [results/sft-rows1-vote15](results/sft-rows1-vote15) |
+| 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + sft-synsql | Fresh LoRA on Spider train plus a SynSQL-2.5M slice (12,215 examples that fit 1,024 tokens, 6,000 synthetic databases), 2 epochs, one greedy query | 61.80 | 639 / 1034 | [results/sft-synsql](results/sft-synsql) |
+| 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + sft-synsql | Same model as sft-synsql; the prompt also lists question words found in the database's text values (value hints), one greedy query | 64.70 | 669 / 1034 | [results/sft-synsql-hints](results/sft-synsql-hints) |
+| 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1 (one example row per table); value hints added to the prompt, one greedy query | 62.28 | 644 / 1034 | [results/sft-rows1-hints](results/sft-rows1-hints) |
 
 ## Notes
 
@@ -77,3 +80,24 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 - 239 predictions ran and returned different rows.
 - 44 of the 693 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
 - Generating all 1,034 predictions took 3,255 seconds.
+
+### 2026-11-24, sft-synsql
+
+- 198 predictions did not run. The most common errors: `no such column` (186), `no such table` (5), `misuse of aggregate` (3).
+- 197 predictions ran and returned different rows.
+- 38 of the 639 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 191 seconds.
+
+### 2026-11-24, sft-synsql-hints
+
+- 197 predictions did not run. The most common errors: `no such column` (183), `no such table` (8), `misuse of aggregate` (3).
+- 168 predictions ran and returned different rows.
+- 40 of the 669 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 187 seconds.
+
+### 2026-11-24, sft-rows1-hints
+
+- 220 predictions did not run. The most common errors: `no such column` (198), `no such table` (16), `a JOIN clause is required before ON` (1).
+- 170 predictions ran and returned different rows.
+- 40 of the 644 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 209 seconds.

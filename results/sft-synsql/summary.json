@@ -1,0 +1,12 @@
+{
+  "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-synsql",
+  "split": "dev",
+  "correct": 639,
+  "total": 1034,
+  "execution_accuracy": 61.8,
+  "generation_seconds": 191,
+  "batch_size": 16,
+  "max_new_tokens": 256,
+  "decoding": "greedy",
+  "torch": "2.11.0+cu128"
+}

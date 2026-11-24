@@ -30,6 +30,9 @@ Measured in this repository. The table and chart below are generated from the ru
 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1; vote over five candidate queries | 65.76 | 680 / 1034 |
 | vote of sft-rows1-vote5, sft-spider-all-vote5, sft-spider-vote5 | Vote across the three fine-tuned models' voted answers (15 candidate queries per question in total) | 68.67 | 710 / 1034 |
 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1, voting over 15 candidate queries instead of 5 | 67.02 | 693 / 1034 |
+| Qwen2.5-Coder-0.5B-Instruct + sft-synsql | Fresh LoRA on Spider train plus a SynSQL-2.5M slice (12,215 examples that fit 1,024 tokens, 6,000 synthetic databases), 2 epochs, one greedy query | 61.80 | 639 / 1034 |
+| Qwen2.5-Coder-0.5B-Instruct + sft-synsql | Same model as sft-synsql; the prompt also lists question words found in the database's text values (value hints), one greedy query | 64.70 | 669 / 1034 |
+| Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1 (one example row per table); value hints added to the prompt, one greedy query | 62.28 | 644 / 1034 |
 
 ![Execution accuracy by run](results/chart.svg)
 
