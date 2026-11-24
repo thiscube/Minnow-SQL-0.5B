@@ -10,6 +10,12 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-24 · Finding · Short reinforcement-learning pilots move many answers but not the score
+
+- **What:** Two GRPO pilots of 600 questions each from the SynSQL model, with value hints: one on fresh SynSQL questions, one on Spider training questions. Learning rate 2e-5.
+- **Evidence:** SynSQL pilot 63.64% (21 fixed, 32 broken), Spider pilot 64.89% (53 fixed, 51 broken), against 64.70% at the start. In the SynSQL pilot 348 of 600 questions were skipped because their prompt was over 900 tokens, so it learned from 252 questions in 58 updates. Its rising training reward was noise when split into blocks of 100 (0.47 to 0.63, no trend). A reviewer found no shift in SQL style, only resampled guesses on hard questions.
+- **So what:** At this learning rate the model changes a quarter of its answers after about 60 updates without a direction. The next pilot uses a 4 times lower rate (5e-6), runs 2,400 questions and is scored every 800 to see a trend rather than one noisy point.
+
 ### 2026-11-24 · Improvement · Three models voting, one with value hints, pass 70%: 71.18%
 
 - **What:** The same majority vote as before over three fine-tuned adapters on one base model: the SynSQL model with value hints (greedy), the example-row model (15 candidates) and the Spider-plus-others model (5 candidates).
