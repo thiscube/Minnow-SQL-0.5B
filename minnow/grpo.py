@@ -68,12 +68,16 @@ def group_rewards(spider: Path, example: SpiderExample, sqls: list[str]) -> list
 
 
 def advantages(rewards: list[float]) -> list[float] | None:
-    """Return each candidate's reward relative to its group, or None when all are equal."""
-    spread = pstdev(rewards)
-    if spread == 0:
+    """Return each candidate's reward minus its group's mean, or None when all are equal.
+
+    The difference is not divided by the group's spread (as in Dr. GRPO): dividing would give
+    a group that only differs in the small "it runs" reward as strong a push as a group where
+    one answer was right.
+    """
+    if pstdev(rewards) == 0:
         return None
     mean = fmean(rewards)
-    return [(value - mean) / spread for value in rewards]
+    return [value - mean for value in rewards]
 
 
 def training_order(count: int, seed: int) -> list[int]:
