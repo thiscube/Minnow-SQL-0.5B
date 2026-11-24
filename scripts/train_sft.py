@@ -25,8 +25,9 @@ from transformers import (
 from minnow.evaluate import add_generation_seconds, claim_run_folder
 from minnow.guard import Example, assert_no_leak
 from minnow.prompt import SYSTEM
+from minnow.prompts import PromptBook
 from minnow.sft import IGNORED, checked_training_examples, encode
-from minnow.spider import load_split, schemas
+from minnow.spider import load_split
 
 MODEL = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
 LORA_TARGETS = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
@@ -66,6 +67,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-tokens", type=int, default=1024)
     parser.add_argument("--lora-rank", type=int, default=16)
     parser.add_argument("--sample-rows", type=int, default=0, help="example rows per table")
+    parser.add_argument("--value-hints", action="store_true", help="list mentioned values")
     parser.add_argument("--max-steps", type=int, default=-1, help="stop early, for a test run")
     parser.add_argument("--train-files", nargs="+", default=["train_spider.json"])
     return parser.parse_args()
@@ -84,8 +86,8 @@ def main() -> None:
         [Example(e.question, e.db_id) for e in dev],
     )
     tokenizer = AutoTokenizer.from_pretrained(args.model)
-    schema_of = schemas(args.spider, examples, args.sample_rows)
-    encoded = [encode(tokenizer, schema_of[e.db_id], e, args.max_tokens) for e in examples]
+    book = PromptBook(args.spider, examples, args.sample_rows, args.value_hints)
+    encoded = [encode(tokenizer, book.schema(e), e, args.max_tokens) for e in examples]
     dataset = [item for item in encoded if item is not None]
     print(f"{len(dataset)} of {len(examples)} examples fit in {args.max_tokens} tokens.")
 
