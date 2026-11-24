@@ -16,8 +16,9 @@ from minnow import grpo
 from minnow.evaluate import add_generation_seconds, claim_run_folder
 from minnow.guard import assert_no_leak
 from minnow.prompt import SYSTEM, chat_prompt, extract_sql
+from minnow.prompts import PromptBook
 from minnow.sft import checked_training_examples, for_guard
-from minnow.spider import load_split, schemas
+from minnow.spider import load_split
 
 MODEL = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
 
@@ -30,8 +31,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--spider", type=Path, default=Path("data/spider"))
     parser.add_argument("--train-files", nargs="+", default=["train_spider.json"])
     parser.add_argument("--sample-rows", type=int, default=0, help="example rows per table")
+    parser.add_argument("--value-hints", action="store_true", help="list mentioned values")
     parser.add_argument("--group", type=int, default=8, help="queries written per question")
-    parser.add_argument("--learning-rate", type=float, default=1e-5)
+    parser.add_argument("--learning-rate", type=float, default=2e-5)
     parser.add_argument("--per-update", type=int, default=4, help="questions with a signal")
     parser.add_argument("--max-questions", type=int, default=-1, help="stop early, for a test")
     return parser.parse_args()
@@ -62,8 +64,7 @@ def learn(model: PeftModel, prompt: torch.Tensor, answers: list, weights: list[f
     """Add the gradient that makes better-than-average answers more likely to the model."""
     for answer, weight in zip(answers, weights, strict=True):
         if weight:
-            loss = -weight * log_prob(model, prompt, answer.clone()) / len(answers)
-            loss.backward()
+            (-weight * log_prob(model, prompt, answer.clone()) / len(answers)).backward()
 
 
 def load(args: argparse.Namespace) -> tuple[PeftModel, torch.optim.Optimizer]:
@@ -105,7 +106,7 @@ def main() -> None:
     dev = load_split(args.spider, "dev.json")
     assert_no_leak(for_guard(examples), for_guard(dev))
     tokenizer = AutoTokenizer.from_pretrained(MODEL, padding_side="left")
-    schema_of = schemas(args.spider, examples, args.sample_rows)
+    book = PromptBook(args.spider, examples, args.sample_rows, args.value_hints)
     stops = {tokenizer.eos_token_id, tokenizer.pad_token_id}
     progress = grpo.Progress.load(args.out)
     model, optimizer = load(args)
@@ -115,7 +116,7 @@ def main() -> None:
     started, signals = time.monotonic(), 0
     for position in range(first, min(stop, len(order))):
         example = examples[order[position]]
-        text = chat_prompt(tokenizer, schema_of[example.db_id], example.question)
+        text = chat_prompt(tokenizer, book.schema(example), example.question)
         prompt = tokenizer(text, return_tensors="pt")["input_ids"][0].to(model.device)
         weights, rewards = None, None
         if len(prompt) <= grpo.MAX_PROMPT_TOKENS:

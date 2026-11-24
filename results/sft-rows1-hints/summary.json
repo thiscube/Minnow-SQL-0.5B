@@ -1,0 +1,12 @@
+{
+  "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-rows1",
+  "split": "dev",
+  "correct": 644,
+  "total": 1034,
+  "execution_accuracy": 62.28,
+  "generation_seconds": 209,
+  "batch_size": 16,
+  "max_new_tokens": 256,
+  "decoding": "greedy",
+  "torch": "2.11.0+cu128"
+}

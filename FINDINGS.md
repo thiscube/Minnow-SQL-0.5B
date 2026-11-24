@@ -10,6 +10,30 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-24 · Improvement · Three models voting, one with value hints, pass 70%: 71.18%
+
+- **What:** The same majority vote as before over three fine-tuned adapters on one base model: the SynSQL model with value hints (greedy), the example-row model (15 candidates) and the Spider-plus-others model (5 candidates).
+- **Evidence:** 736 of 1,034, up from 710 for the earlier three-model vote: 50 fixed, 24 broken. Putting empty and all-NULL results last would give 751 (72.63%), but that rule was found by looking at dev and is not used until it is confirmed on the held-out test half.
+- **So what:** The 70% goal is reached by several models voting, not by one model; the best single model is 64.70%. Which three runs to combine was also chosen on dev, so the final claim must be repeated on the untouched test half.
+
+### 2026-11-24 · Improvement · Listing the values a question mentions adds 2.9 points without retraining
+
+- **What:** Before the question, the prompt lists words from the question that appear as text values in the database, with the table and column that hold them, for example `country.Name = 'Angola'`. The model was never trained with this list.
+- **Evidence:** The SynSQL model with one greedy query scores 64.70% (669 of 1,034) with the list and 61.80% (639) without: 38 questions fixed, 8 broken. On dev the list contains 283 of the 333 text values the reference queries use. The older model trained with example rows gains less: 62.28% against 61.51%.
+- **So what:** This is the largest single gain since fine-tuning, and it costs nothing at answer time. The list stays on, and the reinforcement-learning run trains with it so the model learns to rely on it.
+
+### 2026-11-24 · Finding · Adding 6,000 SynSQL databases to training gives a different model, not a clearly better one
+
+- **What:** A fresh LoRA trained on Spider plus the SynSQL slice (12,215 examples), 2 epochs, 2 hours 2 minutes.
+- **Evidence:** 61.80% (639 of 1,034) with one greedy query, against 61.51% for the best Spider-only model. Between the two, 99 questions were fixed and 96 broke. The final training loss was 0.11, against 0.03 for Spider alone, so the model memorises less. Queries naming a column that does not exist rose to 183.
+- **So what:** More varied data did not raise the single-model score, but this model answers a different set of questions, which helps when models vote together. The extra "no such column" errors are what the reinforcement-learning reward targets.
+
+### 2026-11-24 · Decision · Next steps chosen by a panel of three critics
+
+- **What:** Three independent reviewers (research evidence, 8 GB feasibility, failure analysis) rated eleven ideas, and a second round attacked the chosen plan.
+- **Evidence:** All three ranked better answer selection and reinforcement learning on execution results first. The published 0.5B result of 72.08% came mainly from reinforcement learning: the same paper's model reaches only 65.31% after supervised training on 916k examples. The failure analysis found that in 82 of the 84 questions the three-model vote misses while one model is right, only one model had it right. Chain-of-thought training, longer examples and a larger LoRA were rated lowest.
+- **So what:** Every candidate query is now saved for later re-voting. Spider test is split by database into a half for choosing settings and a half scored once at the end. Reinforcement learning (GRPO) runs locally at 1.6 seconds per question and 4.5 GB, with rewards of 1 for the right rows, 0.1 for a query that runs, and advantages not divided by the group's spread.
+
 ### 2026-11-21 · Decision · Next training run mixes Spider with 6,000 databases of SynSQL
 
 - **What:** A slice of SynSQL-2.5M is added to Spider's training questions: up to two questions from each of 6,000 synthetic databases, without the ones that need extra knowledge, the hardest level, or a query that does not run. The column comments in SynSQL's table definitions are removed.

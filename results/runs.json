@@ -97,5 +97,49 @@
     "execution_accuracy": 67.02,
     "generation_seconds": 3255,
     "fingerprint": "8ecc76dd398d2bdbaf5037f145bf945a26b116102804a2cf02517a19026b759b"
+  },
+  {
+    "name": "sft-synsql",
+    "date": "2026-11-24",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-synsql",
+    "change": "Fresh LoRA on Spider train plus a SynSQL-2.5M slice (12,215 examples that fit 1,024 tokens, 6,000 synthetic databases), 2 epochs, one greedy query",
+    "correct": 639,
+    "total": 1034,
+    "execution_accuracy": 61.8,
+    "generation_seconds": 191,
+    "fingerprint": "11aede04f32421d79d9d2e5b90c6c8d7a179cfd7b8b75613b899087c1f2b7b7d"
+  },
+  {
+    "name": "sft-synsql-hints",
+    "date": "2026-11-24",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-synsql",
+    "change": "Same model as sft-synsql; the prompt also lists question words found in the database's text values (value hints), one greedy query",
+    "correct": 669,
+    "total": 1034,
+    "execution_accuracy": 64.7,
+    "generation_seconds": 187,
+    "fingerprint": "f2561863e7b83a854f114fe72509034db9564053e8f725d0a7dbc890011ac861"
+  },
+  {
+    "name": "sft-rows1-hints",
+    "date": "2026-11-24",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-rows1",
+    "change": "Same model as sft-rows1 (one example row per table); value hints added to the prompt, one greedy query",
+    "correct": 644,
+    "total": 1034,
+    "execution_accuracy": 62.28,
+    "generation_seconds": 209,
+    "fingerprint": "93c475eb1cce0248e436465aa49dcec9ff22e47761d6176c2562d294c898b337"
+  },
+  {
+    "name": "vote-hints-three",
+    "date": "2026-11-24",
+    "model": "vote of sft-synsql-hints, sft-rows1-vote15, sft-spider-all-vote5",
+    "change": "Several models: vote across three fine-tuned adapters (sft-synsql with value hints, sft-rows1 with 15 candidates, sft-spider-all with 5), same majority rule as before",
+    "correct": 736,
+    "total": 1034,
+    "execution_accuracy": 71.18,
+    "generation_seconds": null,
+    "fingerprint": "63184ed496e18ab91655ba992a2ad7e93ef4290a665666ffa6e4c1e081fa736e"
   }
 ]

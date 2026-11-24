@@ -42,6 +42,9 @@ def test_advantages_center_the_group_and_skip_equal_groups():
     assert values[0] > 0 > values[1]
     assert sum(values) == pytest.approx(0)
     assert values[1] == values[2] == values[3]
+    assert values == [0.75, -0.25, -0.25, -0.25]
+    runs_only = advantages([0.1, 0.1, 0.0, 0.0])
+    assert max(runs_only) == pytest.approx(0.05)
 
 
 def test_answer_ends_at_its_first_stop_token():
