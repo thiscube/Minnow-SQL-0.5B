@@ -18,6 +18,16 @@ from minnow.spider import SpiderExample, database_path
 REWARDS = {CORRECT: 1.0, WRONG_ROWS: 0.1}
 NO_RUN_REWARD = 0.0
 PROGRESS_FILE = "progress.json"
+MAX_PROMPT_TOKENS = 900
+MAX_NEW_TOKENS = 200
+
+
+def answer_length(tokens: list[int], stops: set[int]) -> int:
+    """Return how many generated tokens belong to the answer: up to and including its end."""
+    for position, token in enumerate(tokens):
+        if token in stops:
+            return position + 1
+    return len(tokens)
 
 
 def reward(spider: Path, example: SpiderExample, sql: str) -> float:
@@ -59,6 +69,13 @@ class Progress:
         """Return the mean group reward over the last questions, a sign of learning."""
         window = self.history[-last:]
         return fmean(item["reward"] for item in window) if window else 0.0
+
+    def report(self, total: int, seconds_each: float, peak_gb: float) -> str:
+        """Return one progress line: where the run is, the recent reward, speed and memory."""
+        return (
+            f"{self.position}/{total} reward {self.recent_reward():.3f} updates {self.updates} "
+            f"{seconds_each:.1f} s/question peak {peak_gb:.2f} GB"
+        )
 
     def save(self, folder: Path) -> None:
         """Write the progress next to the adapter it belongs to."""

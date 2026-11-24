@@ -2,7 +2,7 @@ import shutil
 
 import pytest
 
-from minnow.grpo import Progress, advantages, reward, training_order
+from minnow.grpo import Progress, advantages, answer_length, reward, training_order
 from minnow.spider import SpiderExample
 
 EXAMPLE = SpiderExample("How many singers?", "SELECT count(*) FROM singer", "concert")
@@ -31,6 +31,11 @@ def test_advantages_center_the_group_and_skip_equal_groups():
     assert values[1] == values[2] == values[3]
 
 
+def test_answer_ends_at_its_first_stop_token():
+    assert answer_length([5, 6, 9, 9, 9], {9}) == 3
+    assert answer_length([5, 6, 7], {9}) == 3
+
+
 def test_order_is_a_fixed_shuffle():
     assert training_order(50, seed=0) == training_order(50, seed=0)
     assert sorted(training_order(50, seed=0)) == list(range(50))
@@ -50,4 +55,7 @@ def test_progress_survives_a_restart(tmp_path):
     assert loaded == progress
     assert loaded.position == 2
     assert loaded.recent_reward() == 0.75
+    assert loaded.report(10, 3.25, 5.0) == (
+        "2/10 reward 0.750 updates 1 3.2 s/question peak 5.00 GB"
+    )
     assert Progress().recent_reward() == 0.0
