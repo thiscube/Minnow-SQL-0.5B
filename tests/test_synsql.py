@@ -142,6 +142,17 @@ def test_copy_reports_a_file_that_is_not_a_database(tmp_path):
     assert not target.with_suffix(".raw").exists()
 
 
+def test_second_slice_skips_databases_of_the_first(tmp_path, synsql, capsys):
+    spider = tmp_path / "spider"
+    spider.mkdir()
+    main([str(synsql), str(spider)])
+
+    main([str(synsql), str(spider), "--out-file", "rl.json", "--exclude", "train_synsql.json"])
+
+    assert load_split(spider, "rl.json") == []
+    assert "0 questions on 0 databases" in capsys.readouterr().out
+
+
 def test_database_limit_is_respected(tmp_path, synsql):
     spider = tmp_path / "spider"
     spider.mkdir()

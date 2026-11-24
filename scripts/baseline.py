@@ -1,11 +1,7 @@
-"""Score an untouched model on Spider dev by execution accuracy.
+"""Score a model on Spider dev by execution accuracy: python scripts/baseline.py
 
-    python scripts/baseline.py
-
-Predictions are saved after every batch, so a stopped run continues where it left off.
-The run folder ends up with predictions.jsonl, outcomes.jsonl and summary.json, ready for
-python -m minnow.runlog add.
-Needs the model extra (pip install -e ".[model]") and Spider unpacked in data/spider.
+Saved after every batch, so a stopped run continues. The folder gets predictions.jsonl,
+outcomes.jsonl and summary.json for minnow.runlog, and candidates.jsonl with every candidate.
 """
 
 import argparse
@@ -18,7 +14,9 @@ from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from minnow.evaluate import (
+    CANDIDATES_FILE,
     add_generation_seconds,
+    append_candidates,
     append_prediction,
     claim_run_folder,
     drop_unfinished_line,
@@ -27,8 +25,9 @@ from minnow.evaluate import (
 from minnow.execution import run_query
 from minnow.outcomes import OUTCOMES_FILE, breakdown, format_breakdown, judge_all, save_outcomes
 from minnow.prompt import SYSTEM, chat_prompt, extract_sql
+from minnow.prompts import PromptBook
 from minnow.select import pick
-from minnow.spider import database_path, load_split, schemas
+from minnow.spider import database_path, load_split
 
 MODEL = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
 
@@ -39,10 +38,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default=MODEL)
     parser.add_argument("--adapter", type=Path, help="folder of a trained LoRA adapter to load")
     parser.add_argument("--spider", type=Path, default=Path("data/spider"))
+    parser.add_argument("--split", default="dev.json", help="question file in the Spider folder")
     parser.add_argument("--out", type=Path, default=Path("outputs/baseline"))
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--max-new-tokens", type=int, default=256)
     parser.add_argument("--sample-rows", type=int, default=0, help="example rows per table")
+    parser.add_argument("--value-hints", action="store_true", help="list mentioned values")
     parser.add_argument("--samples", type=int, default=1, help="candidate queries per question")
     parser.add_argument("--temperature", type=float, default=0.8, help="for the extra candidates")
     return parser.parse_args()
@@ -73,14 +74,17 @@ def main() -> None:
         "batch_size": args.batch_size,
         "max_new_tokens": args.max_new_tokens,
         "samples": args.samples,
+        "split": args.split,
         "sample_rows": args.sample_rows,
+        "value_hints": args.value_hints,
         "temperature": args.temperature,
         "system_prompt": SYSTEM,
     }
     claim_run_folder(args.out, settings)
     predictions_file = args.out / "predictions.jsonl"
     drop_unfinished_line(predictions_file)
-    examples = load_split(args.spider, "dev.json")
+    drop_unfinished_line(args.out / CANDIDATES_FILE)
+    examples = load_split(args.spider, args.split)
     done = load_predictions(predictions_file)
     todo = [index for index in range(len(examples)) if index not in done]
     print(f"{len(done)} of {len(examples)} already predicted, {len(todo)} to go.")
@@ -93,19 +97,17 @@ def main() -> None:
         )
         if args.adapter:
             model = PeftModel.from_pretrained(model, args.adapter)
-        schema_of = schemas(args.spider, examples, args.sample_rows)
-        # The answers depend a little on which questions share a batch, so batches are fixed
-        # blocks of the split. A resumed run redoes a block exactly as a single run would.
+        book = PromptBook(args.spider, examples, args.sample_rows, args.value_hints)
+        # Answers depend a little on batch mates, so batches are fixed blocks of the split.
         for start in range(0, len(examples), args.batch_size):
             batch = range(start, min(start + args.batch_size, len(examples)))
             if all(index in done for index in batch):
                 continue
             prompts = [
-                chat_prompt(tokenizer, schema_of[examples[i].db_id], examples[i].question)
+                chat_prompt(tokenizer, book.schema(examples[i]), examples[i].question)
                 for i in batch
             ]
-            # One greedy answer, then sampled ones. The answer most candidates agree on when
-            # they are run on the database is kept; no reference query is involved.
+            # One greedy answer, then sampled ones; the vote never sees the reference query.
             tokens, heat = args.max_new_tokens, args.temperature
             rounds = [generate(model, tokenizer, prompts, tokens)]
             for sample in range(1, args.samples):
@@ -116,6 +118,7 @@ def main() -> None:
                     database = database_path(args.spider, examples[index].db_id)
                     options = [extract_sql(answers[position]) for answers in rounds]
                     chosen = pick(options, lambda sql, db=database: run_query(db, sql))
+                    append_candidates(args.out / CANDIDATES_FILE, index, options)
                     append_prediction(predictions_file, index, chosen)
             print(f"{batch.stop} of {len(examples)} predicted")
     spent = time.monotonic() - started if todo else 0.0
@@ -127,7 +130,7 @@ def main() -> None:
     accuracy = 100 * counts.correct / counts.total
     summary = {
         "model": name,
-        "split": "dev",
+        "split": args.split.removesuffix(".json"),
         "correct": counts.correct,
         "total": counts.total,
         "execution_accuracy": round(accuracy, 2),
@@ -141,7 +144,6 @@ def main() -> None:
     (args.out / "summary.json").write_text(text, encoding="utf-8", newline="\n")
     print(format_breakdown(counts))
     print(f"Execution accuracy: {accuracy:.2f}% ({counts.correct} of {counts.total})")
-    print(f'Log it with: python -m minnow.runlog add {args.out} --change "what changed"')
 
 
 if __name__ == "__main__":

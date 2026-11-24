@@ -22,7 +22,7 @@ from contextlib import closing
 from pathlib import Path
 
 from minnow.execution import QueryError, run_query
-from minnow.spider import SpiderExample, database_path
+from minnow.spider import SpiderExample, database_path, load_split
 
 OUT_FILE = "train_synsql.json"
 PREFIX = "synsql_"
@@ -125,16 +125,27 @@ def copy_without_comments(raw: bytes, target: Path) -> bool:
 
 
 def write_slice(
-    kept: dict[str, list[SpiderExample]], archive: Path, spider: Path, databases: int
+    kept: dict[str, list[SpiderExample]],
+    archive: Path,
+    spider: Path,
+    databases: int,
+    out_file: str = OUT_FILE,
+    exclude: frozenset[str] = frozenset(),
 ) -> list[SpiderExample]:
-    """Unpack up to `databases` databases into the Spider folder with their runnable questions."""
+    """Unpack up to `databases` databases into the Spider folder with their runnable questions.
+
+    Databases named in exclude (as their Spider-folder id) are passed over, so a second slice
+    can be made from databases the first one did not use.
+    """
     chosen: list[SpiderExample] = []
     used = 0
     with zipfile.ZipFile(archive) as packed:
         names = set(packed.namelist())
         for db_id in fixed_order(kept):
             member = f"databases/{db_id}/{db_id}.sqlite"
-            if used == databases or member not in names:
+            if used == databases:
+                break
+            if member not in names or PREFIX + db_id in exclude:
                 continue
             target = database_path(spider, PREFIX + db_id)
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -148,7 +159,7 @@ def write_slice(
             used += 1
     rows = [{"question": e.question, "query": e.query, "db_id": e.db_id} for e in chosen]
     text = json.dumps(rows, indent=1) + "\n"
-    (spider / OUT_FILE).write_text(text, encoding="utf-8", newline="\n")
+    (spider / out_file).write_text(text, encoding="utf-8", newline="\n")
     return chosen
 
 
@@ -159,11 +170,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("spider", type=Path, help="unpacked Spider folder to add to")
     parser.add_argument("--databases", type=int, default=6000)
     parser.add_argument("--per-database", type=int, default=2)
+    parser.add_argument("--out-file", default=OUT_FILE, help="question file to write")
+    parser.add_argument("--exclude", nargs="*", default=[], help="slices whose databases to skip")
     args = parser.parse_args(argv)
+    exclude = frozenset(e.db_id for name in args.exclude for e in load_split(args.spider, name))
     kept = candidates(read_items(args.synsql / "data.json"), args.per_database)
-    chosen = write_slice(kept, args.synsql / "databases.zip", args.spider, args.databases)
+    archive = args.synsql / "databases.zip"
+    chosen = write_slice(kept, archive, args.spider, args.databases, args.out_file, exclude)
     used = len({example.db_id for example in chosen})
-    print(f"{len(chosen)} questions on {used} databases written to {args.spider / OUT_FILE}")
+    print(f"{len(chosen)} questions on {used} databases written to {args.spider / args.out_file}")
     return 0
 
 

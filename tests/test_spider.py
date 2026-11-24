@@ -32,3 +32,17 @@ def test_schemas_cover_each_database_once(tmp_path, database):
 
 def test_database_path_follows_the_spider_layout():
     assert database_path(Path("spider"), "shop") == Path("spider/database/shop/shop.sqlite")
+
+
+def test_test_split_databases_are_found_in_their_own_folder(tmp_path):
+    test = tmp_path / "test_database" / "zoo" / "zoo.sqlite"
+    test.parent.mkdir(parents=True)
+    test.touch()
+    both = tmp_path / "database" / "shop" / "shop.sqlite"
+    both.parent.mkdir(parents=True)
+    both.touch()
+    (tmp_path / "test_database" / "shop").mkdir()
+    (tmp_path / "test_database" / "shop" / "shop.sqlite").touch()
+
+    assert database_path(tmp_path, "zoo") == test
+    assert database_path(tmp_path, "shop") == both

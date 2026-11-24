@@ -3,8 +3,8 @@ import shutil
 
 import pytest
 
-from minnow.combine import combine, main
-from minnow.evaluate import append_prediction, load_predictions
+from minnow.combine import combine, load_run, main, pool
+from minnow.evaluate import append_candidates, append_prediction, load_predictions
 from minnow.spider import SpiderExample
 
 QUESTIONS = [
@@ -34,16 +34,42 @@ def write_run(folder, predictions):
     return folder
 
 
+def single(predictions):
+    return {index: [sql] for index, sql in predictions.items()}
+
+
 def test_keeps_what_most_runs_agree_on(spider):
-    combined = combine(EXAMPLES, [WRONG, RIGHT, ALSO_RIGHT], spider)
+    combined = combine(EXAMPLES, [single(WRONG), single(RIGHT), single(ALSO_RIGHT)], spider)
 
     assert combined[0] == RIGHT[0]
     assert combined[1] == RIGHT[1]
 
 
 def test_tie_goes_to_the_run_named_first_and_gaps_are_skipped(spider):
-    assert combine(EXAMPLES, [WRONG, RIGHT], spider) == {0: "SELECT 99", 1: RIGHT[1], 2: "SELECT 1"}
-    assert combine(EXAMPLES, [RIGHT], spider) == RIGHT
+    combined = combine(EXAMPLES, [single(WRONG), single(RIGHT)], spider)
+
+    assert combined == {0: "SELECT 99", 1: RIGHT[1], 2: "SELECT 1"}
+    assert combine(EXAMPLES, [single(RIGHT)], spider) == RIGHT
+
+
+def test_pool_interleaves_ranks():
+    assert pool([["a1", "a2", "a3"], ["b1"], ["c1", "c2"]]) == ["a1", "b1", "c1", "a2", "c2", "a3"]
+
+
+def test_all_candidates_are_pooled_and_empty_results_can_go_last(spider):
+    empty = "SELECT name FROM singer WHERE age > 99"
+    runs = [{0: [empty, empty, "SELECT count(*) FROM singer"]}, {0: [empty]}]
+
+    assert combine(EXAMPLES, runs, spider) == {0: empty}
+    assert combine(EXAMPLES, runs, spider, prefer_rows=True) == {0: "SELECT count(*) FROM singer"}
+
+
+def test_saved_candidates_win_over_the_chosen_prediction(tmp_path):
+    folder = write_run(tmp_path / "a", RIGHT)
+    append_candidates(folder / "candidates.jsonl", 0, ["SELECT 1", "SELECT 2"])
+
+    assert load_run(folder) == {0: ["SELECT 1", "SELECT 2"]}
+    assert load_run(write_run(tmp_path / "b", RIGHT)) == single(RIGHT)
 
 
 def test_command_line_writes_a_complete_run(tmp_path, spider, capsys):
