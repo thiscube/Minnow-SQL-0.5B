@@ -1,8 +1,7 @@
 """Score a model on Spider dev by execution accuracy: python scripts/baseline.py
 
-Predictions are saved after every batch, so a stopped run continues where it left off.
-The folder gets predictions.jsonl, outcomes.jsonl and summary.json for minnow.runlog, and
-candidates.jsonl with every candidate query. Needs the model extra and Spider in data/spider.
+Saved after every batch, so a stopped run continues. The folder gets predictions.jsonl,
+outcomes.jsonl and summary.json for minnow.runlog, and candidates.jsonl with every candidate.
 """
 
 import argparse
@@ -38,6 +37,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", default=MODEL)
     parser.add_argument("--adapter", type=Path, help="folder of a trained LoRA adapter to load")
     parser.add_argument("--spider", type=Path, default=Path("data/spider"))
+    parser.add_argument("--split", default="dev.json", help="question file in the Spider folder")
     parser.add_argument("--out", type=Path, default=Path("outputs/baseline"))
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--max-new-tokens", type=int, default=256)
@@ -72,6 +72,7 @@ def main() -> None:
         "batch_size": args.batch_size,
         "max_new_tokens": args.max_new_tokens,
         "samples": args.samples,
+        "split": args.split,
         "sample_rows": args.sample_rows,
         "temperature": args.temperature,
         "system_prompt": SYSTEM,
@@ -80,7 +81,7 @@ def main() -> None:
     predictions_file = args.out / "predictions.jsonl"
     drop_unfinished_line(predictions_file)
     drop_unfinished_line(args.out / CANDIDATES_FILE)
-    examples = load_split(args.spider, "dev.json")
+    examples = load_split(args.spider, args.split)
     done = load_predictions(predictions_file)
     todo = [index for index in range(len(examples)) if index not in done]
     print(f"{len(done)} of {len(examples)} already predicted, {len(todo)} to go.")
@@ -128,7 +129,7 @@ def main() -> None:
     accuracy = 100 * counts.correct / counts.total
     summary = {
         "model": name,
-        "split": "dev",
+        "split": args.split.removesuffix(".json"),
         "correct": counts.correct,
         "total": counts.total,
         "execution_accuracy": round(accuracy, 2),

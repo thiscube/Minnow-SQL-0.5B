@@ -7,7 +7,18 @@ RESULTS = {
     "b": [(3,)],
     "b again": [(3,)],
     "empty": [],
+    "empty again": [],
+    "nulls": [(None,)],
+    "nulls again": [(None,)],
 }
+
+
+def test_prefer_rows_puts_empty_and_null_results_last():
+    many_empty = ["empty", "empty again", "nulls", "nulls again", "b"]
+
+    assert pick(many_empty, run) == "empty"
+    assert pick(many_empty, run, prefer_rows=True) == "b"
+    assert pick(["broken", "nulls", "empty", "empty again"], run, prefer_rows=True) == "empty"
 
 
 def run(sql):

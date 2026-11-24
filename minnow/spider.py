@@ -24,8 +24,14 @@ def load_split(folder: Path, filename: str) -> list[SpiderExample]:
 
 
 def database_path(folder: Path, db_id: str) -> Path:
-    """Return the SQLite file of a Spider database."""
-    return folder / "database" / db_id / f"{db_id}.sqlite"
+    """Return the SQLite file of a Spider database, which for the test split is in test_database.
+
+    The test databases share no names with the others, so a name is looked up in database
+    first and in test_database only when it is not there.
+    """
+    path = folder / "database" / db_id / f"{db_id}.sqlite"
+    test = folder / "test_database" / db_id / f"{db_id}.sqlite"
+    return test if test.exists() and not path.exists() else path
 
 
 def schemas(
