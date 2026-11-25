@@ -1,16 +1,18 @@
 import re
 import xml.etree.ElementTree as ET
+from itertools import pairwise
 
 import pytest
 
-from minnow.chart import HEIGHT, WIDTH, bar_chart
+from minnow.chart import LABEL_FONT_SIZE, MAX_NAME_LENGTH, ROW_HEIGHT, WIDTH, bar_chart, height
 
 SVG = "{http://www.w3.org/2000/svg}"
 BARS = [("baseline", 45.36), ("sft", 61.9)]
 MARKERS = [("target 70%", 70.0), ("SLM-SQL-0.5B, published 72.08%", 72.08)]
-BASELINE_Y = 310
-PIXELS_PER_PERCENT = 2.5
-LABEL_FONT_SIZE = 11
+CHARACTER_WIDTH = 6.6
+VALUE_FONT_SIZE = 12
+# coordinates are written with two decimals
+ROUNDING = 0.01
 
 
 def draw(bars=BARS, markers=MARKERS):
@@ -22,21 +24,25 @@ def texts(chart):
 
 
 def bar_edges(chart):
-    """The left, top and right edge of every bar, read back from its outline."""
+    """The left, top, right and bottom edge of every bar, read back from its outline."""
     edges = []
     for path in chart.iter(f"{SVG}path"):
         numbers = [float(number) for number in re.findall(r"-?\d+(?:\.\d+)?", path.get("d"))]
-        xs = [numbers[0], numbers[3], numbers[5], numbers[7], numbers[8], numbers[10]]
-        edges.append((min(xs), numbers[4], max(xs)))
+        edges.append((numbers[0], numbers[1], numbers[5], numbers[9]))
     return edges
 
 
-def test_chart_is_an_svg_of_the_expected_size():
+def tick_x(chart, tick):
+    return float(texts(chart)[str(tick)].get("x"))
+
+
+def test_chart_is_an_svg_that_grows_with_the_number_of_bars():
     chart = draw()
 
     assert chart.tag == f"{SVG}svg"
-    assert (chart.get("width"), chart.get("height")) == ("720", "360")
-    assert chart.get("viewBox") == f"0 0 {WIDTH} {HEIGHT}"
+    assert (chart.get("width"), chart.get("height")) == (str(WIDTH), str(height(2)))
+    assert chart.get("viewBox") == f"0 0 {WIDTH} {height(2)}"
+    assert height(16) - height(2) == 14 * ROW_HEIGHT
 
 
 def test_background_is_light_and_opaque_and_covers_the_whole_chart():
@@ -45,63 +51,82 @@ def test_background_is_light_and_opaque_and_covers_the_whole_chart():
 
     assert background.get("fill") == "#fcfcfb"
     assert float(background.get("width")) >= WIDTH - 1
-    assert float(background.get("height")) >= HEIGHT - 1
+    assert float(background.get("height")) >= height(2) - 1
     assert "opacity" not in text
     assert "transparent" not in text
 
 
-def test_one_bar_per_run_in_order_with_its_accuracy_printed():
+def test_one_row_per_run_in_order_with_its_name_and_accuracy():
     chart = draw()
     labels = texts(chart)
-    (first_left, first_top, first_right), (second_left, second_top, _) = bar_edges(chart)
+    (left, first_top, first_end, first_bottom), (_, second_top, second_end, _) = bar_edges(chart)
+    scale = (tick_x(chart, 100) - tick_x(chart, 0)) / 100
 
-    assert first_right < second_left
-    assert first_top == pytest.approx(BASELINE_Y - PIXELS_PER_PERCENT * 45.36)
-    assert second_top == pytest.approx(BASELINE_Y - PIXELS_PER_PERCENT * 61.9)
-    assert first_left < float(labels["45.36%"].get("x")) < first_right
-    assert float(labels["45.36%"].get("x")) == float(labels["baseline"].get("x"))
-    assert float(labels["45.36%"].get("y")) < first_top
-    assert float(labels["baseline"].get("y")) > BASELINE_Y
-    assert float(labels["baseline"].get("x")) < float(labels["sft"].get("x"))
+    assert left == pytest.approx(tick_x(chart, 0))
+    assert first_end == pytest.approx(left + scale * 45.36, abs=ROUNDING)
+    assert second_end == pytest.approx(left + scale * 61.9, abs=ROUNDING)
+    assert first_bottom <= second_top
+    assert first_top < float(labels["45.36%"].get("y")) < first_bottom + 2
+    assert labels["45.36%"].get("y") == labels["baseline"].get("y")
+    assert float(labels["45.36%"].get("x")) > first_end
+    assert float(labels["baseline"].get("x")) < left
     assert "61.90%" in labels
 
 
-def test_axis_runs_from_0_to_100():
-    labels = texts(draw())
+def test_no_label_can_run_into_another():
+    names = [f"run-with-a-long-name-{number}" for number in range(40)]
+    chart = draw([(name, 50.0 + number) for number, name in enumerate(names)])
+    labels = texts(chart)
+    rows = [float(labels[name].get("y")) for name in names]
 
-    assert float(labels["0"].get("y")) > float(labels["100"].get("y"))
-    assert {"0", "20", "40", "60", "80", "100"} <= labels.keys()
-    assert bar_edges(draw([("none", 0.0), ("all", 100.0)]))[0][1] == BASELINE_Y
-    assert bar_edges(draw([("none", 0.0), ("all", 100.0)]))[1][1] == BASELINE_Y - 250
+    assert all(later - earlier >= VALUE_FONT_SIZE for earlier, later in pairwise(rows))
+    for name in names:
+        assert float(labels[name].get("x")) - CHARACTER_WIDTH * len(name) >= 0
+    value = labels["50.00%"]
+    assert float(value.get("x")) <= WIDTH
+    assert float(value.get("x")) - CHARACTER_WIDTH * len("100.00%") >= tick_x(chart, 100)
+
+
+def test_a_very_long_name_is_cut_short():
+    labels = texts(draw([("x" * 80, 10.0)]))
+
+    assert "x" * (MAX_NAME_LENGTH - 3) + "..." in labels
+    assert tick_x(draw([("x" * 80, 10.0)]), 0) < WIDTH / 2
+
+
+def test_axis_runs_from_0_to_100():
+    chart = draw([("none", 0.0), ("all", 100.0)])
+    (left, _, none_end, _), (_, _, all_end, _) = bar_edges(chart)
+
+    assert [tick_x(chart, tick) for tick in (0, 20, 40, 60, 80, 100)] == sorted(
+        tick_x(chart, tick) for tick in (0, 20, 40, 60, 80, 100)
+    )
+    assert none_end == left
+    assert all_end == pytest.approx(tick_x(chart, 100))
 
 
 def test_markers_are_dashed_lines_at_their_values_with_labels():
     chart = draw()
     dashed = [group for group in chart.iter(f"{SVG}g") if group.get("stroke-dasharray")]
-    heights = [float(line.get("y1")) for line in dashed[0].iter(f"{SVG}line")]
+    positions = [float(line.get("x1")) for line in dashed[0].iter(f"{SVG}line")]
+    scale = (tick_x(chart, 100) - tick_x(chart, 0)) / 100
 
     assert len(dashed) == 1
-    assert heights == pytest.approx(
-        [BASELINE_Y - PIXELS_PER_PERCENT * 70, BASELINE_Y - PIXELS_PER_PERCENT * 72.08]
+    assert positions == pytest.approx(
+        [tick_x(chart, 0) + scale * 70, tick_x(chart, 0) + scale * 72.08], abs=ROUNDING
     )
     assert {"target 70%", "SLM-SQL-0.5B, published 72.08%"} <= texts(chart).keys()
 
 
-def test_labels_of_close_markers_do_not_overlap():
-    labels = texts(draw())
-    target = float(labels["target 70%"].get("y"))
-    published = float(labels["SLM-SQL-0.5B, published 72.08%"].get("y"))
+def test_labels_of_close_markers_do_not_overlap_and_stay_inside():
+    labels = texts(draw([("grpo-lr5-2400-hints", 66.92)]))
+    target = labels["target 70%"]
+    published = labels["SLM-SQL-0.5B, published 72.08%"]
 
-    assert target - published >= 2 * LABEL_FONT_SIZE
-
-
-def test_many_bars_stay_left_of_the_marker_labels_and_inside_the_plot():
-    edges = bar_edges(draw([(f"run {number}", 50.0) for number in range(40)]))
-
-    assert len(edges) == 40
-    assert edges[0][0] >= 52
-    assert edges[-1][2] <= WIDTH - 16 - 224
-    assert all(left < right for left, _, right in edges)
+    assert (target.get("text-anchor"), published.get("text-anchor")) == ("end", "start")
+    assert float(target.get("x")) < float(published.get("x"))
+    assert float(published.get("x")) + CHARACTER_WIDTH * len(published.text) <= WIDTH
+    assert float(target.get("y")) + LABEL_FONT_SIZE < bar_edges(draw())[0][1]
 
 
 def test_chart_without_runs_still_draws():
