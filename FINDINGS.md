@@ -10,6 +10,12 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-25 · Improvement · The vote holds on unseen test questions, and "empty results last" is confirmed: 72.63% on dev
+
+- **What:** The three vote members were scored on `test_val.json` (1,230 Spider test questions on 21 databases, never used before), and four voting rules were compared there: voting over each model's own pick or over all pooled candidates, each with and without putting empty and all-NULL results last.
+- **Evidence:** On validation the members score 66.59%, 67.48% and 64.23%. Vote over picks: 71.14% (875 of 1,230), against 71.18% on dev, so the vote did not shrink on unseen databases. Empty results last: 72.20% (888), +13 questions. Pooled candidates: 69.84% (859), and 70.73% (870) with empty results last, both worse than voting over picks, because the model with 15 candidates outvotes the other two. On dev the confirmed rule gives 72.63% (751 of 1,034): 19 fixed, 4 broken against the plain vote. Reinforcement learning past 2,400 questions gave 65.86% at 3,600 and 65.76% at 4,800, so that run was stopped.
+- **So what:** The final setup votes over each model's pick with empty results last. The rule was chosen on validation and gains on both sets (+13 and +15 questions). Pooling candidates is dropped. `test_final.json` stays untouched until the member models are final.
+
 ### 2026-11-25 · Improvement · Reinforcement learning at a lower learning rate lifts the best single model to 66.92%
 
 - **What:** GRPO from the SynSQL model on Spider training questions with value hints, learning rate 5e-6 instead of 2e-5, scored on dev every 800 questions.
