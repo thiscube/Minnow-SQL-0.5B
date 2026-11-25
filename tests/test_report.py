@@ -77,12 +77,17 @@ returns nothing.
 - Generating all 1,034 predictions took 1 second.
 """
 README_BLOCK = """\
-| Model | Change | Spider dev EX (%) | Correct |
-| --- | --- | ---: | ---: |
-| Qwen2.5-Coder-0.5B-Instruct | Baseline: no training | 45.36 | 469 / 1034 |
-| minnow-sft | Fine-tuned \\| one epoch | 67.70 | 700 / 1034 |
-
 ![Execution accuracy by run](results/chart.svg)
+
+<details>
+<summary>What each of the 2 runs changed</summary>
+
+| Run | Change | Spider dev EX (%) | Correct |
+| --- | --- | ---: | ---: |
+| baseline | Baseline: no training | 45.36 | 469 / 1034 |
+| sft | Fine-tuned \\| one epoch | 67.70 | 700 / 1034 |
+
+</details>
 """
 
 
@@ -107,7 +112,7 @@ def test_results_log_without_runs_is_only_the_frame():
     assert text.endswith("| --- | --- | --- | ---: | ---: | --- |\n\n## Notes\n")
 
 
-def test_readme_block_is_a_table_of_the_runs_and_the_chart():
+def test_readme_block_is_the_chart_and_a_folded_table_of_the_runs():
     assert readme_block([BASELINE, TUNED]) == README_BLOCK
 
 

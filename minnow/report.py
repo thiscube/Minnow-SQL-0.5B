@@ -19,7 +19,7 @@ _LOG_HEADER = (
     "| --- | --- | --- | ---: | ---: | --- |",
 )
 _README_HEADER = (
-    "| Model | Change | Spider dev EX (%) | Correct |",
+    "| Run | Change | Spider dev EX (%) | Correct |",
     "| --- | --- | ---: | ---: |",
 )
 _EMPTY_RESULT_CAVEAT = (
@@ -97,7 +97,8 @@ def results_markdown(runs: Sequence[Run], counts: Mapping[str, Breakdown]) -> st
 
 
 def readme_block(runs: Sequence[Run]) -> str:
-    """Return the README's results block: a table of the runs, then the chart image."""
-    rows = [_row([*_model_and_change(run), *_score(run)]) for run in runs]
+    """Return the README's results block: the chart, then a folded table of the runs."""
+    rows = [_row([run.name, run.change, *_score(run)]) for run in runs]
     image = f"![Execution accuracy by run]({CHART_FILE})"
-    return "\n".join([*_README_HEADER, *rows, "", image]) + "\n"
+    opened = f"<details>\n<summary>What each of the {len(runs)} runs changed</summary>\n"
+    return "\n".join([image, "", opened, *_README_HEADER, *rows, "", "</details>"]) + "\n"
