@@ -185,5 +185,38 @@
     "execution_accuracy": 72.63,
     "generation_seconds": null,
     "fingerprint": "869f6ca6041b3734e8733fa5abeb0abeac0a85fe81bbdf60d42648b644d5c37a"
+  },
+  {
+    "name": "sft-hintstrained",
+    "date": "2026-11-25",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints",
+    "change": "Trained with value hints in the prompt (Spider + SynSQL slice, 2 epochs), greedy",
+    "correct": 646,
+    "total": 1034,
+    "execution_accuracy": 62.48,
+    "generation_seconds": 187,
+    "fingerprint": "c54ff49027b3b24e3717b178ab3e39da5d6ac718ca4fb08f75a3e309ae379f2f"
+  },
+  {
+    "name": "sft-hintstrained-vote15",
+    "date": "2026-11-25",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints",
+    "change": "Same hints-trained model, vote over 15 candidates",
+    "correct": 709,
+    "total": 1034,
+    "execution_accuracy": 68.57,
+    "generation_seconds": 2979,
+    "fingerprint": "fc8be92b27666822daea4ec51e8a08ce807806445eb79def9f5d24376c9023e5"
+  },
+  {
+    "name": "vote-hintstrained-three",
+    "date": "2026-11-25",
+    "model": "vote of picks-sft-hintstrained-vote15, sft-rows1-vote15, sft-spider-all-vote5",
+    "change": "Three models vote (hints-trained with 15 candidates, one-row model with 15, all-Spider model with 5), empty results last",
+    "correct": 758,
+    "total": 1034,
+    "execution_accuracy": 73.31,
+    "generation_seconds": null,
+    "fingerprint": "2fd7ebeac2b8a126de92673e195394d8f6b67f1e5558cd6a02d265815e857296"
   }
 ]

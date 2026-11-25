@@ -10,6 +10,12 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-25 · Improvement · Training with value hints gives the best single model and lifts the vote to 73.31% on dev
+
+- **What:** A fresh adapter was trained on Spider train plus the SynSQL slice with value hints in the training prompts (`sft-hintstrained`, 2 epochs, 1,506 updates, 3 hours 40 minutes, peak 5.21 GB). Before, hints were only added at scoring time to a model that had never seen them. The new model was then tried in the three-model vote on `test_val.json`.
+- **Evidence:** One greedy query: 62.48% on dev (64.70% for the old model with hints added at scoring time) and 67.48% on validation (66.59%), so greedy is mixed. Vote over 15 candidates: 68.57% on dev (709 of 1,034) and 71.14% on validation (875 of 1,230), against 67.02% and 67.48% for the best member before. In the vote on validation, replacing the old SynSQL model with it gives 73.25% (901), against 72.20% (888); adding it as a fourth member gives 72.93%, replacing other members 72.60% to 73.09%. The same line-up on dev: 73.31% (758), 35 fixed and 28 broken against 72.63%.
+- **So what:** The final vote is the hints-trained model with 15 candidates, the one-row model with 15 and the all-Spider model with 5, empty results last. The line-up was chosen on validation. The single-model gain (+3.7 points on validation) is clear; the vote gain (+1.05) is at the edge of noise. Next: score this line-up once on `test_final.json`.
+
 ### 2026-11-25 · Improvement · The vote holds on unseen test questions, and "empty results last" is confirmed: 72.63% on dev
 
 - **What:** The three vote members were scored on `test_val.json` (1,230 Spider test questions on 21 databases, never used before), and four voting rules were compared there: voting over each model's own pick or over all pooled candidates, each with and without putting empty and all-NULL results last.
