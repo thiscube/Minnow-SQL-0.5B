@@ -9,11 +9,11 @@ Minnow-SQL-0.5B is a text-to-SQL model in the 0.5B-parameter class, fine-tuned f
 > [!NOTE]
 > The 70% goal is reached on Spider dev. Still to do: the final score on held-out test databases, and the weights release. See the [roadmap](#roadmap).
 
-| | Spider dev EX |
-| --- | ---: |
-| Base model, untouched | 45.36% |
-| Best single model (SFT, then reinforcement learning) | 66.92% |
-| Vote of three fine-tuned adapters | **71.18%** |
+| | Spider dev EX | Unseen test questions (1,230) |
+| --- | ---: | ---: |
+| Base model, untouched | 45.36% | |
+| Best single model (SFT, then reinforcement learning) | 66.92% | |
+| Vote of three fine-tuned adapters | **72.63%** | **72.20%** |
 
 ## Goal
 
@@ -28,7 +28,7 @@ Every run measured in this repository. The chart and table are generated from th
 ![Execution accuracy by run](results/chart.svg)
 
 <details>
-<summary>What each of the 16 runs changed</summary>
+<summary>What each of the 17 runs changed</summary>
 
 | Run | Change | Spider dev EX (%) | Correct |
 | --- | --- | ---: | ---: |
@@ -48,6 +48,7 @@ Every run measured in this repository. The chart and table are generated from th
 | grpo600-hints | RL pilot: GRPO from sft-synsql on 600 fresh SynSQL questions (only 252 fit 900 prompt tokens), lr 2e-5, value hints, one greedy query | 63.64 | 658 / 1034 |
 | grpo-spider600-hints | RL pilot: GRPO from sft-synsql on 600 Spider train questions, lr 2e-5, value hints, one greedy query | 64.89 | 671 / 1034 |
 | grpo-lr5-2400-hints | GRPO from sft-synsql on 2,400 Spider train questions, lr 5e-6, value hints, one greedy query (65.38% at 800, 65.76% at 1,600) | 66.92 | 692 / 1034 |
+| vote-hints-three-rows | Several models: same three adapters as vote-hints-three, vote over each model's pick with empty and all-NULL results last; rule confirmed on 1,230 unseen Spider test questions (71.14% to 72.20%) | 72.63 | 751 / 1034 |
 
 </details>
 
@@ -60,7 +61,7 @@ Every run measured in this repository. The chart and table are generated from th
 - **Greedy or vote.** A run answers with one greedy query, or samples several, runs them and keeps the result most of them agree on. "Several models" means the candidates of more than one adapter are pooled.
 - **Value hints.** The prompt also lists question words found in the database's text values. They come from plain text matching, never from the reference query.
 - **Noise.** Differences of about one point are noise: redoing 200 questions with another batch size flipped 3 verdicts. All runs use batches of 16.
-- **Dev is optimistic.** Settings such as the voting rule were chosen on dev. Spider test is therefore split by database: one half (1,230 questions) for choosing settings, the other (917 questions) scored once at the end.
+- **Dev is optimistic.** The models and the number of candidates were chosen on dev. Spider test is therefore split by database: one half (1,230 questions) for choosing settings such as the voting rule, the other (917 questions) scored once at the end. The vote scores 72.20% on the first half.
 
 ### Published results for comparison
 
