@@ -17,6 +17,9 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 | 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + sft-synsql | Same model as sft-synsql; the prompt also lists question words found in the database's text values (value hints), one greedy query | 64.70 | 669 / 1034 | [results/sft-synsql-hints](results/sft-synsql-hints) |
 | 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1 (one example row per table); value hints added to the prompt, one greedy query | 62.28 | 644 / 1034 | [results/sft-rows1-hints](results/sft-rows1-hints) |
 | 2026-11-24 | vote of sft-synsql-hints, sft-rows1-vote15, sft-spider-all-vote5 | Several models: vote across three fine-tuned adapters (sft-synsql with value hints, sft-rows1 with 15 candidates, sft-spider-all with 5), same majority rule as before | 71.18 | 736 / 1034 | [results/vote-hints-three](results/vote-hints-three) |
+| 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + grpo-synsql | RL pilot: GRPO from sft-synsql on 600 fresh SynSQL questions (only 252 fit 900 prompt tokens), lr 2e-5, value hints, one greedy query | 63.64 | 658 / 1034 | [results/grpo600-hints](results/grpo600-hints) |
+| 2026-11-24 | Qwen2.5-Coder-0.5B-Instruct + grpo-spider | RL pilot: GRPO from sft-synsql on 600 Spider train questions, lr 2e-5, value hints, one greedy query | 64.89 | 671 / 1034 | [results/grpo-spider600-hints](results/grpo-spider600-hints) |
+| 2026-11-25 | Qwen2.5-Coder-0.5B-Instruct + grpo-spider-lr5 | GRPO from sft-synsql on 2,400 Spider train questions, lr 5e-6, value hints, one greedy query (65.38% at 800, 65.76% at 1,600) | 66.92 | 692 / 1034 | [results/grpo-lr5-2400-hints](results/grpo-lr5-2400-hints) |
 
 ## Notes
 
@@ -108,3 +111,24 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 - 61 predictions did not run. The most common errors: `no such column` (59), `no such table` (2).
 - 237 predictions ran and returned different rows.
 - 44 of the 736 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+
+### 2026-11-24, grpo600-hints
+
+- 187 predictions did not run. The most common errors: `no such column` (174), `no such table` (7), `misuse of aggregate` (3).
+- 189 predictions ran and returned different rows.
+- 40 of the 658 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 187 seconds.
+
+### 2026-11-24, grpo-spider600-hints
+
+- 143 predictions did not run. The most common errors: `no such column` (125), `no such table` (11), `misuse of aggregate` (3).
+- 220 predictions ran and returned different rows.
+- 39 of the 671 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 192 seconds.
+
+### 2026-11-25, grpo-lr5-2400-hints
+
+- 143 predictions did not run. The most common errors: `no such column` (131), `misuse of aggregate` (5), `no such table` (4).
+- 199 predictions ran and returned different rows.
+- 38 of the 692 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 184 seconds.

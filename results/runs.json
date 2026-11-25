@@ -141,5 +141,38 @@
     "execution_accuracy": 71.18,
     "generation_seconds": null,
     "fingerprint": "63184ed496e18ab91655ba992a2ad7e93ef4290a665666ffa6e4c1e081fa736e"
+  },
+  {
+    "name": "grpo600-hints",
+    "date": "2026-11-24",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + grpo-synsql",
+    "change": "RL pilot: GRPO from sft-synsql on 600 fresh SynSQL questions (only 252 fit 900 prompt tokens), lr 2e-5, value hints, one greedy query",
+    "correct": 658,
+    "total": 1034,
+    "execution_accuracy": 63.64,
+    "generation_seconds": 187,
+    "fingerprint": "e6710945d0c1000ff466be190fe75d08d3966a856d363a4f488b3afbd709644a"
+  },
+  {
+    "name": "grpo-spider600-hints",
+    "date": "2026-11-24",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + grpo-spider",
+    "change": "RL pilot: GRPO from sft-synsql on 600 Spider train questions, lr 2e-5, value hints, one greedy query",
+    "correct": 671,
+    "total": 1034,
+    "execution_accuracy": 64.89,
+    "generation_seconds": 192,
+    "fingerprint": "4fe94dbae0985cd39bc73cf87a5a399fe3515f6f9e806d8457878d41203e7423"
+  },
+  {
+    "name": "grpo-lr5-2400-hints",
+    "date": "2026-11-25",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + grpo-spider-lr5",
+    "change": "GRPO from sft-synsql on 2,400 Spider train questions, lr 5e-6, value hints, one greedy query (65.38% at 800, 65.76% at 1,600)",
+    "correct": 692,
+    "total": 1034,
+    "execution_accuracy": 66.92,
+    "generation_seconds": 184,
+    "fingerprint": "e65a1ef7b52f2ad4f573899c7d9942f8cd615db522966ffd848dba0b59b7c6f5"
   }
 ]

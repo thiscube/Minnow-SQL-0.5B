@@ -7,7 +7,13 @@
 Minnow-SQL-0.5B is a text-to-SQL model in the 0.5B-parameter class, fine-tuned from [Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct). Given a natural-language question and a database schema, it produces a SQL query.
 
 > [!NOTE]
-> This project is in progress. The baseline is measured (see [results](#results)), training has not started, and no model has been released. See the [roadmap](#roadmap).
+> Training is done and the 70% goal is reached on Spider dev by a vote of three fine-tuned adapters (71.18%). The best single model scores 66.92%. The final score on held-out Spider test databases is still to be measured, and no weights have been released yet. See the [roadmap](#roadmap).
+
+| | Spider dev EX |
+| --- | ---: |
+| Base model, untouched | 45.36% |
+| Best single model (SFT, then reinforcement learning) | 66.92% |
+| Vote of three fine-tuned adapters | **71.18%** |
 
 ## Goal
 
@@ -34,6 +40,9 @@ Measured in this repository. The table and chart below are generated from the ru
 | Qwen2.5-Coder-0.5B-Instruct + sft-synsql | Same model as sft-synsql; the prompt also lists question words found in the database's text values (value hints), one greedy query | 64.70 | 669 / 1034 |
 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1 (one example row per table); value hints added to the prompt, one greedy query | 62.28 | 644 / 1034 |
 | vote of sft-synsql-hints, sft-rows1-vote15, sft-spider-all-vote5 | Several models: vote across three fine-tuned adapters (sft-synsql with value hints, sft-rows1 with 15 candidates, sft-spider-all with 5), same majority rule as before | 71.18 | 736 / 1034 |
+| Qwen2.5-Coder-0.5B-Instruct + grpo-synsql | RL pilot: GRPO from sft-synsql on 600 fresh SynSQL questions (only 252 fit 900 prompt tokens), lr 2e-5, value hints, one greedy query | 63.64 | 658 / 1034 |
+| Qwen2.5-Coder-0.5B-Instruct + grpo-spider | RL pilot: GRPO from sft-synsql on 600 Spider train questions, lr 2e-5, value hints, one greedy query | 64.89 | 671 / 1034 |
+| Qwen2.5-Coder-0.5B-Instruct + grpo-spider-lr5 | GRPO from sft-synsql on 2,400 Spider train questions, lr 5e-6, value hints, one greedy query (65.38% at 800, 65.76% at 1,600) | 66.92 | 692 / 1034 |
 
 ![Execution accuracy by run](results/chart.svg)
 
@@ -43,7 +52,10 @@ Measured in this repository. The table and chart below are generated from the ru
 
 - A prediction is correct when it runs and returns the same rows as the reference query, in the same order when the reference query sorts, with columns in any order.
 - Each question is scored on its one original Spider database. A wrong query can therefore be counted as correct when both it and the reference return no rows; results.md reports how many correct predictions are of this kind.
-- Decoding is greedy, in fixed batches of 16. The batch size affects a few answers: redoing 200 baseline questions one at a time changed the verdict for 3 of them. Differences of about one point between runs are within this noise.
+- Each row says how its answer was chosen: one greedy query, or a vote. A vote samples several candidate queries, runs them, and keeps the result most candidates agree on. Rows marked "several models" pool the candidates of more than one adapter.
+- "Value hints" means the prompt also lists question words that appear in the database's text values, with their table and column. They are found by plain text matching, never from the reference query.
+- Generation runs in fixed batches of 16. The batch size affects a few answers: redoing 200 baseline questions one at a time changed the verdict for 3 of them. Differences of about one point between runs are within this noise.
+- Choices such as the voting rule were made on Spider dev, so the dev numbers are optimistic. Spider test is split by database into a validation half (1,230 questions, 21 databases) for choosing settings and a final half (917 questions, 19 databases) that is scored once at the end.
 
 ### Published results for comparison
 
@@ -54,14 +66,15 @@ Measured in this repository. The table and chart below are generated from the ru
 | Qwen2.5-Coder-0.5B-Instruct | none | 44.07 | 44.31 | [SLM-SQL][slm-sql] |
 | SLM-SQL-0.5B | SFT and RL on SynSQL-derived data | 72.08 | 73.50 | [SLM-SQL][slm-sql] |
 
-None of the published rows has been reproduced here, and they are not directly comparable with each other or with this repository's numbers. The SLM-SQL rows use that paper's corrective self-consistency decoding. The model-card rows use the non-instruct base model. This repository uses greedy decoding and its own implementation of execution accuracy on the original Spider databases, which is simpler than the official test-suite evaluation.
+None of the published rows has been reproduced here, and they are not directly comparable with each other or with this repository's numbers. The SLM-SQL rows use that paper's corrective self-consistency decoding. The model-card rows use the non-instruct base model. This repository uses its own implementation of execution accuracy on the original Spider databases, which is simpler than the official test-suite evaluation.
 
 ## Roadmap
 
 - [x] Tooling: linting, tests, a train/dev leakage guard, continuous integration
 - [x] Baseline: the unmodified base model, evaluated on Spider dev
-- [ ] Supervised fine-tuning on the Spider training set (about 7,000 examples)
-- [ ] Improvements: a subset of [SynSQL-2.5M][omnisql], LoRA configuration, schema serialization, and execution-guided selection among sampled queries
+- [x] Supervised fine-tuning on the Spider training set: 45.36% to 60.64%
+- [x] Improvements: a slice of [SynSQL-2.5M][omnisql], example rows and value hints in the prompt, voting among sampled queries, and reinforcement learning on execution results
+- [ ] Final evaluation: validate the voting rules on the Spider test validation half, then score the final setup once on the held-out half
 - [ ] Release: model weights on Hugging Face, a demo, and a write-up of the results
 
 ## Constraints
@@ -75,14 +88,18 @@ None of the published rows has been reproduced here, and they are not directly c
 ```
 minnow/       library code; imports without a GPU or deep-learning dependencies
 tests/        unit tests and structure tests
-scripts/      entry points and the local check runner
+scripts/      training, evaluation, the dashboard and the local check runner
 results/      predictions, verdicts and score summary of each logged run
+dashboard/    the local results page
 results.md    the log of measured runs, generated from results/
+FINDINGS.md   what each experiment showed and the decisions it led to
 ```
 
-## Reproducing the baseline
+## Training and evaluation
 
-Requires a CUDA GPU with about 3 GB of free memory. The run takes about 5 minutes on an RTX 3060 Ti.
+Everything runs on one 8 GB GPU. Every script saves its progress often, so a stopped run continues where it left off when started again with the same command.
+
+### Setup
 
 1. Install [PyTorch](https://pytorch.org/get-started/locally/) with CUDA support, then the model dependencies:
 
@@ -92,13 +109,45 @@ Requires a CUDA GPU with about 3 GB of free memory. The run takes about 5 minute
 
 2. Download [Spider][spider] and unpack it so that `data/spider/dev.json` and `data/spider/database/` exist.
 
-3. Run the evaluation:
+3. Optional: download [SynSQL-2.5M][omnisql] to `data/synsql` and add a slice of it to the Spider folder. Column comments are removed so the schemas look like Spider's.
 
    ```bash
-   python scripts/baseline.py
+   python -m minnow.synsql data/synsql data/spider --databases 6000 --per-database 2
    ```
 
-Predictions are written to `outputs/baseline/` after every batch, so an interrupted run continues where it stopped.
+### Evaluate
+
+```bash
+python scripts/baseline.py                                    # the untouched base model
+python scripts/baseline.py --adapter outputs/sft/adapter      # a trained adapter
+```
+
+Useful options: `--value-hints` adds value hints to the prompt, `--samples 15` samples 15 candidates per question and votes, `--sample-rows 1` shows one example row per table, and `--split` scores another question file in the Spider folder. The untouched model takes about 5 minutes on an RTX 3060 Ti and about 3 GB of GPU memory.
+
+### Train
+
+Supervised fine-tuning with LoRA (rank 16, learning rate 2e-4, 16 examples per update, examples up to 1,024 tokens):
+
+```bash
+python scripts/train_sft.py --train-files train_spider.json train_synsql.json --epochs 2 --out outputs/sft
+```
+
+Reinforcement learning on execution results, starting from a supervised adapter. Each question gets 8 sampled queries; a query that returns the right rows earns 1, one that only runs earns 0.1, and the model is pushed toward the better ones in its group:
+
+```bash
+python scripts/train_grpo.py --adapter outputs/sft/adapter --out outputs/grpo --value-hints --learning-rate 5e-6
+```
+
+Both check the training data against Spider dev with the [leakage guard](#data-leakage-guard) before they start.
+
+### Vote across runs
+
+```bash
+python -m minnow.combine outputs/vote outputs/run-a outputs/run-b outputs/run-c --spider data/spider
+python -m minnow.splits data/spider    # writes test_val.json and test_final.json
+```
+
+`combine` pools every saved candidate of the given runs and keeps the result most of them agree on. `splits` cuts Spider test into the validation and final halves described [above](#how-results-are-measured); score either with `python scripts/baseline.py --split test_val.json`.
 
 ## Results log
 
