@@ -4,31 +4,63 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)
 
-Minnow-SQL-0.5B is a text-to-SQL model in the 0.5B-parameter class, fine-tuned from [Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct). Given a natural-language question and a database schema, it produces a SQL query.
+A very small language model that turns a plain English question into a database query.
+
+You ask:
+
+> What is the average, minimum, and maximum age of all singers from France?
+
+It looks at the tables in the database and writes:
+
+```sql
+SELECT avg(age), min(age), max(age) FROM singer WHERE country = 'France'
+```
+
+Big models are good at this. I wanted to see how far a tiny one can get, trained at home on one gaming graphics card. Minnow starts from [Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct), a model with about 500 million parameters. That is a tiny fraction of the size of the models behind the well-known chat assistants.
+
+## Where it stands
+
+The test is [Spider][spider], a standard benchmark. An answer only counts when the query runs and returns the right rows.
+
+| | Spider dev (1,034 questions) | Questions never used for training or picking models (1,230) |
+| --- | ---: | ---: |
+| The model before any training | 45.36% | |
+| My best single model | 68.57% | 71.14% |
+| Three of my models voting on the answer | **73.31%** | **73.25%** |
+
+So training took it from getting less than half right to getting almost three out of four right.
 
 > [!NOTE]
-> The 70% goal is reached on Spider dev. Still to do: the final score on held-out test databases, and the weights release. See the [roadmap](#roadmap).
+> Still open: one last score on a set of questions I have not looked at, and putting the model on Hugging Face. See [what is left](#what-is-left).
 
-| | Spider dev EX | Unseen test questions (1,230) |
-| --- | ---: | ---: |
-| Base model, untouched | 45.36% | |
-| Best single model (SFT, then reinforcement learning) | 66.92% | |
-| Vote of three fine-tuned adapters | **72.63%** | **72.20%** |
+## The goal
 
-## Goal
+Reach at least 70% execution accuracy on the Spider development set, with a model this small, on one consumer graphics card. "Execution accuracy" means the share of questions where the model's query returns the same rows as the correct query.
 
-Reach at least 70% execution accuracy (EX) on the [Spider][spider] development set (1,034 questions), with a 0.5B-parameter model trained on one consumer GPU. A prediction counts as correct when its query runs and returns the same rows as the reference query.
+That goal is reached.
+
+## How I got there
+
+Each step was measured on the same 1,034 questions, so the gains can be compared.
+
+1. **Start: 45%.** The untouched model. Its most common mistake was asking for a column that does not exist.
+2. **Teach it with examples: 61%.** I showed it about 6,000 questions with their correct queries from Spider's training set. This is ordinary fine-tuning, done with LoRA, which trains a small add-on and leaves the original model as it is.
+3. **Let it try several times: 67%.** The model writes 15 different queries for a question. All of them are run, and the result that most of them agree on wins. Wrong queries tend to be wrong in different ways, and right ones agree.
+4. **Tell it what is in the database: 69%.** If the question says "France" and a column contains the value "France", the prompt now says so. I also added 12,000 machine-written practice questions from [SynSQL-2.5M][omnisql].
+5. **Let three models vote: 73%.** Three models trained in slightly different ways each give their answer, and the majority wins. An answer that returns nothing only wins when no other answer is left.
+
+Not everything worked. More training data alone did not help much, and neither did reinforcement learning (rewarding the model when its query returns the right rows). Both are written up, with numbers, in [FINDINGS.md](FINDINGS.md).
 
 ## Results
 
-Every run measured in this repository. The chart and table are generated from the runs' own files; [results.md](results.md) adds the kinds of error per run.
+Every run I measured, in order. The chart and the table below are made by a script from the runs' own files, so nobody types a score by hand. [results.md](results.md) also shows what kinds of mistakes each run made.
 
 <!-- results:start -->
 
 ![Execution accuracy by run](results/chart.svg)
 
 <details>
-<summary>What each of the 17 runs changed</summary>
+<summary>What each of the 20 runs changed</summary>
 
 | Run | Change | Spider dev EX (%) | Correct |
 | --- | --- | ---: | ---: |
@@ -49,21 +81,23 @@ Every run measured in this repository. The chart and table are generated from th
 | grpo-spider600-hints | RL pilot: GRPO from sft-synsql on 600 Spider train questions, lr 2e-5, value hints, one greedy query | 64.89 | 671 / 1034 |
 | grpo-lr5-2400-hints | GRPO from sft-synsql on 2,400 Spider train questions, lr 5e-6, value hints, one greedy query (65.38% at 800, 65.76% at 1,600) | 66.92 | 692 / 1034 |
 | vote-hints-three-rows | Several models: same three adapters as vote-hints-three, vote over each model's pick with empty and all-NULL results last; rule confirmed on 1,230 unseen Spider test questions (71.14% to 72.20%) | 72.63 | 751 / 1034 |
+| sft-hintstrained | Trained with value hints in the prompt (Spider + SynSQL slice, 2 epochs), greedy | 62.48 | 646 / 1034 |
+| sft-hintstrained-vote15 | Same hints-trained model, vote over 15 candidates | 68.57 | 709 / 1034 |
+| vote-hintstrained-three | Three models vote (hints-trained with 15 candidates, one-row model with 15, all-Spider model with 5), empty results last | 73.31 | 758 / 1034 |
 
 </details>
 
 <!-- results:end -->
 
-### How results are measured
+### How to read the numbers
 
-- **Correct** means the query runs and returns the same rows as the reference query. Row order only matters when the reference query sorts.
-- **One database per question.** A wrong query can pass when it and the reference both return nothing. results.md counts these.
-- **Greedy or vote.** A run answers with one greedy query, or samples several, runs them and keeps the result most of them agree on. "Several models" means the candidates of more than one adapter are pooled.
-- **Value hints.** The prompt also lists question words found in the database's text values. They come from plain text matching, never from the reference query.
-- **Noise.** Differences of about one point are noise: redoing 200 questions with another batch size flipped 3 verdicts. All runs use batches of 16.
-- **Dev is optimistic.** The models and the number of candidates were chosen on dev. Spider test is therefore split by database: one half (1,230 questions) for choosing settings such as the voting rule, the other (917 questions) scored once at the end. The vote scores 72.20% on the first half.
+- **Correct** means the query runs and returns the same rows as the reference query. The order of rows only matters when the question asks for a sorted answer.
+- **A wrong query can get lucky.** Each question is checked on one database. If the right answer is "nothing" and a wrong query also returns nothing, it passes. results.md counts how often that could have happened.
+- **One point up or down means little.** Scoring 200 questions again with a different batch size changed 3 verdicts. Every run uses the same batch size of 16, and I only call something better when it wins by clearly more than a point.
+- **The hints are not cheating.** They come from matching words of the question against the text in the database. The correct query is never used.
+- **The dev score flatters a little.** I picked models and settings while looking at dev scores, so dev is no longer a fair exam. To fix that, I split Spider's separate test set in two by database. One half (1,230 questions) is for choosing settings such as the voting rule. The other half (917 questions) is scored once, at the very end.
 
-### Published results for comparison
+### How it compares to published work
 
 | Model | Training | Spider dev EX (%) | Spider test EX (%) | Source |
 | --- | --- | ---: | ---: | --- |
@@ -72,46 +106,35 @@ Every run measured in this repository. The chart and table are generated from th
 | Qwen2.5-Coder-0.5B-Instruct | none | 44.07 | 44.31 | [SLM-SQL][slm-sql] |
 | SLM-SQL-0.5B | SFT and RL on SynSQL-derived data | 72.08 | 73.50 | [SLM-SQL][slm-sql] |
 
-These rows were not reproduced here and are not directly comparable with this repository's numbers:
+EX is short for execution accuracy. SLM-SQL is the strongest published result I know of for this exact base model. My numbers land in the same range, but this is not a clean head-to-head:
 
-- SLM-SQL uses its own corrective self-consistency decoding.
-- The model-card rows use the non-instruct base model.
-- This repository scores with its own execution check on the original Spider databases, which is simpler than the official test-suite evaluation.
+- I did not rerun their models. Their rows are copied from their papers.
+- My 73% comes from three models voting. Theirs is one model with its own way of picking among several tries.
+- I check answers with my own, simpler checker on the original Spider databases. The official test suite is stricter.
+- The two model-card rows start from a slightly different base model.
 
-## Roadmap
+## What is left
 
-- [x] Tooling: linting, tests, a train/dev leakage guard, continuous integration
-- [x] Baseline: the unmodified base model, evaluated on Spider dev
-- [x] Supervised fine-tuning on the Spider training set: 45.36% to 60.64%
-- [x] Improvements: [SynSQL-2.5M][omnisql] data, value hints, voting, reinforcement learning
-- [ ] Final evaluation: one score on the held-out half of Spider test
-- [ ] Release: model weights on Hugging Face, a demo, and a write-up of the results
+- [x] Project checks: tests, code style, and a guard against training on test questions
+- [x] Measure the untouched model: 45.36%
+- [x] First fine-tune on Spider's training set: 60.64%
+- [x] Improvements: more data, value hints, voting, reinforcement learning
+- [ ] Final score on the 917 held-back questions
+- [ ] Release: the model on Hugging Face, a demo and a write-up
 
-## Constraints
+## Limits I set myself
 
-- Hardware: one NVIDIA RTX 3060 Ti (8 GB VRAM) and 32 GB of RAM.
-- Cloud compute: at most $15 in total.
-- Spider dev is used for evaluation only and never for training.
+- One NVIDIA RTX 3060 Ti with 8 GB of memory, and 32 GB of RAM.
+- At most $15 for rented graphics cards. Spent so far: $0.
+- Spider dev is only ever used for scoring. The model never trains on it.
 
-## Repository layout
+## Run it yourself
 
-```
-minnow/       library code; imports without a GPU or deep-learning dependencies
-tests/        unit tests and structure tests
-scripts/      training, evaluation, the dashboard and the local check runner
-results/      predictions, verdicts and score summary of each logged run
-dashboard/    the local results page
-results.md    the log of measured runs, generated from results/
-FINDINGS.md   what each experiment showed and the decisions it led to
-```
-
-## Training and evaluation
-
-Everything runs on one 8 GB GPU. A stopped run continues where it left off when started again with the same command.
+Everything fits on one 8 GB graphics card. If you stop a training run, the same command picks it up where it stopped.
 
 ### Setup
 
-1. Install [PyTorch](https://pytorch.org/get-started/locally/) with CUDA support, then the model dependencies:
+1. Install [PyTorch](https://pytorch.org/get-started/locally/) with CUDA support, then the rest:
 
    ```bash
    pip install -e ".[model]"
@@ -119,53 +142,53 @@ Everything runs on one 8 GB GPU. A stopped run continues where it left off when 
 
 2. Download [Spider][spider] and unpack it so that `data/spider/dev.json` and `data/spider/database/` exist.
 
-3. Optional: download [SynSQL-2.5M][omnisql] to `data/synsql` and add a slice of it to the Spider folder. Column comments are removed so the schemas look like Spider's.
+3. Optional: download [SynSQL-2.5M][omnisql] to `data/synsql` and add a slice of it to the Spider folder:
 
    ```bash
    python -m minnow.synsql data/synsql data/spider --databases 6000 --per-database 2
    ```
 
-### Evaluate
+### Score a model
 
 ```bash
 python scripts/baseline.py                                    # the untouched base model
-python scripts/baseline.py --adapter outputs/sft/adapter      # a trained adapter
+python scripts/baseline.py --adapter outputs/sft/adapter      # a model you trained
 ```
 
 | Option | What it does |
 | --- | --- |
-| `--value-hints` | adds value hints to the prompt |
-| `--samples 15` | samples 15 candidate queries per question and votes |
-| `--sample-rows 1` | shows one example row per table |
-| `--split test_val.json` | scores another question file in the Spider folder |
+| `--value-hints` | tells the model which question words appear in the database |
+| `--samples 15` | writes 15 queries per question and lets them vote |
+| `--sample-rows 1` | shows the model one example row of every table |
+| `--split test_val.json` | scores a different question file from the Spider folder |
 
-The untouched model takes about 5 minutes and 3 GB of GPU memory on an RTX 3060 Ti.
+Scoring the untouched model takes about 5 minutes and 3 GB of GPU memory on an RTX 3060 Ti.
 
-### Train
+### Train a model
 
-Supervised fine-tuning with LoRA:
+Learning from examples (supervised fine-tuning with LoRA):
 
 ```bash
-python scripts/train_sft.py --train-files train_spider.json train_synsql.json --epochs 2 --out outputs/sft
+python scripts/train_sft.py --train-files train_spider.json train_synsql.json --value-hints --epochs 2 --out outputs/sft
 ```
 
-Reinforcement learning on execution results, starting from a supervised adapter:
+Learning from trial and error (reinforcement learning), starting from a model trained as above:
 
 ```bash
 python scripts/train_grpo.py --adapter outputs/sft/adapter --out outputs/grpo --value-hints --learning-rate 5e-6
 ```
 
-Each question gets 8 sampled queries. One that returns the right rows earns 1, one that only runs earns 0.1, and the model is pushed toward the better ones. Both scripts check the training data with the [leakage guard](#data-leakage-guard) before they start.
+Here the model writes 8 queries per question. A query that returns the right rows scores 1, one that only runs scores 0.1, and the model is nudged toward the better ones.
 
-### Vote across runs
+### Let several models vote
 
 ```bash
-python -m minnow.combine outputs/vote outputs/run-a outputs/run-b outputs/run-c --spider data/spider
+python -m minnow.combine outputs/vote outputs/run-a outputs/run-b outputs/run-c --spider data/spider --prefer-rows
 ```
 
-Pools every saved candidate of the given runs and keeps the result most of them agree on.
+Takes the answers of the runs you list and keeps the result most of them agree on. `--prefer-rows` makes an empty result the last choice.
 
-### Split Spider test
+### Split the Spider test set
 
 ```bash
 python -m minnow.splits data/spider
@@ -173,31 +196,41 @@ python -m minnow.splits data/spider
 
 Writes `test_val.json` (for choosing settings) and `test_final.json` (scored once at the end).
 
-## Results log
+## How the numbers stay honest
 
-No score in this repository is typed by hand. Three small tools turn a run's files into everything that is reported:
+A score is easy to get wrong by accident, so a few things are automatic.
+
+**No score is typed by hand.** Three small tools turn a run's files into everything reported here:
 
 ```bash
-python -m minnow.outcomes outputs/run --spider data/spider    # judge a run again and count its errors
+python -m minnow.outcomes outputs/run --spider data/spider    # judge a run again and count its mistakes
 python -m minnow.compare results/baseline outputs/run         # which questions a change fixed or broke
-python -m minnow.runlog add outputs/run --change "..."        # log the run and regenerate the reports
+python -m minnow.runlog add outputs/run --change "..."        # log the run and rebuild the reports
 ```
 
-`runlog add` regenerates `results.md`, the chart and the results table in this README. `python -m minnow.runlog check` fails when any of them is out of date, and it is part of the checks below.
+`runlog add` rebuilds `results.md`, the chart and the results table in this README. `python -m minnow.runlog check` fails if any of them no longer matches the runs.
+
+**The model cannot train on the exam.** `minnow.guard` checks that the training data shares no question and no database with Spider dev. Every training script has to call it before it starts, and a test fails if one does not.
+
+```bash
+python -m minnow.guard train.json dev.json
+```
+
+Both files are JSON lists of objects with `question` and `db_id` fields, the format Spider uses. It exits with 0 when the data is clean and with 3 when it finds an overlap.
 
 ## Dashboard
 
-A local page shows every logged run: scores, kinds of error, accuracy per database, and each question with the model's query next to the reference query.
+A local page to browse every logged run: scores, kinds of mistakes, accuracy per database, and each question with the model's query next to the correct one.
 
 ```bash
 python scripts/dashboard.py
 ```
 
-It serves the repository on `127.0.0.1` only and reads the files under `results/` directly. Question text and reference queries appear when Spider is unpacked in `data/spider`.
+It only runs on your own machine (`127.0.0.1`) and reads the files under `results/` directly. Questions and correct queries show up when Spider is unpacked in `data/spider`.
 
-## Development
+## Working on the code
 
-Requires Python 3.12 or later.
+You need Python 3.12 or later.
 
 ```bash
 python -m venv .venv
@@ -214,26 +247,28 @@ pytest
 python -m minnow.runlog check
 ```
 
-On Windows, `powershell -File scripts/verify.ps1` runs all of them in one step. The same checks run in CI on every push to `main`. They cover:
+On Windows, `powershell -File scripts/verify.ps1` runs all of them in one go. The same checks run on GitHub for every push to `main`. They cover:
 
-- formatting and linting with [ruff](https://docs.astral.sh/ruff/), including limits on function length and complexity
-- unit tests with a 90% coverage floor on `minnow/`
-- structure tests: every module has a test file, source files stay under a size limit, and any file that starts training must call the leakage guard
+- code style and linting with [ruff](https://docs.astral.sh/ruff/), with limits on how long and tangled a function may get
+- unit tests, which have to cover at least 90% of `minnow/`
+- structure tests: every module has a test file, files stay small, and training scripts call the guard
 - the results log: every reported number matches the runs' files
 
-### Data leakage guard
+### Folders
 
-`minnow.guard` verifies that a training set shares no question and no database with the Spider dev set. Questions are compared after normalizing case, punctuation, and whitespace.
-
-```bash
-python -m minnow.guard train.json dev.json
 ```
-
-Both files are JSON lists of objects with `question` and `db_id` fields, the format Spider uses. The command exits with 0 when the data is clean and with 3 when it finds a leak.
+minnow/       the logic; runs without a GPU
+tests/        tests
+scripts/      training, scoring, the dashboard and the check runner
+results/      answers, verdicts and score of every logged run
+dashboard/    the local results page
+results.md    the log of measured runs, built from results/
+FINDINGS.md   what each experiment showed and what I decided because of it
+```
 
 ## License
 
-The code in this repository is released under the [MIT License](LICENSE). The base model and the datasets are distributed under their own licenses.
+The code is released under the [MIT License](LICENSE). The base model and the datasets come with their own licenses.
 
 ## References
 
