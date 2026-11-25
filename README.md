@@ -17,7 +17,7 @@ Minnow-SQL-0.5B is a text-to-SQL model in the 0.5B-parameter class, fine-tuned f
 
 ## Goal
 
-At least 70% execution accuracy (EX) on the [Spider][spider] development set (1,034 questions), with a 0.5B-parameter model trained on one consumer GPU. A prediction counts as correct when its query runs and returns the same rows as the reference query.
+Reach at least 70% execution accuracy (EX) on the [Spider][spider] development set (1,034 questions), with a 0.5B-parameter model trained on one consumer GPU. A prediction counts as correct when its query runs and returns the same rows as the reference query.
 
 ## Results
 
