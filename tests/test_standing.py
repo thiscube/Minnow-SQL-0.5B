@@ -69,7 +69,7 @@ def test_headline_list_comes_first_when_a_published_score_is_given(repo):
     assert standing_table(repo).splitlines()[:4] == [
         "- **~2x fewer mistakes.** It now gets 50 of every 100 questions wrong. Before "
         "training it got 75 wrong, more than half.",
-        "- **2.0 times as many right.** It answers 2 of the 4 questions correctly, up from 1.",
+        "- **2.0x as many right.** It answers 2 of the 4 questions correctly, up from 1.",
         "- **33% on questions it had never seen.** Other-0.5B, a published model of the same "
         "size, reports 60.5%.",
         "",
