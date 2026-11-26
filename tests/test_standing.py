@@ -56,7 +56,7 @@ def test_table_reads_every_score_from_the_run_files(repo):
     assert standing_table(repo) == (
         "|  | Spider dev | Scored once |\n"
         "| --- | ---: | ---: |\n"
-        "| Before training | 25.00% |  |\n"
+        "| Before training | 25.00% | N/A |\n"
         "| One model | 50.00% | 33.33% |\n"
         "| Three models | **75.00%** | **66.67%** |\n"
     )
