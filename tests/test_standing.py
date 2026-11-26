@@ -54,7 +54,7 @@ def repo(tmp_path):
 
 def test_table_reads_every_score_from_the_run_files(repo):
     assert standing_table(repo) == (
-        "|  | Spider dev (4 questions) | Scored once (3 questions) |\n"
+        "|  | Spider dev | Scored once |\n"
         "| --- | ---: | ---: |\n"
         "| Before training | 25.00% |  |\n"
         "| One model | 50.00% | 33.33% |\n"
@@ -86,15 +86,6 @@ def test_halved_mistakes_are_called_half(repo):
     make_run(repo / "five/good", 3, 5)
 
     assert standing_table(repo).startswith("- **Half the mistakes:**")
-
-
-def test_question_count_is_written_with_a_thousands_comma(repo):
-    table = dict(TABLE, rows=[{"label": "One model", "runs": ["big", None]}])
-    table["columns"] = TABLE["columns"][:1]
-    (repo / STANDING_FILE).write_text(json.dumps(table), encoding="utf-8")
-    make_run(repo / "results/big", 517, 1034)
-
-    assert standing_table(repo).splitlines()[0] == "|  | Spider dev (1,034 questions) |"
 
 
 def test_runs_of_one_column_have_to_cover_the_same_questions(repo):

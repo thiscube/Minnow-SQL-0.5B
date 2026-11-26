@@ -1,17 +1,17 @@
 {
   "published": {"name": "SLM-SQL-0.5B", "score": 73.5},
   "columns": [
-    {"title": "Spider dev", "folder": "results"},
-    {"title": "Spider test, the half for choosing settings", "folder": "heldout/validation"},
-    {"title": "Spider test, the half scored once at the end", "folder": "heldout/final"}
+    {"title": "Dev", "folder": "results"},
+    {"title": "Test A", "folder": "heldout/validation"},
+    {"title": "Test B", "folder": "heldout/final"}
   ],
   "rows": [
     {
-      "label": "The model before any training",
+      "label": "Before training",
       "runs": ["baseline", null, null]
     },
     {
-      "label": "My best single model",
+      "label": "My best model",
       "runs": [
         "sft-hintstrained-repaired",
         "sft-hintstrained-repaired",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "label": "Three of my models voting on the answer",
+      "label": "Three models voting",
       "runs": ["vote-three-repaired", "vote-three-repaired", "vote-three-repaired"],
       "bold": true
     }

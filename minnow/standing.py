@@ -30,8 +30,7 @@ def _column(root: Path, column: Mapping[str, str], names: Sequence[str | None]) 
             f"The runs of {column['folder']} named in {STANDING_FILE} have to cover the same "
             "questions."
         )
-    header = f"{column['title']} ({totals.pop():,} questions)"
-    return [header, *(f"{run.execution_accuracy:.2f}%" if run else "" for run in runs)]
+    return [column["title"], *(f"{run.execution_accuracy:.2f}%" if run else "" for run in runs)]
 
 
 def _highlights(root: Path, table: Mapping) -> list[str]:

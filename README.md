@@ -14,9 +14,9 @@ My PC:
 - **RAM:** 32 GB
 - **System:** Windows 10
 
-## Where it stands
+## Results
 
-The test is [Spider][spider], a standard benchmark. An answer only counts when the query runs and returns the right rows.
+Tested on [Spider][spider], a standard benchmark. An answer only counts if the query runs and returns the right rows.
 
 <!-- standing:start -->
 
@@ -24,17 +24,15 @@ The test is [Spider][spider], a standard benchmark. An answer only counts when t
 - **1.6 times as many right:** 469 of 1,034 before training, now 736.
 - **77% on questions it never saw:** the published SLM-SQL-0.5B, same size, reports 73.5% on Spider test.
 
-|  | Spider dev (1,034 questions) | Spider test, the half for choosing settings (1,230 questions) | Spider test, the half scored once at the end (917 questions) |
+|  | Dev | Test A | Test B |
 | --- | ---: | ---: | ---: |
-| The model before any training | 45.36% |  |  |
-| My best single model | 71.18% | 72.93% | 76.66% |
-| Three of my models voting on the answer | **73.79%** | **74.72%** | **78.19%** |
+| Before training | 45.36% |  |  |
+| My best model | 71.18% | 72.93% | 76.66% |
+| Three models voting | **73.79%** | **74.72%** | **78.19%** |
 
 <!-- standing:end -->
 
-So training took it from getting less than half right to getting about three out of four right.
-
-The last column is the fairest one. I set those questions aside, chose nothing on them, and scored them a single time when everything else was finished. They come from different databases than the other two columns, so the three columns show the same setup on three sets of questions, not a model that got better from left to right.
+Test B is the fairest score. I set those questions aside, chose nothing on them, and scored them once at the very end.
 
 > [!NOTE]
 > Still open: putting the model on Hugging Face. See [what is left](#what-is-left).

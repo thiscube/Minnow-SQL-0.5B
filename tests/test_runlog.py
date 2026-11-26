@@ -236,7 +236,7 @@ def test_render_fills_the_score_table_when_the_repository_describes_one(logged):
     assert stale == ["README.md is out of date: run python -m minnow.runlog render"]
     assert path.read_text(encoding="utf-8").endswith(
         "<!-- standing:start -->\n\n"
-        "|  | Spider dev (4 questions) |\n| --- | ---: |\n| Before training | 50.00% |\n"
+        "|  | Spider dev |\n| --- | ---: |\n| Before training | 50.00% |\n"
         "\n<!-- standing:end -->\n"
     )
     assert check(logged) == []
