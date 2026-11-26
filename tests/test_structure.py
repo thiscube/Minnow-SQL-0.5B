@@ -133,4 +133,4 @@ def test_chart_reference_lines_match_the_numbers_in_the_readme():
     assert (
         f"| SLM-SQL-0.5B | SFT and RL on SynSQL-derived data | {PUBLISHED_ACCURACY:.2f} |" in readme
     )
-    assert f"Reach at least {TARGET_ACCURACY:g}% execution accuracy" in readme
+    assert f"I wanted at least {TARGET_ACCURACY:g}% on Spider's dev set" in readme

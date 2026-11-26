@@ -67,10 +67,11 @@ def test_headline_list_comes_first_when_a_published_score_is_given(repo):
     (repo / STANDING_FILE).write_text(json.dumps(table), encoding="utf-8")
 
     assert standing_table(repo).splitlines()[:4] == [
-        "- **1.5 times fewer mistakes:** 75 of 100 questions wrong before training, now 50.",
-        "- **2.0 times as many right:** 1 of 4 before training, now 2.",
-        "- **33% on questions it never saw:** the published Other-0.5B, same size, reports "
-        "60.5% on Spider test.",
+        "- **1.5 times fewer mistakes.** It now gets 50 of every 100 questions wrong. Before "
+        "training it got 75 wrong, more than half.",
+        "- **2.0 times as many right.** It answers 2 of the 4 questions correctly, up from 1.",
+        "- **33% on questions it had never seen.** Other-0.5B, a published model of the same "
+        "size, reports 60.5%.",
         "",
     ]
 
@@ -85,7 +86,10 @@ def test_halved_mistakes_are_called_half(repo):
     make_run(repo / "five/base", 1, 5)
     make_run(repo / "five/good", 3, 5)
 
-    assert standing_table(repo).startswith("- **Half the mistakes:**")
+    assert standing_table(repo).startswith(
+        "- **Half the mistakes.** It now gets 40 of every 100 questions wrong. Before training "
+        "it got 80 wrong, more than half."
+    )
 
 
 def test_runs_of_one_column_have_to_cover_the_same_questions(repo):

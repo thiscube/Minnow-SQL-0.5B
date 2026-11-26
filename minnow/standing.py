@@ -43,13 +43,17 @@ def _highlights(root: Path, table: Mapping) -> list[str]:
     wrong_before, wrong_after = before.total - before.correct, after.total - after.correct
     fewer = wrong_before / wrong_after
     mistakes = "Half the mistakes" if abs(fewer - 2) < 0.25 else f"{fewer:.1f} times fewer mistakes"
+    half = ", more than half" if 2 * wrong_before > before.total else ""
     return [
-        f"- **{mistakes}:** {round(100 * wrong_before / before.total)} of 100 questions wrong "
-        f"before training, now {round(100 * wrong_after / after.total)}.",
-        f"- **{after.correct / before.correct:.1f} times as many right:** {before.correct:,} of "
-        f"{before.total:,} before training, now {after.correct:,}.",
-        f"- **{unseen.execution_accuracy:.0f}% on questions it never saw:** the published "
-        f"{published['name']}, same size, reports {published['score']:g}% on Spider test.",
+        f"- **{mistakes}.** It now gets {round(100 * wrong_after / after.total)} of every 100 "
+        f"questions wrong. Before training it got {round(100 * wrong_before / before.total)} "
+        f"wrong{half}.",
+        f"- **{after.correct / before.correct:.1f} times as many right.** It answers "
+        f"{after.correct:,} of the {after.total:,} questions correctly, up from "
+        f"{before.correct:,}.",
+        f"- **{unseen.execution_accuracy:.0f}% on questions it had never seen.** "
+        f"{published['name']}, a published model of the same size, reports "
+        f"{published['score']:g}%.",
     ]
 
 
