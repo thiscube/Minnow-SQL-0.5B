@@ -10,6 +10,12 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-26 · Improvement · Empty results last inside each model's vote, and a repair for picks that do not run: one model alone reaches 71.18% on dev
+
+- **What:** Two steps after sampling that use only the database, never the reference query (`minnow.repair`). Each model's own vote now puts empty and all-NULL results last, the rule the vote across models already had. A pick that still fails with "no such column" gets the column reached another way: the alias of the table in the query that has it, else a natural join to the table that holds it, else the closest column name. The repair is kept only when the query then runs.
+- **Evidence:** Chosen on validation (1,230 questions): best single model with 15 candidates 875 to 897 (71.14% to 72.93%), three-model line-up 901 to 919 (73.25% to 74.72%). The frozen recipe on dev: single model 709 to 736 (68.57% to 71.18%, 27 fixed, 0 broken); line-up on the same candidates 753 to 763 (72.82% to 73.79%, 18 fixed, 8 broken). One greedy answer plus the repair: 830 to 875 on validation and 646 to 693 on dev, as good as voting over 15 candidates without it. Measured and dropped: repairing every candidate before the vote (3 fixed, 18 broken), replacing text values that are not stored (validation +6, dev -12, all 22 broken dev answers in flight_2, where the reference itself uses a value that is not stored), more than 15 candidates (the vote gets 865.9, 872.5 and 875.3 at 5, 10 and 15).
+- **So what:** Every reported result now uses the recipe. Two line-up members were sampled again for it, because their dev runs had no saved candidates. One of them drew 16 questions worse than before (657 against 673 with 5 candidates), which is why the dev line-up moves less than the validation one. The single model is past 70% on dev on its own.
+
 ### 2026-11-26 · Decision · Repair first, training only as a gated side bet
 
 - **What:** Three independent analyses of the validation questions (scoring-time fixes, training and data, and a red team attacking the plan) each had to bring measured proof and then agree on one plan for the night.

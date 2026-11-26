@@ -60,7 +60,7 @@ Every run I measured, in order. The chart and the table below are made by a scri
 ![Execution accuracy by run](results/chart.svg)
 
 <details>
-<summary>What each of the 20 runs changed</summary>
+<summary>What each of the 25 runs changed</summary>
 
 | Run | Change | Spider dev EX (%) | Correct |
 | --- | --- | ---: | ---: |
@@ -84,6 +84,11 @@ Every run I measured, in order. The chart and the table below are made by a scri
 | sft-hintstrained | Trained with value hints in the prompt (Spider + SynSQL slice, 2 epochs), greedy | 62.48 | 646 / 1034 |
 | sft-hintstrained-vote15 | Same hints-trained model, vote over 15 candidates | 68.57 | 709 / 1034 |
 | vote-hintstrained-three | Three models vote (hints-trained with 15 candidates, one-row model with 15, all-Spider model with 5), empty results last | 73.31 | 758 / 1034 |
+| sft-rows1-shared15 | Same model as sft-rows1-vote15, sampled again with the shared-prompt sampler so that its 15 candidates are saved | 66.73 | 690 / 1034 |
+| sft-spider-all-shared5 | Same model as sft-spider-all-vote5, sampled again with the shared-prompt sampler so that its 5 candidates are saved | 63.54 | 657 / 1034 |
+| sft-hintstrained-greedy-repaired | One greedy query of the hints-trained model; a query that fails on a missing column is repaired from the database (minnow.repair) | 67.02 | 693 / 1034 |
+| sft-hintstrained-repaired | Same 15 candidates as sft-hintstrained-vote15, voted again with empty results last, then repaired where a column was missing | 71.18 | 736 / 1034 |
+| vote-three-repaired | Several models: hints-trained (15 candidates), sft-rows1-shared15 and sft-spider-all-shared5, each voted again with empty results last and repaired, then a vote over their picks; 72.82% on the same candidates without these two steps | 73.79 | 763 / 1034 |
 
 </details>
 
