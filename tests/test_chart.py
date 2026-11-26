@@ -49,7 +49,7 @@ def test_background_is_light_and_opaque_and_covers_the_whole_chart():
     text = bar_chart("Accuracy (%)", BARS, MARKERS)
     background = draw().find(f"{SVG}rect")
 
-    assert background.get("fill") == "#fcfcfb"
+    assert background.get("fill") == "#f5f4ed"
     assert float(background.get("width")) >= WIDTH - 1
     assert float(background.get("height")) >= height(2) - 1
     assert "opacity" not in text

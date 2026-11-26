@@ -25,14 +25,17 @@ _BELOW = 36
 _BAR_HEIGHT = 14
 _BAR_CORNER = 3
 _TICKS = (0, 20, 40, 60, 80, 100)
-_SURFACE = "#fcfcfb"
-_GRID = "#e1e0d9"
-_AXIS = "#c3c2b7"
-_INK = "#0b0b0b"
-_SECONDARY_INK = "#52514e"
-_MUTED_INK = "#898781"
-_BAR_COLOR = "#2a78d6"
+_SURFACE = "#f5f4ed"
+_GRID = "#e8e6dc"
+_AXIS = "#c9c6b8"
+_INK = "#141413"
+_SECONDARY_INK = "#5e5d59"
+_MUTED_INK = "#a3a198"
+_BAR_COLOR = "#c2c0b6"
+# the best bar stands out in a warm clay colour, every other bar stays a quiet grey
+_BEST_COLOR = "#d97757"
 _FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif"
+_TITLE_FONT = "Georgia, 'Times New Roman', serif"
 
 
 def _number(value: float) -> str:
@@ -70,9 +73,8 @@ def _frame(title: str, description: str, tall: int) -> list[str]:
         f'font-family="{_FONT}">',
         f'<title id="chart-title">{escape(title)}</title>',
         f'<desc id="chart-desc">{escape(description)}</desc>',
-        f'<rect x="0.5" y="0.5" width="{WIDTH - 1}" height="{tall - 1}" rx="6" '
-        f'fill="{_SURFACE}" stroke="{_GRID}"/>',
-        f'<text x="{_MARGIN}" y="32" font-size="14" font-weight="600" fill="{_INK}">'
+        f'<rect width="{WIDTH}" height="{tall}" rx="12" fill="{_SURFACE}"/>',
+        f'<text x="{_MARGIN}" y="34" font-size="18" font-family="{_TITLE_FONT}" fill="{_INK}">'
         f"{escape(title)}</text>",
     ]
 
@@ -84,8 +86,8 @@ def _grid(left: float, bottom: float) -> list[str]:
     ]
     for tick in _TICKS:
         x = _number(_x(left, tick))
-        colour = _AXIS if tick == 0 else _GRID
-        lines.append(f'<line x1="{x}" y1="{_TOP}" x2="{x}" y2="{bottom}" stroke="{colour}"/>')
+        if tick == 0:
+            lines.append(f'<line x1="{x}" y1="{_TOP}" x2="{x}" y2="{bottom}" stroke="{_AXIS}"/>')
         lines.append(f'<text x="{x}" y="{bottom + 18}">{tick}</text>')
     return [*lines, "</g>"]
 
@@ -107,21 +109,27 @@ def _bar_shape(left: float, middle: float, percent: float) -> str:
 def _bars(left: float, bars: Sequence[Labelled]) -> list[str]:
     shapes = [f'<g fill="{_BAR_COLOR}">']
     # the values line up in their own column right of the plot, clear of bars and marker lines
-    values = [f'<g font-size="12" font-weight="600" fill="{_INK}" text-anchor="end">']
+    values = [f'<g font-size="12" fill="{_SECONDARY_INK}" text-anchor="end">']
     names = [f'<g font-size="{LABEL_FONT_SIZE}" fill="{_SECONDARY_INK}" text-anchor="end">']
+    best = max(percent for _, percent in bars) if bars else None
     for position, (label, percent) in enumerate(bars):
         middle = _row(position)
         text_y = _number(middle + 4)
-        shapes.append(_bar_shape(left, middle, percent))
-        values.append(f'<text x="{WIDTH - _MARGIN}" y="{text_y}">{percent:.2f}%</text>')
+        shape = _bar_shape(left, middle, percent)
+        style = ""
+        if percent == best:
+            shape = shape.replace("<path ", f'<path fill="{_BEST_COLOR}" ', 1)
+            style = f' font-weight="700" fill="{_BEST_COLOR}"'
+        shapes.append(shape)
+        values.append(f'<text x="{WIDTH - _MARGIN}" y="{text_y}"{style}>{percent:.2f}%</text>')
         names.append(f'<text x="{_number(left - _GAP)}" y="{text_y}">{escape(_name(label))}</text>')
     return [*shapes, "</g>", *names, "</g>", *values, "</g>"]
 
 
 def _markers(left: float, bottom: float, markers: Sequence[Labelled]) -> list[str]:
     highest = max((percent for _, percent in markers), default=0)
-    lines = [f'<g stroke="{_SECONDARY_INK}" stroke-dasharray="5 4">']
-    labels = [f'<g font-size="{LABEL_FONT_SIZE}" fill="{_SECONDARY_INK}">']
+    lines = [f'<g stroke="{_MUTED_INK}" stroke-dasharray="3 4">']
+    labels = [f'<g font-size="{LABEL_FONT_SIZE}" fill="{_MUTED_INK}">']
     for label, percent in markers:
         x = _x(left, percent)
         # the highest label reads to the right of its line and the others to the left,
