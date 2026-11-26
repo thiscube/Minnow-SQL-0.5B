@@ -100,11 +100,10 @@ Here's every run I measured, in order. A script builds the chart and the table f
 
 ### How to read the numbers
 
-- **Correct means the query runs and returns the same rows as the correct query.** Row order only matters when the question asks for a sorted answer.
-- **A wrong query can get lucky.** Each question is checked on one database. If the right answer is "nothing" and a wrong query also returns nothing, it passes. results.md counts how often that could have happened.
-- **One point up or down doesn't mean much.** When I scored 200 questions again with a different batch size, 3 answers flipped. So every run uses the same batch size of 16, and I only call something better when it wins by clearly more than a point.
-- **The hints aren't cheating.** They come from matching words in the question against text stored in the database. The correct query is never used.
-- **The dev score is a little flattering.** I picked models and settings while looking at dev scores, so dev isn't a fair exam anymore. To fix that, I split Spider's separate test set in two, by database. Test A (1,230 questions) is for choosing settings like the voting rule. Test B (917 questions) was scored once, at the very end, when there was nothing left to choose. The answers behind both are in [heldout/](heldout).
+- **Correct** means the query returns the same rows as the right answer.
+- **±1 point is noise.** I only count a change as better when it clearly beats that.
+- **Hints aren't cheating.** They only use the database, never the right answer.
+- **Test B is the fair exam.** I chose settings on Dev and Test A, and scored Test B once at the end ([heldout/](heldout)).
 
 ### How it compares to published work
 
