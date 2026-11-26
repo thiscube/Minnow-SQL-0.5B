@@ -1,4 +1,5 @@
 import json
+import shutil
 import sqlite3
 import zipfile
 from contextlib import closing
@@ -14,6 +15,7 @@ from minnow.synsql import (
     fixed_order,
     looks_like_spider,
     main,
+    more_questions,
     one_line,
     read_items,
 )
@@ -160,3 +162,87 @@ def test_database_limit_is_respected(tmp_path, synsql):
     main([str(synsql), str(spider), "--databases", "0"])
 
     assert load_split(spider, "train_synsql.json") == []
+
+
+MORE = [
+    item("music", "Simple", "SELECT count(*)\nFROM singer;", "How many singers?"),
+    item("music", "Simple", "SELECT name\nFROM singer;", "Who sings?"),
+    item("music", "Simple", "SELECT nothing FROM singer", "What is not there?"),
+    item("music", "Simple", "SELECT 1 -- note", "What has a comment?"),
+    item("music", "Simple", "SELECT age FROM singer", "How old are they?"),
+    item("music", "Simple", "SELECT singer_id FROM singer", "Which ids are there?"),
+    item("music", "Moderate", "SELECT max(age) FROM singer", "Who sings?"),
+    item("music", "Moderate", "SELECT min(age) FROM singer", "How young is the youngest?"),
+    item("music", "Highly Complex", "SELECT 2", "What is too hard?"),
+    item("other", "Simple", "SELECT 1", "What is on another database?"),
+]
+
+
+def unpacked(spider, database, *names):
+    for name in names:
+        target = spider / "database" / f"synsql_{name}" / f"synsql_{name}.sqlite"
+        target.parent.mkdir(parents=True)
+        shutil.copy(database, target)
+    return spider
+
+
+def test_more_questions_are_new_runnable_and_limited_per_level(tmp_path, database):
+    spider = unpacked(tmp_path, database, "music", "other")
+    slices = [SpiderExample("How many singers?", "SELECT count(*) FROM singer", "synsql_music")]
+
+    found = more_questions(MORE, slices, spider, per_level=2)
+
+    assert found == [
+        SpiderExample("Who sings?", "SELECT name FROM singer", "synsql_music"),
+        SpiderExample("How old are they?", "SELECT age FROM singer", "synsql_music"),
+        SpiderExample("How young is the youngest?", "SELECT min(age) FROM singer", "synsql_music"),
+    ]
+
+
+def test_more_questions_come_in_a_fixed_order_of_databases(tmp_path, database):
+    spider = unpacked(tmp_path, database, "music", "films")
+    first, second = fixed_order(["synsql_music", "synsql_films"])
+    slices = [SpiderExample("How many?", "SELECT 1", db_id) for db_id in (first, second)]
+    items = [
+        item(second.removeprefix("synsql_"), "Simple", "SELECT 2", "What is two?"),
+        item(first.removeprefix("synsql_"), "Simple", "SELECT 3", "What is three?"),
+        item(second.removeprefix("synsql_"), "Complex", "SELECT 4", "What is four?"),
+    ]
+
+    found = more_questions(items, slices, spider, per_level=3)
+
+    assert [example.query for example in found] == ["SELECT 3", "SELECT 2", "SELECT 4"]
+    assert found == more_questions(items, slices[::-1], spider, per_level=3)
+
+
+def test_command_line_finds_more_questions_without_unpacking(tmp_path, synsql, capsys):
+    spider = tmp_path / "spider"
+    spider.mkdir()
+    main([str(synsql), str(spider), "--per-database", "1"])
+    (synsql / "data.json").write_text(json.dumps(MORE), encoding="utf-8")
+    (synsql / "databases.zip").unlink()
+    more = ["--more-from", "train_synsql.json", "--per-level", "1", "--out-file", "more.json"]
+
+    assert main([str(synsql), str(spider), *more]) == 0
+
+    assert [example.query for example in load_split(spider, "more.json")] == [
+        "SELECT name FROM singer",
+        "SELECT min(age) FROM singer",
+    ]
+    assert [example.query for example in load_split(spider, "train_synsql.json")] == [
+        "SELECT count(*) FROM singer"
+    ]
+    assert [path.name for path in (spider / "database").iterdir()] == ["synsql_music"]
+    assert "2 questions on 1 databases" in capsys.readouterr().out
+
+
+def test_more_questions_may_not_overwrite_the_slice_they_come_from(tmp_path, synsql):
+    spider = tmp_path / "spider"
+    spider.mkdir()
+    main([str(synsql), str(spider)])
+    before = (spider / "train_synsql.json").read_text(encoding="utf-8")
+
+    with pytest.raises(SystemExit):
+        main([str(synsql), str(spider), "--more-from", "train_synsql.json"])
+
+    assert (spider / "train_synsql.json").read_text(encoding="utf-8") == before

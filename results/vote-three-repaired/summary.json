@@ -1,0 +1,9 @@
+{
+  "model": "vote of rep-sft-hintstrained-vote15, rep-sft-rows1-shared15, rep-sft-spider-all-shared5",
+  "split": "dev",
+  "correct": 763,
+  "total": 1034,
+  "execution_accuracy": 73.79,
+  "generation_seconds": null,
+  "decoding": "vote over the candidates of 3 runs, empty results last"
+}

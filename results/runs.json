@@ -218,5 +218,60 @@
     "execution_accuracy": 73.31,
     "generation_seconds": null,
     "fingerprint": "2fd7ebeac2b8a126de92673e195394d8f6b67f1e5558cd6a02d265815e857296"
+  },
+  {
+    "name": "sft-rows1-shared15",
+    "date": "2026-11-26",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-rows1",
+    "change": "Same model as sft-rows1-vote15, sampled again with the shared-prompt sampler so that its 15 candidates are saved",
+    "correct": 690,
+    "total": 1034,
+    "execution_accuracy": 66.73,
+    "generation_seconds": 944,
+    "fingerprint": "4eb4852c35edb035108f44dc797f5413b39dc34134539543726eb4cf9b2bd1c9"
+  },
+  {
+    "name": "sft-spider-all-shared5",
+    "date": "2026-11-26",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-spider-all",
+    "change": "Same model as sft-spider-all-vote5, sampled again with the shared-prompt sampler so that its 5 candidates are saved",
+    "correct": 657,
+    "total": 1034,
+    "execution_accuracy": 63.54,
+    "generation_seconds": 573,
+    "fingerprint": "495dd0e9aa4fcb92ea8d15713c7b5dabad129017eb772eb7c80d27b7329f1b4c"
+  },
+  {
+    "name": "sft-hintstrained-greedy-repaired",
+    "date": "2026-11-26",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints",
+    "change": "One greedy query of the hints-trained model; a query that fails on a missing column is repaired from the database (minnow.repair)",
+    "correct": 693,
+    "total": 1034,
+    "execution_accuracy": 67.02,
+    "generation_seconds": 187,
+    "fingerprint": "e89f1929315747db2ed286e10907feb89313a0fd4425d6b3f7241dfc5b5a8b50"
+  },
+  {
+    "name": "sft-hintstrained-repaired",
+    "date": "2026-11-26",
+    "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints",
+    "change": "Same 15 candidates as sft-hintstrained-vote15, voted again with empty results last, then repaired where a column was missing",
+    "correct": 736,
+    "total": 1034,
+    "execution_accuracy": 71.18,
+    "generation_seconds": 2979,
+    "fingerprint": "c98ad7b36fa1ad41d8ef6f955eb82ec2e88d95696884f71c1d2094bb7dc68897"
+  },
+  {
+    "name": "vote-three-repaired",
+    "date": "2026-11-26",
+    "model": "vote of rep-sft-hintstrained-vote15, rep-sft-rows1-shared15, rep-sft-spider-all-shared5",
+    "change": "Several models: hints-trained (15 candidates), sft-rows1-shared15 and sft-spider-all-shared5, each voted again with empty results last and repaired, then a vote over their picks; 72.82% on the same candidates without these two steps",
+    "correct": 763,
+    "total": 1034,
+    "execution_accuracy": 73.79,
+    "generation_seconds": null,
+    "fingerprint": "980b8c8ff231194458262f45789a228f727dc64785259d096fe4a8df2b933f3e"
   }
 ]

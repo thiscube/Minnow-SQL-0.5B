@@ -24,6 +24,11 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 | 2026-11-25 | Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints | Trained with value hints in the prompt (Spider + SynSQL slice, 2 epochs), greedy | 62.48 | 646 / 1034 | [results/sft-hintstrained](results/sft-hintstrained) |
 | 2026-11-25 | Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints | Same hints-trained model, vote over 15 candidates | 68.57 | 709 / 1034 | [results/sft-hintstrained-vote15](results/sft-hintstrained-vote15) |
 | 2026-11-25 | vote of picks-sft-hintstrained-vote15, sft-rows1-vote15, sft-spider-all-vote5 | Three models vote (hints-trained with 15 candidates, one-row model with 15, all-Spider model with 5), empty results last | 73.31 | 758 / 1034 | [results/vote-hintstrained-three](results/vote-hintstrained-three) |
+| 2026-11-26 | Qwen2.5-Coder-0.5B-Instruct + sft-rows1 | Same model as sft-rows1-vote15, sampled again with the shared-prompt sampler so that its 15 candidates are saved | 66.73 | 690 / 1034 | [results/sft-rows1-shared15](results/sft-rows1-shared15) |
+| 2026-11-26 | Qwen2.5-Coder-0.5B-Instruct + sft-spider-all | Same model as sft-spider-all-vote5, sampled again with the shared-prompt sampler so that its 5 candidates are saved | 63.54 | 657 / 1034 | [results/sft-spider-all-shared5](results/sft-spider-all-shared5) |
+| 2026-11-26 | Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints | One greedy query of the hints-trained model; a query that fails on a missing column is repaired from the database (minnow.repair) | 67.02 | 693 / 1034 | [results/sft-hintstrained-greedy-repaired](results/sft-hintstrained-greedy-repaired) |
+| 2026-11-26 | Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints | Same 15 candidates as sft-hintstrained-vote15, voted again with empty results last, then repaired where a column was missing | 71.18 | 736 / 1034 | [results/sft-hintstrained-repaired](results/sft-hintstrained-repaired) |
+| 2026-11-26 | vote of rep-sft-hintstrained-vote15, rep-sft-rows1-shared15, rep-sft-spider-all-shared5 | Several models: hints-trained (15 candidates), sft-rows1-shared15 and sft-spider-all-shared5, each voted again with empty results last and repaired, then a vote over their picks; 72.82% on the same candidates without these two steps | 73.79 | 763 / 1034 | [results/vote-three-repaired](results/vote-three-repaired) |
 
 ## Notes
 
@@ -162,3 +167,37 @@ Execution accuracy (EX) on the Spider development set, 1,034 questions. A predic
 - 42 predictions did not run. The most common errors: `no such column` (42).
 - 234 predictions ran and returned different rows.
 - 39 of the 758 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+
+### 2026-11-26, sft-rows1-shared15
+
+- 105 predictions did not run. The most common errors: `no such column` (97), `no such table` (8).
+- 239 predictions ran and returned different rows.
+- 43 of the 690 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 944 seconds.
+
+### 2026-11-26, sft-spider-all-shared5
+
+- 140 predictions did not run. The most common errors: `no such column` (133), `no such table` (4), `misuse of aggregate` (3).
+- 237 predictions ran and returned different rows.
+- 43 of the 657 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 573 seconds.
+
+### 2026-11-26, sft-hintstrained-greedy-repaired
+
+- 77 predictions did not run. The most common errors: `no such column` (66), `no such table` (9), `misuse of aggregate` (2).
+- 264 predictions ran and returned different rows.
+- 40 of the 693 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 187 seconds.
+
+### 2026-11-26, sft-hintstrained-repaired
+
+- 37 predictions did not run. The most common errors: `no such column` (37).
+- 261 predictions ran and returned different rows.
+- 40 of the 736 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.
+- Generating all 1,034 predictions took 2,979 seconds.
+
+### 2026-11-26, vote-three-repaired
+
+- 22 predictions did not run. The most common errors: `no such column` (22).
+- 249 predictions ran and returned different rows.
+- 37 of the 763 correct predictions matched a reference query that returns no rows. With a single database per question, such a match cannot be told apart from a wrong query that also returns nothing.

@@ -1,0 +1,1230 @@
+{"index": 0, "sql": "SELECT count(*) FROM club"}
+{"index": 1, "sql": "SELECT count(*) FROM club"}
+{"index": 2, "sql": "SELECT Name FROM club ORDER BY Name ASC"}
+{"index": 3, "sql": "SELECT name FROM club ORDER BY name"}
+{"index": 4, "sql": "SELECT Manager , Captain FROM club"}
+{"index": 5, "sql": "SELECT Manager , Captain FROM club"}
+{"index": 6, "sql": "SELECT name FROM club WHERE Manufacturer != \"Nike\""}
+{"index": 7, "sql": "SELECT name FROM club WHERE manufacturer != 'Nike'"}
+{"index": 8, "sql": "SELECT Name FROM player ORDER BY Wins_count ASC"}
+{"index": 9, "sql": "SELECT Name FROM player ORDER BY Wins_count ASC"}
+{"index": 10, "sql": "SELECT Name FROM player ORDER BY Earnings DESC LIMIT 1"}
+{"index": 11, "sql": "SELECT Name FROM player ORDER BY Earnings DESC LIMIT 1"}
+{"index": 12, "sql": "SELECT DISTINCT Country FROM player WHERE Earnings > 1200000"}
+{"index": 13, "sql": "SELECT Country FROM player WHERE Earnings > 1200000"}
+{"index": 14, "sql": "SELECT Country FROM player WHERE Earnings = ( SELECT max(Earnings) FROM player WHERE Wins_count > 2 )"}
+{"index": 15, "sql": "SELECT T1.Country FROM player AS T1 JOIN club AS T2 ON T1.Club_ID = T2.Club_ID WHERE T1.Wins_count > 2 ORDER BY T1.Wins_count DESC LIMIT 1"}
+{"index": 16, "sql": "SELECT T1.Name , T2.Name FROM player AS T1 JOIN club AS T2 ON T1.Club_ID = T2.Club_ID"}
+{"index": 17, "sql": "SELECT T1.Name , T2.Name FROM player AS T1 JOIN club AS T2 ON T1.Club_ID = T2.Club_ID"}
+{"index": 18, "sql": "SELECT T1.name FROM club AS T1 JOIN player AS T2 ON T1.club_id = T2.club_id GROUP BY T2.club_id HAVING max(T2.wins_count) > 2"}
+{"index": 19, "sql": "SELECT T1.name FROM club AS T1 JOIN player AS T2 ON T1.club_id = T2.club_id GROUP BY T2.club_id HAVING COUNT(DISTINCT T2.wins_count) > 2"}
+{"index": 20, "sql": "SELECT T2.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID = T2.Club_ID WHERE T1.Manager = \"Sam Allardyce\""}
+{"index": 21, "sql": "SELECT T1.Name FROM player AS T1 JOIN club AS T2 ON T1.Club_ID = T2.Club_ID WHERE T2.Manager = 'Sam Allardyce'"}
+{"index": 22, "sql": "SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID = T2.Club_ID GROUP BY T1.Club_ID ORDER BY avg(T2.Earnings) DESC"}
+{"index": 23, "sql": "SELECT T1.Name FROM club AS T1 JOIN player AS T2 ON T1.Club_ID = T2.Club_ID GROUP BY T1.Club_ID ORDER BY avg(T2.Earnings) DESC"}
+{"index": 24, "sql": "SELECT Manufacturer , COUNT(*) FROM club GROUP BY Manufacturer"}
+{"index": 25, "sql": "SELECT Manufacturer , COUNT(*) FROM club GROUP BY Manufacturer"}
+{"index": 26, "sql": "SELECT Manufacturer FROM club GROUP BY Manufacturer ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 27, "sql": "SELECT Manufacturer FROM club GROUP BY Manufacturer ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 28, "sql": "SELECT Manufacturer FROM club GROUP BY Manufacturer HAVING COUNT(*) > 1"}
+{"index": 29, "sql": "SELECT Manufacturer FROM club GROUP BY Manufacturer HAVING count(*) > 1"}
+{"index": 30, "sql": "SELECT Country FROM player GROUP BY Country HAVING COUNT(*) > 1"}
+{"index": 31, "sql": "SELECT Country FROM player GROUP BY Country HAVING COUNT(*) > 1"}
+{"index": 32, "sql": "SELECT name FROM club WHERE club_id NOT IN (SELECT club_id FROM player)"}
+{"index": 33, "sql": "SELECT name FROM club WHERE club_id NOT IN (SELECT club_id FROM player)"}
+{"index": 34, "sql": "SELECT Country FROM player WHERE Earnings > 1400000 INTERSECT SELECT Country FROM player WHERE Earnings < 1100000"}
+{"index": 35, "sql": "SELECT Country FROM player WHERE Earnings > 1400000 INTERSECT SELECT Country FROM player WHERE Earnings < 1100000"}
+{"index": 36, "sql": "SELECT count(DISTINCT Country) FROM player"}
+{"index": 37, "sql": "SELECT count(DISTINCT Country) FROM player"}
+{"index": 38, "sql": "SELECT Earnings FROM player WHERE Country = \"Australia\" OR Country = \"Zimbabwe\""}
+{"index": 39, "sql": "SELECT Earnings FROM player WHERE Country = 'Australia' OR Country = 'Zimbabwe'"}
+{"index": 40, "sql": "SELECT Model FROM vehicle WHERE Power > 6000 ORDER BY Top_Speed DESC LIMIT 1"}
+{"index": 41, "sql": "SELECT Model FROM vehicle WHERE Power > 6000 ORDER BY Top_Speed DESC LIMIT 1"}
+{"index": 42, "sql": "SELECT Name FROM driver WHERE Citizenship = 'United States'"}
+{"index": 43, "sql": "SELECT Name FROM driver WHERE Citizenship = 'United States'"}
+{"index": 44, "sql": "SELECT T1.Vehicle_ID , T2.Driver_ID FROM vehicle_driver AS T1 JOIN driver AS T2 ON T1.Driver_ID = T2.Driver_ID GROUP BY T1.Vehicle_ID ORDER BY count(*) DESC LIMIT 1"}
+{"index": 45, "sql": "SELECT T2.Driver_ID , count(*) FROM vehicle_driver AS T1 JOIN driver AS T2 ON T1.driver_id = T2.driver_id GROUP BY T1.driver_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 46, "sql": "SELECT max(power) , avg(power) FROM vehicle WHERE builder = 'Zhuzhou'"}
+{"index": 47, "sql": "SELECT max(power) , avg(power) FROM vehicle WHERE builder = 'Zhuzhou'"}
+{"index": 48, "sql": "SELECT Vehicle_ID FROM vehicle_driver GROUP BY Vehicle_ID ORDER BY COUNT(*) ASC LIMIT 1"}
+{"index": 49, "sql": "SELECT Vehicle_ID FROM vehicle_driver GROUP BY Vehicle_ID ORDER BY COUNT(*) ASC LIMIT 1"}
+{"index": 50, "sql": "SELECT Top_Speed , Power FROM vehicle WHERE Build_Year = 1996"}
+{"index": 51, "sql": "SELECT Top_Speed , Power FROM vehicle WHERE Build_Year = 1996"}
+{"index": 52, "sql": "SELECT Build_Year , Model , Builder FROM vehicle"}
+{"index": 53, "sql": "SELECT Build_Year , Model , Builder FROM vehicle"}
+{"index": 54, "sql": "SELECT count(DISTINCT T1.Name) FROM driver AS T1 JOIN vehicle_driver AS T2 ON T1.Driver_ID = T2.Driver_ID JOIN vehicle AS T3 ON T2.Vehicle_ID = T3.Vehicle_ID WHERE T3.Build_Year = 2012"}
+{"index": 55, "sql": "SELECT COUNT (DISTINCT T1.Name) FROM driver AS T1 JOIN vehicle_driver AS T2 ON T1.Driver_ID = T2.Driver_ID JOIN vehicle AS T3 ON T2.Vehicle_ID = T3.Vehicle_ID WHERE T3.Build_Year = 2012"}
+{"index": 56, "sql": "SELECT count(*) FROM driver WHERE Racing_Series = \"NASCAR\""}
+{"index": 57, "sql": "SELECT count(*) FROM driver WHERE Racing_Series = \"NASCAR\""}
+{"index": 58, "sql": "SELECT avg(T1.Top_Speed) FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID"}
+{"index": 59, "sql": "SELECT avg(T1.Top_Speed) FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID"}
+{"index": 60, "sql": "SELECT DISTINCT T1.Name FROM driver AS T1 JOIN vehicle_driver AS T2 ON T1.Driver_ID = T2.Driver_ID JOIN vehicle AS T3 ON T2.Vehicle_ID = T3.Vehicle_ID WHERE T3.Power > 5000"}
+{"index": 61, "sql": "SELECT T1.Name FROM driver AS T1 JOIN vehicle_driver AS T2 ON T1.Driver_ID = T2.Driver_ID JOIN vehicle AS T3 ON T2.Vehicle_ID = T3.Vehicle_ID WHERE T3.Power > 5000"}
+{"index": 62, "sql": "SELECT Model FROM vehicle WHERE Total_Production > 100 OR Top_Speed > 150"}
+{"index": 63, "sql": "SELECT Model FROM vehicle WHERE Total_Production > 100 OR Top_Speed > 150"}
+{"index": 64, "sql": "SELECT Model , Build_Year FROM vehicle WHERE Model LIKE \"%DJ%\""}
+{"index": 65, "sql": "SELECT Model , Build_Year FROM vehicle WHERE Model LIKE \"%DJ%\""}
+{"index": 66, "sql": "SELECT Model FROM vehicle WHERE Vehicle_ID NOT IN (SELECT Vehicle_ID FROM vehicle_driver)"}
+{"index": 67, "sql": "SELECT Model FROM vehicle EXCEPT SELECT T1.Model FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID"}
+{"index": 68, "sql": "SELECT T1.Vehicle_ID , T1.Model FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID WHERE T2.Driver_ID = T2.Driver_ID GROUP BY T1.Vehicle_ID HAVING count(*) >= 2 OR T1.builder = 'Ziyang'"}
+{"index": 69, "sql": "SELECT T1.Vehicle_ID , T1.Model FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID GROUP BY T2.Vehicle_ID HAVING COUNT(*) = 2 OR T1.builder = 'Ziyang'"}
+{"index": 70, "sql": "SELECT T1.Vehicle_ID , T1.Model FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID WHERE T2.Driver_ID IN ( SELECT Driver_ID FROM driver WHERE Name = 'Jeff Gordon' ) INTERSECT SELECT T1.Vehicle_ID , T1.Model FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID GROUP BY T2.Driver_ID HAVING COUNT(*) > 2"}
+{"index": 71, "sql": "SELECT T1.Vehicle_ID , T1.Model FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID GROUP BY T2.Vehicle_ID HAVING COUNT(*) > 2 UNION SELECT T1.Vehicle_ID , T1.Model FROM vehicle AS T1 JOIN vehicle_driver AS T2 ON T1.Vehicle_ID = T2.Vehicle_ID JOIN driver AS T3 ON T2.Driver_ID = T3.Driver_ID WHERE T3.Name = \"Jeff Gordon\""}
+{"index": 72, "sql": "SELECT count(*) FROM vehicle WHERE Top_Speed = (SELECT max(Top_Speed) FROM vehicle)"}
+{"index": 73, "sql": "SELECT count(*) FROM vehicle WHERE top_speed = (SELECT max(top_speed) FROM vehicle)"}
+{"index": 74, "sql": "SELECT Name FROM driver ORDER BY Name ASC"}
+{"index": 75, "sql": "SELECT Name FROM driver ORDER BY Name ASC"}
+{"index": 76, "sql": "SELECT Racing_Series , COUNT(*) FROM driver GROUP BY Racing_Series"}
+{"index": 77, "sql": "SELECT Racing_Series , COUNT(*) FROM driver GROUP BY Racing_Series"}
+{"index": 78, "sql": "SELECT T2.Name , T2.Citizenship FROM vehicle_driver AS T1 JOIN driver AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T1.Vehicle_ID IN ( SELECT Vehicle_ID FROM vehicle WHERE Model = 'DJ1' )"}
+{"index": 79, "sql": "SELECT T2.Name , T2.Citizenship FROM vehicle_driver AS T1 JOIN driver AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T1.Vehicle_ID = (SELECT Vehicle_ID FROM vehicle WHERE Model = 'DJ1')"}
+{"index": 80, "sql": "SELECT count(*) FROM driver WHERE driver_id NOT IN (SELECT driver_id FROM vehicle_driver)"}
+{"index": 81, "sql": "SELECT count(*) FROM driver WHERE driver_id NOT IN (SELECT driver_id FROM vehicle_driver)"}
+{"index": 82, "sql": "SELECT count(*) FROM addresses"}
+{"index": 83, "sql": "SELECT count(*) FROM addresses"}
+{"index": 84, "sql": "SELECT address_id , address_details FROM addresses"}
+{"index": 85, "sql": "SELECT address_id , address_details FROM addresses"}
+{"index": 86, "sql": "SELECT count(*) FROM products"}
+{"index": 87, "sql": "SELECT count(*) FROM products"}
+{"index": 88, "sql": "SELECT product_id , product_type_code , product_name FROM products"}
+{"index": 89, "sql": "SELECT product_id , product_type_code , product_name FROM products"}
+{"index": 90, "sql": "SELECT product_price FROM products WHERE product_name = \"Monitor\""}
+{"index": 91, "sql": "SELECT product_price FROM products WHERE product_name = \"Monitor\""}
+{"index": 92, "sql": "SELECT min(product_price) , avg(product_price) , max(product_price) FROM products"}
+{"index": 93, "sql": "SELECT min(product_price) , avg(product_price) , max(product_price) FROM products"}
+{"index": 94, "sql": "SELECT avg(product_price) FROM products WHERE product_type_code = 'Clothes'"}
+{"index": 95, "sql": "SELECT avg(product_price) FROM products WHERE product_type_code = 'Clothes'"}
+{"index": 96, "sql": "SELECT count(*) FROM products WHERE product_type_code = \"Hardware\""}
+{"index": 97, "sql": "SELECT count(*) FROM products WHERE product_type_code = \"Hardware\""}
+{"index": 98, "sql": "SELECT product_name FROM products WHERE product_price > (SELECT avg(product_price) FROM products)"}
+{"index": 99, "sql": "SELECT product_name FROM products WHERE product_price > (SELECT avg(product_price) FROM products)"}
+{"index": 100, "sql": "SELECT product_name FROM products WHERE product_type_code = 'Hardware' AND product_price > (SELECT avg(product_price) FROM products WHERE product_type_code = 'Hardware')"}
+{"index": 101, "sql": "SELECT product_name FROM products WHERE product_type_code = \"Hardware\" AND product_price > (SELECT avg(product_price) FROM products WHERE product_type_code = \"Hardware\")"}
+{"index": 102, "sql": "SELECT product_name FROM products WHERE product_type_code = 'Clothes' ORDER BY product_price DESC LIMIT 1"}
+{"index": 103, "sql": "SELECT product_name FROM products WHERE product_type_code = 'Clothes' ORDER BY product_price DESC LIMIT 1"}
+{"index": 104, "sql": "SELECT product_id , product_name FROM products WHERE product_type_code = \"Hardware\" ORDER BY product_price LIMIT 1"}
+{"index": 105, "sql": "SELECT product_id , product_name FROM products WHERE product_type_code = \"Hardware\" ORDER BY product_price LIMIT 1"}
+{"index": 106, "sql": "SELECT product_name FROM products ORDER BY product_price DESC"}
+{"index": 107, "sql": "SELECT product_name FROM products ORDER BY product_price DESC"}
+{"index": 108, "sql": "SELECT product_name FROM products WHERE product_type_code = 'Hardware' ORDER BY product_price ASC"}
+{"index": 109, "sql": "SELECT product_name FROM products WHERE product_type_code = 'Hardware' ORDER BY product_price"}
+{"index": 110, "sql": "SELECT product_type_code , count(*) FROM products GROUP BY product_type_code"}
+{"index": 111, "sql": "SELECT product_type_code , count(*) FROM products GROUP BY product_type_code"}
+{"index": 112, "sql": "SELECT product_type_code , avg(product_price) FROM products GROUP BY product_type_code"}
+{"index": 113, "sql": "SELECT avg(product_price) , product_type_code FROM products GROUP BY product_type_code"}
+{"index": 114, "sql": "SELECT product_type_code FROM products GROUP BY product_type_code HAVING count(*) >= 2"}
+{"index": 115, "sql": "SELECT product_type_code FROM products GROUP BY product_type_code HAVING count(*) >= 2"}
+{"index": 116, "sql": "SELECT product_type_code FROM products GROUP BY product_type_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 117, "sql": "SELECT product_type_code FROM products GROUP BY product_type_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 118, "sql": "SELECT count(*) FROM customers"}
+{"index": 119, "sql": "SELECT count(*) FROM customers"}
+{"index": 120, "sql": "SELECT customer_id , customer_name FROM customers"}
+{"index": 121, "sql": "SELECT customer_id , customer_name FROM Customers"}
+{"index": 122, "sql": "SELECT customer_address , customer_phone , customer_email FROM customers WHERE customer_name = \"Jeromy\""}
+{"index": 123, "sql": "SELECT customer_address , customer_phone , customer_email FROM customers WHERE customer_name = \"Jeromy\""}
+{"index": 124, "sql": "SELECT payment_method_code , count(*) FROM customers GROUP BY payment_method_code"}
+{"index": 125, "sql": "SELECT payment_method_code , count(*) FROM customers GROUP BY payment_method_code"}
+{"index": 126, "sql": "SELECT payment_method_code FROM customers GROUP BY payment_method_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 127, "sql": "SELECT payment_method_code FROM customers GROUP BY payment_method_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 128, "sql": "SELECT customer_name FROM customers GROUP BY payment_method_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 129, "sql": "SELECT customer_name FROM customers ORDER BY payment_method_code LIMIT 1"}
+{"index": 130, "sql": "SELECT payment_method_code , customer_number FROM customers WHERE customer_name = \"Jeromy\""}
+{"index": 131, "sql": "SELECT payment_method_code , customer_number FROM customers WHERE customer_name = 'Jeromy'"}
+{"index": 132, "sql": "SELECT DISTINCT payment_method_code FROM customers"}
+{"index": 133, "sql": "SELECT DISTINCT payment_method_code FROM Customers"}
+{"index": 134, "sql": "SELECT product_id , product_type_code FROM products ORDER BY product_name"}
+{"index": 135, "sql": "SELECT product_id , product_type_code FROM products ORDER BY product_name"}
+{"index": 136, "sql": "SELECT product_type_code FROM products GROUP BY product_type_code ORDER BY count(*) ASC LIMIT 1"}
+{"index": 137, "sql": "SELECT product_type_code FROM products GROUP BY product_type_code ORDER BY count(*) ASC LIMIT 1"}
+{"index": 138, "sql": "SELECT count(*) FROM customer_orders"}
+{"index": 139, "sql": "SELECT count(*) FROM customer_orders"}
+{"index": 140, "sql": "SELECT T1.order_id , T1.order_date , T1.order_status_code FROM Customer_Orders AS T1 JOIN Customers AS T2 ON T1.customer_id = T2.customer_id WHERE T2.customer_name = 'Jeromy'"}
+{"index": 141, "sql": "SELECT T1.order_id , T1.order_date , T1.order_status_code FROM Customer_orders AS T1 JOIN customers AS t2 ON T1.customer_id = t2.customer_id WHERE t2.customer_name = \"Jeromy\""}
+{"index": 142, "sql": "SELECT T1.customer_name , T1.customer_id , count(*) FROM customers AS T1 JOIN customer_orders AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id"}
+{"index": 143, "sql": "SELECT T1.customer_name , T1.customer_id , count(*) FROM customers AS T1 JOIN customer_orders AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id"}
+{"index": 144, "sql": "SELECT T1.customer_id , T1.customer_name , T1.customer_phone , T1.customer_email FROM customers AS T1 JOIN customer_orders AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 145, "sql": "SELECT T1.customer_id , T1.customer_name , T1.customer_phone , T1.customer_email FROM customers AS T1 JOIN customer_orders AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 146, "sql": "SELECT order_status_code , count(*) FROM customer_orders GROUP BY order_status_code"}
+{"index": 147, "sql": "SELECT order_status_code , count(*) FROM customer_orders GROUP BY order_status_code"}
+{"index": 148, "sql": "SELECT order_status_code FROM customer_orders GROUP BY order_status_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 149, "sql": "SELECT order_status_code FROM customer_orders GROUP BY order_status_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 150, "sql": "SELECT count(*) FROM customers WHERE customer_id NOT IN ( SELECT customer_id FROM customer_orders )"}
+{"index": 151, "sql": "SELECT count(*) FROM customers WHERE customer_id NOT IN (SELECT customer_id FROM customer_orders)"}
+{"index": 152, "sql": "SELECT product_name FROM products WHERE product_id NOT IN (SELECT product_id FROM order_items)"}
+{"index": 153, "sql": "SELECT product_name FROM products EXCEPT SELECT t1.product_name FROM products AS t1 JOIN order_items AS t2 ON t1.product_id = t2.product_id"}
+{"index": 154, "sql": "SELECT count(*) FROM products AS t1 JOIN order_items AS t2 ON t1.product_id = t2.product_id WHERE t1.product_name = \"Monitor\""}
+{"index": 155, "sql": "SELECT sum(t1.order_quantity) FROM order_items AS t1 JOIN products AS t2 ON t1.product_id = t2.product_id WHERE t2.product_name = \"Monitor\""}
+{"index": 156, "sql": "SELECT count(DISTINCT T1.customer_id) FROM customer_orders AS T1 JOIN order_items AS T2 ON T1.order_id = T2.order_id JOIN products AS T3 ON T2.product_id = T3.product_id WHERE T3.product_name = \"Monitor\""}
+{"index": 157, "sql": "SELECT count(DISTINCT t1.customer_id) FROM customers AS t1 JOIN customer_orders AS t2 ON t1.customer_id = t2.customer_id JOIN order_items AS t3 ON t2.order_id = t3.order_id JOIN products AS t4 ON t3.product_id = t4.product_id WHERE t4.product_name = \"Monitor\""}
+{"index": 158, "sql": "SELECT count(DISTINCT customer_id) FROM customer_orders"}
+{"index": 159, "sql": "SELECT count(DISTINCT customer_id) FROM customer_orders"}
+{"index": 160, "sql": "SELECT customer_id FROM customers EXCEPT SELECT customer_id FROM customer_orders"}
+{"index": 161, "sql": "SELECT customer_id FROM customers EXCEPT SELECT customer_id FROM customer_orders"}
+{"index": 162, "sql": "SELECT T1.order_date , T1.order_id FROM customer_orders AS T1 JOIN order_items AS T2 ON T1.order_id = T2.order_id GROUP BY T1.order_id HAVING sum(T2.order_quantity) > 6 OR count(*) > 3"}
+{"index": 163, "sql": "SELECT T1.order_id , T1.order_date FROM customer_orders AS T1 JOIN order_items AS T2 ON T1.order_id = T2.order_id WHERE T2.order_quantity > 6 UNION SELECT T1.order_id , T1.order_date FROM customer_orders AS T1 JOIN order_items AS T2 ON T1.order_id = T2.order_id GROUP BY T1.order_id HAVING count(*) > 3"}
+{"index": 164, "sql": "SELECT count(*) FROM building"}
+{"index": 165, "sql": "SELECT count(*) FROM building"}
+{"index": 166, "sql": "SELECT Name FROM building ORDER BY Number_of_Stories ASC"}
+{"index": 167, "sql": "SELECT Name FROM building ORDER BY Number_of_Stories ASC"}
+{"index": 168, "sql": "SELECT address FROM building ORDER BY Completed_Year DESC"}
+{"index": 169, "sql": "SELECT address FROM building ORDER BY completed_year DESC"}
+{"index": 170, "sql": "SELECT max(Number_of_Stories) FROM building WHERE Completed_Year != 1980"}
+{"index": 171, "sql": "SELECT max(Number_of_Stories) FROM building WHERE Completed_Year != 1980"}
+{"index": 172, "sql": "SELECT avg(Population) FROM region"}
+{"index": 173, "sql": "SELECT avg(Population) FROM region"}
+{"index": 174, "sql": "SELECT Name FROM region ORDER BY Name ASC"}
+{"index": 175, "sql": "SELECT Name FROM region ORDER BY Name ASC"}
+{"index": 176, "sql": "SELECT Capital FROM region WHERE Area > 10000"}
+{"index": 177, "sql": "SELECT Capital FROM region WHERE Area > 10000"}
+{"index": 178, "sql": "SELECT Capital FROM region ORDER BY Population DESC LIMIT 1"}
+{"index": 179, "sql": "SELECT Capital FROM region ORDER BY Population DESC LIMIT 1"}
+{"index": 180, "sql": "SELECT Name FROM region ORDER BY Area DESC LIMIT 5"}
+{"index": 181, "sql": "SELECT Name FROM region ORDER BY Area DESC LIMIT 5"}
+{"index": 182, "sql": "SELECT T1.Name , T2.Name FROM building AS T1 JOIN region AS T2 ON T1.Region_ID = T2.Region_ID"}
+{"index": 183, "sql": "SELECT T1.Name , T2.Name FROM building AS T1 JOIN region AS T2 ON T1.Region_ID = T2.Region_ID"}
+{"index": 184, "sql": "SELECT T1.Name FROM region AS T1 JOIN building AS T2 ON T1.Region_ID = T2.Region_ID GROUP BY T1.Name HAVING COUNT(*) > 1"}
+{"index": 185, "sql": "SELECT T1.Name FROM region AS T1 JOIN building AS T2 ON T1.Region_ID = T2.Region_ID GROUP BY T1.Name HAVING COUNT(*) > 1"}
+{"index": 186, "sql": "SELECT t1.Capital FROM region AS t1 JOIN building AS t2 ON t1.Region_ID = t2.Region_ID GROUP BY t1.Region_ID ORDER BY count(*) DESC LIMIT 1"}
+{"index": 187, "sql": "SELECT t1.Capital FROM region AS t1 JOIN building AS t2 ON t1.Region_ID = t2.Region_ID GROUP BY t1.Region_ID ORDER BY count(*) DESC LIMIT 1"}
+{"index": 188, "sql": "SELECT T1.Address , T2.Capital FROM building AS T1 JOIN region AS T2 ON T1.Region_ID = T2.Region_ID"}
+{"index": 189, "sql": "SELECT T1.Address , T2.Name FROM building AS T1 JOIN region AS T2 ON T1.Region_ID = T2.Region_ID"}
+{"index": 190, "sql": "SELECT T1.Number_of_Stories FROM building AS T1 JOIN region AS T2 ON T1.Region_ID = T2.Region_ID WHERE T2.Name = \"Abruzzo\""}
+{"index": 191, "sql": "SELECT T1.Number_of_Stories FROM building AS T1 JOIN region AS T2 ON T1.Region_ID = T2.Region_ID WHERE T2.Name = \"Abruzzo\""}
+{"index": 192, "sql": "SELECT Completed_Year , COUNT(*) FROM building GROUP BY Completed_Year"}
+{"index": 193, "sql": "SELECT Completed_Year , COUNT(*) FROM building GROUP BY Completed_Year"}
+{"index": 194, "sql": "SELECT Completed_Year FROM building GROUP BY Completed_Year ORDER BY count(*) DESC LIMIT 1"}
+{"index": 195, "sql": "SELECT Completed_Year FROM building GROUP BY Completed_Year ORDER BY count(*) DESC LIMIT 1"}
+{"index": 196, "sql": "SELECT Name FROM region WHERE Region_ID NOT IN (SELECT Region_ID FROM building)"}
+{"index": 197, "sql": "SELECT name FROM region WHERE region_id NOT IN (SELECT region_id FROM building)"}
+{"index": 198, "sql": "SELECT Completed_Year FROM building WHERE Number_of_Stories > 20 INTERSECT SELECT Completed_Year FROM building WHERE Number_of_Stories < 15"}
+{"index": 199, "sql": "SELECT Completed_Year FROM building WHERE Number_of_Stories > 20 INTERSECT SELECT Completed_Year FROM building WHERE Number_of_Stories < 15"}
+{"index": 200, "sql": "SELECT DISTINCT Address FROM building"}
+{"index": 201, "sql": "SELECT DISTINCT Address FROM building"}
+{"index": 202, "sql": "SELECT Completed_Year FROM building ORDER BY Number_of_Stories DESC"}
+{"index": 203, "sql": "SELECT Completed_Year , Name FROM building ORDER BY Number_of_Stories DESC"}
+{"index": 204, "sql": "SELECT Channel_Details FROM Channels ORDER BY Channel_Details"}
+{"index": 205, "sql": "SELECT Channel_Details FROM Channels ORDER BY Channel_Details"}
+{"index": 206, "sql": "SELECT count(*) FROM Services"}
+{"index": 207, "sql": "SELECT count(*) FROM services"}
+{"index": 208, "sql": "SELECT Analytical_Layer_Type_Code FROM Analytical_Layer GROUP BY Analytical_Layer_Type_Code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 209, "sql": "SELECT Analytical_Layer_Type_Code FROM Analytical_Layer GROUP BY Analytical_Layer_Type_Code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 210, "sql": "SELECT DISTINCT T3.service_details FROM customers AS t1 JOIN customers_and_services AS t2 ON t1.customer_id = t2.customer_id JOIN services AS t3 ON t2.service_id = t3.service_id WHERE t1.customer_details = \"Hardy Kutch\""}
+{"index": 211, "sql": "SELECT T3.service_details FROM customers AS T1 JOIN customers_and_services AS T2 ON T1.customer_id = T2.customer_id JOIN services AS T3 ON T2.service_id = T3.service_id WHERE T1.customer_details = \"Hardy Kutch\""}
+{"index": 212, "sql": "SELECT T1.service_details FROM Services AS T1 JOIN Customers_and_services AS T2 ON T1.service_id = T2.service_id GROUP BY T1.service_id HAVING count(*) > 3"}
+{"index": 213, "sql": "SELECT T1.service_details FROM Services AS T1 JOIN Customers_and_services AS T2 ON T1.service_id = T2.service_id GROUP BY T1.service_id HAVING count(*) > 3"}
+{"index": 214, "sql": "SELECT T1.Customer_details FROM Customers AS T1 JOIN Customers_and_services AS T2 ON T1.customer_id = T2.customer_id GROUP BY T2.customer_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 215, "sql": "SELECT t1.customer_details FROM customers AS t1 JOIN customers_and_services AS t2 ON t1.customer_id = t2.customer_id GROUP BY t1.customer_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 216, "sql": "SELECT T1.customer_details FROM customers AS T1 JOIN customers_and_services AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 217, "sql": "SELECT T1.customer_details FROM customers AS T1 JOIN customers_and_services AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 218, "sql": "SELECT customer_details FROM customers EXCEPT SELECT t1.customer_details FROM customers AS t1 JOIN customers_and_services AS t2 ON t1.customer_id = t2.customer_id"}
+{"index": 219, "sql": "SELECT DISTINCT customer_details FROM Customers EXCEPT SELECT T1.customer_details FROM Customers AS T1 JOIN Customers_and_Services AS T2 ON T1.customer_id = T2.customer_id"}
+{"index": 220, "sql": "SELECT T1.customer_details FROM customers AS T1 JOIN customers_and_services AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id ORDER BY count(*) LIMIT 1"}
+{"index": 221, "sql": "SELECT DISTINCT T1.customer_details FROM customers AS T1 JOIN customers_and_services AS T2 ON T1.customer_id = T2.customer_id GROUP BY T1.customer_id ORDER BY count(*) LIMIT 1"}
+{"index": 222, "sql": "SELECT count(DISTINCT Customers_and_Services_details) FROM Customers_and_Services"}
+{"index": 223, "sql": "SELECT count(*) FROM Customers_and_services"}
+{"index": 224, "sql": "SELECT DISTINCT customer_details FROM customers WHERE customer_details LIKE \"%Kutch%\""}
+{"index": 225, "sql": "SELECT customer_details FROM customers WHERE customer_details LIKE \"%Kutch%\""}
+{"index": 226, "sql": "SELECT T3.service_details FROM customers AS T1 JOIN customers_and_services AS T2 ON T1.customer_id = T2.customer_id JOIN services AS T3 ON T2.service_id = T3.service_id JOIN customer_interactions AS T4 ON T1.customer_id = T4.customer_id WHERE T1.customer_details = \"Hardy Kutch\" OR T4.Status_Code = \"good\""}
+{"index": 227, "sql": "SELECT T3.service_details FROM customers AS t1 JOIN customers_and_services AS t2 ON t1.customer_id = t2.customer_id JOIN services AS t3 ON t2.service_id = t3.service_id WHERE t1.customer_details = \"Hardy Kutch\" OR t2.customers_and_services_details = \"good\""}
+{"index": 228, "sql": "SELECT DISTINCT T1.service_details FROM services AS T1 JOIN customers_and_services AS T2 ON T1.service_id = T2.service_id JOIN customer_interactions AS T3 ON T2.customer_id = T3.customer_id WHERE T2.customer_id = ( SELECT customer_id FROM customers WHERE customer_details = \"Hardy Kutch\") AND T3.status_code = \"bad\""}
+{"index": 229, "sql": "SELECT DISTINCT T3.Service_details FROM Customers AS T1 JOIN Customer_Interactions AS T2 ON T1.Customer_ID = T2.Customer_ID JOIN Services AS T3 ON T2.Service_ID = T3.Service_ID WHERE T1.Customer_Details = \"Hardy Kutch\" AND T2.Status_Code = \"bad\""}
+{"index": 230, "sql": "SELECT T1.service_details FROM Services AS T1 JOIN Customer_interactions AS T2 ON T1.service_id = T2.service_id JOIN channels AS T3 ON T2.channel_id = T3.channel_id WHERE T3.channel_details = \"15 ij\""}
+{"index": 231, "sql": "SELECT T1.service_details FROM Services AS T1 JOIN Customer_interactions AS T2 ON T1.service_id = T2.service_id JOIN channels AS T3 ON T2.channel_id = T3.channel_id WHERE T3.channel_details = \"15 ij\""}
+{"index": 232, "sql": "SELECT t3.customer_details FROM customer_interactions AS t1 JOIN customers_and_services AS t2 ON t1.service_id = t2.service_id JOIN customers AS t3 ON t1.customer_id = t3.customer_id WHERE t1.status_code = 'Stuck' AND t1.services_and_channels_details = 'bad'"}
+{"index": 233, "sql": "SELECT DISTINCT t3.customer_details FROM customer_interactions AS t1 JOIN customers_and_services AS t2 ON t1.service_id = t2.service_id JOIN customers AS t3 ON t1.customer_id = t3.customer_id WHERE t1.status_code = \"Stuck\" AND t1.services_and_channels_details = \"bad\""}
+{"index": 234, "sql": "SELECT count(*) FROM Integration_Platform WHERE Integration_Platform_details = 'success'"}
+{"index": 235, "sql": "SELECT count(*) FROM Integration_Platform WHERE Integration_Platform_details = \"Success\""}
+{"index": 236, "sql": "SELECT T1.customer_details FROM customers AS T1 JOIN customer_interactions AS T2 ON T1.customer_id = T2.customer_id JOIN integration_platform AS T3 ON T2.customer_interaction_id = T3.customer_interaction_id WHERE T2.status_code = 'Failed'"}
+{"index": 237, "sql": "SELECT T1.customer_details FROM customers AS T1 JOIN customer_interactions AS T2 ON T1.customer_id = T2.customer_id JOIN integration_platform AS T3 ON T2.customer_interaction_id = T3.customer_interaction_id WHERE T3.integration_platform_details = \"Fail\""}
+{"index": 238, "sql": "SELECT service_details FROM services EXCEPT SELECT customers_and_services_details FROM customers_and_services"}
+{"index": 239, "sql": "SELECT T1.service_details FROM services AS T1 JOIN customers_and_services AS T2 ON T1.service_id = T2.service_id EXCEPT SELECT T1.service_details FROM services AS T1 JOIN customers_and_services AS T2 ON T1.service_id = T2.service_id WHERE T2.customer_id = (SELECT customer_id FROM customers)"}
+{"index": 240, "sql": "SELECT analytical_layer_type_code , count(*) FROM analytical_layer GROUP BY analytical_layer_type_code"}
+{"index": 241, "sql": "SELECT Analytical_Layer_Type_Code , count(*) FROM Analytical_Layer GROUP BY Analytical_Layer_Type_Code"}
+{"index": 242, "sql": "SELECT T1.service_details FROM services AS T1 JOIN customers_and_services AS T2 ON T1.service_id = T2.service_id WHERE T2.customers_and_services_details = 'unsatisfied'"}
+{"index": 243, "sql": "SELECT T2.service_details FROM Customers_and_services AS T1 JOIN Services AS T2 ON T1.Service_ID = T2.Service_ID WHERE T1.Customers_and_Services_details = \"unsatisfied\""}
+{"index": 244, "sql": "SELECT DISTINCT name FROM Author"}
+{"index": 245, "sql": "SELECT DISTINCT name FROM author"}
+{"index": 246, "sql": "SELECT name , address FROM client"}
+{"index": 247, "sql": "SELECT name , address FROM client"}
+{"index": 248, "sql": "SELECT title , isbn , saleprice FROM book"}
+{"index": 249, "sql": "SELECT title , isbn , saleprice FROM book"}
+{"index": 250, "sql": "SELECT count(*) FROM book"}
+{"index": 251, "sql": "SELECT count(*) FROM book"}
+{"index": 252, "sql": "SELECT count(*) FROM author"}
+{"index": 253, "sql": "SELECT count(*) FROM author"}
+{"index": 254, "sql": "SELECT count(*) FROM client"}
+{"index": 255, "sql": "SELECT count(*) FROM client"}
+{"index": 256, "sql": "SELECT name , address FROM client ORDER BY name"}
+{"index": 257, "sql": "SELECT name , address FROM client ORDER BY name"}
+{"index": 258, "sql": "SELECT T2.title , T1.author FROM Author AS T1 JOIN Book_Author AS T2 ON T1.idAuthorA = T2.idAuthor JOIN Book AS T3 ON T2.ISBN = T3.ISBN"}
+{"index": 259, "sql": "SELECT T2.title , T1.author FROM Author AS T1 JOIN Book_Author AS T2 ON T1.idAuthorA = T2.idAuthor JOIN Book AS T3 ON T2.ISBN = T3.ISBN"}
+{"index": 260, "sql": "SELECT T1.idorder , T2.name FROM Orders AS T1 JOIN Client AS T2 ON T1.idclient = T2.idclient"}
+{"index": 261, "sql": "SELECT T1.idorder , T2.name FROM Orders AS T1 JOIN Client AS T2 ON T1.idclient = T2.idclient"}
+{"index": 262, "sql": "SELECT T1.name , count(*) FROM author AS T1 JOIN author_book AS T2 ON T1.idAuthor = T2.author GROUP BY T1.idAuthor"}
+{"index": 263, "sql": "SELECT T1.name , count(*) FROM author AS T1 JOIN author_book AS T2 ON T1.idAuthor = T1.idauthor JOIN book AS T3 ON T2.isbn = T3.isbn GROUP BY T1.name"}
+{"index": 264, "sql": "SELECT T1.isbn , count(*) FROM Book AS T1 JOIN Books_order AS T2 ON T1.isbn = T2.isbn GROUP BY T1.isbn"}
+{"index": 265, "sql": "SELECT T1.isbn , count(*) FROM Book AS T1 JOIN Books_order AS T2 ON T1.isbn = T2.isbn GROUP BY T1.isbn"}
+{"index": 266, "sql": "SELECT T1.isbn , sum(T2.amount) FROM Book AS T1 JOIN Books_Order AS T2 ON T1.isbn = T2.isbn GROUP BY T1.isbn"}
+{"index": 267, "sql": "SELECT T1.isbn , sum(T2.amount) FROM Book AS T1 JOIN Books_Order AS T2 ON T1.isbn = T2.isbn GROUP BY T1.isbn"}
+{"index": 268, "sql": "SELECT T1.title FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn GROUP BY T1.title ORDER BY count(*) DESC LIMIT 1"}
+{"index": 269, "sql": "SELECT T1.title FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn GROUP BY T2.isbn ORDER BY count(*) DESC LIMIT 1"}
+{"index": 270, "sql": "SELECT T1.title , T1.purchaseprice FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn GROUP BY T2.isbn ORDER BY sum(T2.amount) DESC LIMIT 1"}
+{"index": 271, "sql": "SELECT T1.title , T1.purchaseprice FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn GROUP BY T2.isbn ORDER BY sum(T2.amount) DESC LIMIT 1"}
+{"index": 272, "sql": "SELECT T1.title FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn GROUP BY T1.title HAVING sum(T2.amount) > 0"}
+{"index": 273, "sql": "SELECT DISTINCT T1.title FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn WHERE T2.amount != 0"}
+{"index": 274, "sql": "SELECT T1.name FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient GROUP BY T1.name HAVING count(*) >= 1"}
+{"index": 275, "sql": "SELECT DISTINCT T1.name FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient"}
+{"index": 276, "sql": "SELECT T1.name , count(*) FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient GROUP BY T1.idclient"}
+{"index": 277, "sql": "SELECT T1.name , count(*) FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient GROUP BY T1.idclient"}
+{"index": 278, "sql": "SELECT T1.name FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient GROUP BY T1.idclient ORDER BY count(*) DESC LIMIT 1"}
+{"index": 279, "sql": "SELECT T1.name FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient GROUP BY T1.name ORDER BY count(*) DESC LIMIT 1"}
+{"index": 280, "sql": "SELECT T2.name , sum(T3.amount) FROM Books_order AS T1 JOIN Client AS T2 ON T1.idorder = T2.idclient JOIN Books_Order AS T3 ON T1.ISBN = T3.ISBN GROUP BY T2.idclient"}
+{"index": 281, "sql": "SELECT T1.name , sum(T2.amount) FROM client AS T1 JOIN books_order AS T2 ON T1.idclient = T2.idorder GROUP BY T1.name"}
+{"index": 282, "sql": "SELECT T1.name FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient JOIN books_order AS T3 ON T2.idorder = T3.idorder GROUP BY T1.name ORDER BY sum(T3.amount) DESC LIMIT 1"}
+{"index": 283, "sql": "SELECT T1.name FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient JOIN books_order AS T3 ON T2.idorder = T3.idorder GROUP BY T1.idclient ORDER BY sum(T3.amount) DESC LIMIT 1"}
+{"index": 284, "sql": "SELECT title FROM book WHERE isbn NOT IN (SELECT ISBN FROM Books_order)"}
+{"index": 285, "sql": "SELECT title FROM book WHERE isbn NOT IN (SELECT ISBN FROM Books_order)"}
+{"index": 286, "sql": "SELECT name FROM client WHERE idclient NOT IN (SELECT idclient FROM books_order)"}
+{"index": 287, "sql": "SELECT name FROM client EXCEPT SELECT T1.name FROM client AS T1 JOIN books_order AS T2 ON T1.idclient = T2.idorder"}
+{"index": 288, "sql": "SELECT max(SalePrice) , min(SalePrice) FROM Book"}
+{"index": 289, "sql": "SELECT max(SalePrice) , min(SalePrice) FROM Book"}
+{"index": 290, "sql": "SELECT avg(PurchasePrice) , avg(SalePrice) FROM Book"}
+{"index": 291, "sql": "SELECT avg(PurchasePrice) , avg(SalePrice) FROM Book"}
+{"index": 292, "sql": "SELECT max(SalePrice - PurchasePrice) FROM Book"}
+{"index": 293, "sql": "SELECT max(SalePrice - PurchasePrice) FROM Book"}
+{"index": 294, "sql": "SELECT title FROM book WHERE saleprice > (SELECT avg(saleprice) FROM book)"}
+{"index": 295, "sql": "SELECT title FROM book WHERE saleprice > (SELECT avg(saleprice) FROM book)"}
+{"index": 296, "sql": "SELECT title FROM book ORDER BY saleprice ASC LIMIT 1"}
+{"index": 297, "sql": "SELECT title FROM book WHERE saleprice = (SELECT min(saleprice) FROM book)"}
+{"index": 298, "sql": "SELECT title FROM book ORDER BY PurchasePrice DESC LIMIT 1"}
+{"index": 299, "sql": "SELECT title FROM book ORDER BY PurchasePrice DESC LIMIT 1"}
+{"index": 300, "sql": "SELECT avg(T2.saleprice) FROM author AS T1 JOIN book AS T2 ON T2.author = T2.author WHERE T1.name = \"George Orwell\""}
+{"index": 301, "sql": "SELECT avg(T2.saleprice) FROM author AS T1 JOIN book AS T2 ON T2.author = T2.author WHERE T1.name = \"George Orwell\""}
+{"index": 302, "sql": "SELECT T2.saleprice FROM author_book AS T1 JOIN book AS T2 ON T1.isbn = T2.isbn JOIN author AS T3 ON T1.author = T3.idAuthor WHERE T3.name = \"Plato\""}
+{"index": 303, "sql": "SELECT T2.saleprice FROM author_book AS T1 JOIN book AS T2 ON T1.isbn = T2.isbn JOIN author AS T3 ON T1.author = T3.idAuthor WHERE T3.name = \"Plato\""}
+{"index": 304, "sql": "SELECT title FROM book WHERE author = (SELECT name FROM author WHERE name = 'George Orwell') ORDER BY saleprice LIMIT 1"}
+{"index": 305, "sql": "SELECT T1.title FROM book AS T1 JOIN author_book AS T2 ON T1.isbn = T2.isbn JOIN author AS T3 ON T2.author = T3.idAuthor WHERE T3.name = \"George Orwell\" ORDER BY T1.saleprice LIMIT 1"}
+{"index": 306, "sql": "SELECT T1.title FROM book AS T1 JOIN author_book AS T2 ON T1.isbn = T2.isbn JOIN author AS T3 ON T2.author = T3.idAuthor WHERE T3.name = \"Plato\" AND T1.saleprice < (SELECT avg(saleprice) FROM book)"}
+{"index": 307, "sql": "SELECT T1.title FROM book AS T1 JOIN author_book AS T2 ON T1.isbn = T2.isbn JOIN author AS T3 ON T2.author = T3.idAuthor WHERE T3.name = \"Plato\" AND T1.saleprice < (SELECT avg(saleprice) FROM book)"}
+{"index": 308, "sql": "SELECT T3.name FROM book AS T1 JOIN author_book AS T2 ON T1.isbn = T2.isbn JOIN author AS T3 ON T2.author = T3.idAuthor WHERE T1.title = \"Pride and Prejudice\""}
+{"index": 309, "sql": "SELECT T3.name FROM book AS T1 JOIN author_book AS T2 ON T1.isbn = T2.isbn JOIN author AS T3 ON T2.author = T3.idAuthor WHERE T1.title = \"Pride and Prejudice\""}
+{"index": 310, "sql": "SELECT T2.title FROM author AS T1 JOIN book AS T2 ON T2.author = T2.author WHERE T1.name LIKE '%Plato%'"}
+{"index": 311, "sql": "SELECT T2.title FROM author AS T1 JOIN book AS T2 ON T2.author = T2.author WHERE T1.name LIKE '%Plato%'"}
+{"index": 312, "sql": "SELECT count(*) FROM book AS T1 JOIN author_book AS T2 ON T1.isbn = T2.isbn JOIN books_order AS T3 ON T1.isbn = T3.isbn WHERE T1.title = \"Pride and Prejudice\""}
+{"index": 313, "sql": "SELECT count(*) FROM Book AS T1 JOIN Orders AS T2 ON T1.ISBN = T2.IDORDER WHERE Title = \"Pride and Prejudice\""}
+{"index": 314, "sql": "SELECT T1.idorder FROM Books_order AS T1 JOIN Book AS T2 ON T1.ISBN = T2.ISBN WHERE Title = \"Pride and Prejudice\" INTERSECT SELECT T1.idorder FROM Books_order AS T1 JOIN Book AS T2 ON T1.ISBN = T2.ISBN WHERE Title = \"The Little Prince\""}
+{"index": 315, "sql": "SELECT T1.idorder FROM Books_order AS T1 JOIN Book AS T2 ON T1.ISBN = T2.ISBN WHERE T2.title = \"Pride and Prejudice\" INTERSECT SELECT T1.idorder FROM Books_order AS T1 JOIN Book AS T2 ON T1.ISBN = T2.ISBN WHERE T2.title = \"The Little Prince\""}
+{"index": 316, "sql": "SELECT T1.isbn FROM Book AS T1 JOIN Books_Order AS T2 ON T1.isbn = T2.isbn WHERE T2.idorder IN (SELECT T3.idorder FROM Orders AS T3 JOIN Client AS T4 ON T3.idclient = T4.idclient WHERE T4.name = \"Peter Doe\") INTERSECT SELECT T1.isbn FROM Book AS T1 JOIN Books_Order AS T2 ON T1.isbn = T2.isbn WHERE T2.idorder IN (SELECT T3.idorder FROM Orders AS T3 JOIN Client AS T4 ON T3.idclient = T4.idclient WHERE T4.name = \"James Smith\")"}
+{"index": 317, "sql": "SELECT T3.isbn FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient JOIN books_order AS T3 ON T2.idorder = T3.idorder WHERE T1.name = \"Peter Doe\" INTERSECT SELECT T3.isbn FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient JOIN books_order AS T3 ON T2.idorder = T3.idorder WHERE T1.name = \"James Smith\""}
+{"index": 318, "sql": "SELECT T1.title FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn WHERE T2.idorder IN ( SELECT idorder FROM orders AS T3 JOIN client AS T4 ON T3.idclient = T4.idclient WHERE T4.name = 'Peter Doe' EXCEPT SELECT idorder FROM orders AS T3 JOIN client AS T4 ON T3.idclient = T4.idclient WHERE T4.name = 'James Smith' )"}
+{"index": 319, "sql": "SELECT T1.title FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn WHERE T2.idorder NOT IN ( SELECT T3.idorder FROM orders AS T3 JOIN client AS T4 ON T3.idclient = T4.idclient WHERE T4.name = 'Peter Doe') INTERSECT SELECT title FROM book AS T1 JOIN books_order AS T2 ON T1.isbn = T2.isbn WHERE T2.idorder IN ( SELECT T3.idorder FROM orders AS T3 JOIN client AS T4 ON T3.idclient = T4.idclient WHERE T4.name = 'James Smith')"}
+{"index": 320, "sql": "SELECT T1.name FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient JOIN book AS T3 ON T3.isbn = T3.isbn WHERE T3.title = \"Pride and Prejudice\""}
+{"index": 321, "sql": "SELECT T1.name FROM client AS T1 JOIN orders AS T2 ON T1.idclient = T2.idclient JOIN books_order AS T3 ON T2.idorder = T3.idorder JOIN book AS T4 ON T4.isbn = T3.isbn WHERE T4.title = \"Pride and Prejudice\""}
+{"index": 322, "sql": "SELECT count(*) FROM customer"}
+{"index": 323, "sql": "SELECT count(*) FROM customer"}
+{"index": 324, "sql": "SELECT Name FROM customer ORDER BY LEVEL_OF_MEMBERSHIP ASC"}
+{"index": 325, "sql": "SELECT name FROM customer ORDER BY LEVEL_OF_MEMBERSHIP ASC"}
+{"index": 326, "sql": "SELECT Nationality , Card_Credit FROM customer"}
+{"index": 327, "sql": "SELECT Nationality , Card_Credit FROM customer"}
+{"index": 328, "sql": "SELECT Name FROM customer WHERE Nationality = \"England\" OR Nationality = \"Australia\""}
+{"index": 329, "sql": "SELECT Name FROM customer WHERE Nationality = \"England\" OR Nationality = \"Australia\""}
+{"index": 330, "sql": "SELECT avg(card_credit) FROM customer WHERE LEVEL_OF_MEMBERSHIP > 1"}
+{"index": 331, "sql": "SELECT avg(card_credit) FROM customer WHERE LEVEL_OF_MEMBERSHIP > 1"}
+{"index": 332, "sql": "SELECT Card_Credit FROM customer ORDER BY LEVEL_OF_MEMBERSHIP DESC LIMIT 1"}
+{"index": 333, "sql": "SELECT name , card_credit FROM customer ORDER BY LEVEL_OF_MEMBERSHIP DESC LIMIT 1"}
+{"index": 334, "sql": "SELECT Nationality , COUNT(*) FROM customer GROUP BY Nationality"}
+{"index": 335, "sql": "SELECT Nationality , COUNT(*) FROM customer GROUP BY Nationality"}
+{"index": 336, "sql": "SELECT Nationality FROM customer GROUP BY Nationality ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 337, "sql": "SELECT Nationality FROM customer GROUP BY Nationality ORDER BY count(*) DESC LIMIT 1"}
+{"index": 338, "sql": "SELECT Nationality FROM customer WHERE Card_Credit < 50 INTERSECT SELECT Nationality FROM customer WHERE Card_Credit > 75"}
+{"index": 339, "sql": "SELECT Nationality FROM customer WHERE Card_Credit > 50 INTERSECT SELECT Nationality FROM customer WHERE Card_Credit < 75"}
+{"index": 340, "sql": "SELECT T1.Name , T2.Dish_Name FROM customer AS T1 JOIN customer_order AS T2 ON T1.Customer_ID = T2.Customer_ID"}
+{"index": 341, "sql": "SELECT T1.Name , T2.Dish_Name FROM customer AS T1 JOIN customer_order AS T2 ON T1.Customer_ID = T2.Customer_ID"}
+{"index": 342, "sql": "SELECT T2.Name , T1.Dish_Name FROM customer_order AS T1 JOIN customer AS T2 ON T1.Customer_ID = T2.Customer_ID ORDER BY T1.Quantity DESC"}
+{"index": 343, "sql": "SELECT T2.Name , T1.Dish_Name FROM customer_order AS T1 JOIN customer AS T2 ON T1.Customer_ID = T2.Customer_ID ORDER BY T1.Quantity DESC"}
+{"index": 344, "sql": "SELECT T1.Name , sum(T2.Quantity) FROM customer AS T1 JOIN customer_order AS T2 ON T1.Customer_ID = T2.Customer_ID GROUP BY T1.Name"}
+{"index": 345, "sql": "SELECT T1.Name , sum(T2.Quantity) FROM customer AS T1 JOIN customer_order AS T2 ON T1.Customer_ID = T2.Customer_ID GROUP BY T1.Name"}
+{"index": 346, "sql": "SELECT T2.Name FROM customer_order AS T1 JOIN customer AS T2 ON T1.Customer_ID = T2.Customer_ID GROUP BY T1.Customer_ID HAVING sum(T1.Quantity) > 1"}
+{"index": 347, "sql": "SELECT T2.Name FROM customer_order AS T1 JOIN customer AS T2 ON T1.Customer_ID = T2.Customer_ID GROUP BY T1.Customer_ID HAVING SUM(T1.Quantity) > 1"}
+{"index": 348, "sql": "SELECT DISTINCT manager FROM branch"}
+{"index": 349, "sql": "SELECT DISTINCT manager FROM branch"}
+{"index": 350, "sql": "SELECT name FROM customer WHERE customer_id NOT IN (SELECT customer_id FROM customer_order)"}
+{"index": 351, "sql": "SELECT name FROM customer WHERE customer_id NOT IN (SELECT customer_id FROM customer_order)"}
+{"index": 352, "sql": "SELECT count(*) FROM member"}
+{"index": 353, "sql": "SELECT Name FROM member ORDER BY Age ASC"}
+{"index": 354, "sql": "SELECT Name , Nationality FROM member"}
+{"index": 355, "sql": "SELECT Name FROM member WHERE Nationality != \"England\""}
+{"index": 356, "sql": "SELECT Name FROM member WHERE Age = 19 OR Age = 20"}
+{"index": 357, "sql": "SELECT Name FROM member ORDER BY Age DESC LIMIT 1"}
+{"index": 358, "sql": "SELECT Nationality , COUNT(*) FROM member GROUP BY Nationality"}
+{"index": 359, "sql": "SELECT Nationality FROM member GROUP BY Nationality ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 360, "sql": "SELECT Nationality FROM member GROUP BY Nationality HAVING COUNT(*) >= 2"}
+{"index": 361, "sql": "SELECT T2.Team_Leader , T2.Club_Name FROM club_leader AS T1 JOIN club AS T2 ON T1.Club_ID = T2.Club_ID"}
+{"index": 362, "sql": "SELECT T1.Team_Leader FROM club AS T1 JOIN club_leader AS T2 ON T1.Club_ID = T2.Club_ID WHERE T1.Overall_Ranking > 100"}
+{"index": 363, "sql": "SELECT T2.Team_Leader FROM club_leader AS T1 JOIN club AS T2 ON T1.Club_ID = T2.Club_ID WHERE T1.Year_Join < 2018"}
+{"index": 364, "sql": "SELECT T1.Team_Leader FROM club AS T1 JOIN club_leader AS T2 ON T1.Club_ID = T2.Club_ID WHERE T1.Club_Name = \"Houston\""}
+{"index": 365, "sql": "SELECT Name FROM member WHERE Member_ID NOT IN (SELECT Member_ID FROM club_leader)"}
+{"index": 366, "sql": "SELECT Nationality FROM member WHERE Age > 22 INTERSECT SELECT Nationality FROM member WHERE Age < 19"}
+{"index": 367, "sql": "SELECT avg(T2.age) FROM club_leader AS T1 JOIN member AS T2 ON T1.member_id = T2.member_id"}
+{"index": 368, "sql": "SELECT club_name FROM club WHERE club_name LIKE '%state%'"}
+{"index": 369, "sql": "SELECT collection_subset_name FROM Collection_Subsets"}
+{"index": 370, "sql": "SELECT collection_subset_name FROM Collection_Subsets"}
+{"index": 371, "sql": "SELECT Collecrtion_Subset_Details FROM Collection_Subsets WHERE Collection_Subset_Name = \"Top collection\""}
+{"index": 372, "sql": "SELECT Collecrtion_Subset_Details FROM Collection_Subsets WHERE Collection_Subset_Name = \"Top collection\""}
+{"index": 373, "sql": "SELECT document_subset_name FROM document_subsets"}
+{"index": 374, "sql": "SELECT document_subset_name FROM Document_Subsets"}
+{"index": 375, "sql": "SELECT document_subset_details FROM document_subsets WHERE document_subset_name = 'Best for 2000'"}
+{"index": 376, "sql": "SELECT document_subset_details FROM document_subsets WHERE document_subset_name = 'Best for 2000'"}
+{"index": 377, "sql": "SELECT document_object_id FROM Document_objects"}
+{"index": 378, "sql": "SELECT document_object_id FROM Document_objects"}
+{"index": 379, "sql": "SELECT parent_document_object_id FROM document_objects WHERE OWNER = 'Marlin'"}
+{"index": 380, "sql": "SELECT document_object_id FROM document_objects WHERE OWNER = 'Marlin'"}
+{"index": 381, "sql": "SELECT OWNER FROM Document_Objects WHERE description = 'Braeden Collection'"}
+{"index": 382, "sql": "SELECT owner FROM Document_Objects WHERE description = 'Braeden Collection'"}
+{"index": 383, "sql": "SELECT T1.owner FROM Document_Objects AS T1 JOIN Document_Objects AS T2 ON T1.parent_document_object_id = T2.document_object_id WHERE T1.owner = 'Marlin'"}
+{"index": 384, "sql": "SELECT OWNER FROM Document_objects WHERE OWNER = 'Marlin'"}
+{"index": 385, "sql": "SELECT DISTINCT description FROM Document_objects"}
+{"index": 386, "sql": "SELECT DISTINCT Description FROM Document_objects"}
+{"index": 387, "sql": "SELECT count(*) FROM Document_objects WHERE OWNER = \"Marlin\""}
+{"index": 388, "sql": "SELECT count(*) FROM Document_objects WHERE OWNER = \"Marlin\""}
+{"index": 389, "sql": "SELECT document_object_id FROM Document_objects EXCEPT SELECT document_object_id FROM Document_objects WHERE parent_document_object_id = document_object_id"}
+{"index": 390, "sql": "SELECT document_object_id FROM Document_objects EXCEPT SELECT parent_document_object_id FROM Document_objects"}
+{"index": 391, "sql": "SELECT document_object_id , count(*) FROM Document_objects GROUP BY document_object_id"}
+{"index": 392, "sql": "SELECT count(*) , parent_document_object_id FROM Document_objects GROUP BY parent_document_object_id"}
+{"index": 393, "sql": "SELECT collection_name FROM Collections"}
+{"index": 394, "sql": "SELECT collection_name FROM Collections"}
+{"index": 395, "sql": "SELECT collection_description FROM collections WHERE collection_name = \"Best\""}
+{"index": 396, "sql": "SELECT collection_description FROM collections WHERE collection_name = \"Best\""}
+{"index": 397, "sql": "SELECT T3.collection_name FROM collections AS T1 JOIN documents_in_collections AS T2 ON T1.collection_id = T2.collection_id JOIN collections AS T3 ON T2.collection_id = T3.collection_id WHERE T1.collection_name = \"Nice\""}
+{"index": 398, "sql": "SELECT T1.collection_name FROM collections AS T1 JOIN documents_in_collections AS T2 ON T1.collection_id = T2.collection_id WHERE T1.collection_name = \"Nice\""}
+{"index": 399, "sql": "SELECT collection_name FROM collections WHERE collection_id NOT IN (SELECT parent_collection_id FROM collections)"}
+{"index": 400, "sql": "SELECT collection_name FROM collections WHERE collection_id != (SELECT parent_collection_id FROM collections)"}
+{"index": 401, "sql": "SELECT document_object_id FROM documents_in_collections GROUP BY document_object_id HAVING count(*) > 1"}
+{"index": 402, "sql": "SELECT document_object_id FROM document_objects GROUP BY document_object_id HAVING count(*) > 1"}
+{"index": 403, "sql": "SELECT count(*) FROM collections AS t1 JOIN collections AS t2 ON t1.parent_collection_id = t2.collection_id WHERE t1.collection_name = \"Best\""}
+{"index": 404, "sql": "SELECT count(*) FROM Collections WHERE Collection_Name = \"Best\""}
+{"index": 405, "sql": "SELECT document_object_id FROM document_objects WHERE OWNER = 'Ransom'"}
+{"index": 406, "sql": "SELECT document_object_id FROM document_objects WHERE owner = 'Ransom'"}
+{"index": 407, "sql": "SELECT collection_subset_id , collection_subset_name , count(*) FROM collection_subsets GROUP BY collection_subset_id"}
+{"index": 408, "sql": "SELECT collection_subset_id , collection_subset_name , count(*) FROM collection_subsets GROUP BY collection_subset_id"}
+{"index": 409, "sql": "SELECT document_object_id , count(*) FROM Document_Subset_members GROUP BY document_object_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 410, "sql": "SELECT document_object_id , count(*) FROM Document_Subset_Members GROUP BY document_object_id"}
+{"index": 411, "sql": "SELECT document_object_id , count(*) FROM Document_Subset_members GROUP BY document_object_id ORDER BY count(*) ASC LIMIT 1"}
+{"index": 412, "sql": "SELECT document_object_id FROM Document_Objects GROUP BY document_object_id ORDER BY count(*) ASC LIMIT 1"}
+{"index": 413, "sql": "SELECT document_object_id , count(*) FROM Document_Subset_Members GROUP BY document_object_id HAVING count(*) BETWEEN 2 AND 4"}
+{"index": 414, "sql": "SELECT T1.collection_id , count(*) FROM collections AS T1 JOIN documents_in_collections AS T2 ON T1.collection_id = T2.collection_id GROUP BY T1.collection_id HAVING count(*) BETWEEN 2 AND 4"}
+{"index": 415, "sql": "SELECT T1.owner FROM Document_Objects AS T1 JOIN Document_Objects AS T2 ON T1.document_object_id = T2.document_object_id WHERE T2.owner = 'Braeden'"}
+{"index": 416, "sql": "SELECT DISTINCT T1.owner FROM Document_Objects AS T1 JOIN Document_Objects AS T2 ON T1.parent_document_object_id = T2.document_object_id WHERE T1.owner = 'Braeden'"}
+{"index": 417, "sql": "SELECT T1.document_subset_name FROM Document_Subsets AS T1 JOIN Document_Subset_Members AS T2 ON T1.document_subset_id = T2.document_subset_id JOIN Document_Objects AS T3 ON T2.related_document_object_id = T3.document_object_id WHERE T3.owner = 'Braeden'"}
+{"index": 418, "sql": "SELECT DISTINCT t3.document_subset_name FROM document_objects AS t1 JOIN document_subset_members AS t2 ON t1.document_object_id = t2.document_object_id JOIN document_subsets AS t3 ON t2.document_subset_id = t3.document_subset_id WHERE t1.owner = 'Braeden'"}
+{"index": 419, "sql": "SELECT document_subset_id , document_subset_name , count(DISTINCT document_object_id) FROM (SELECT * FROM \"Document_Subsets\" NATURAL JOIN \"Document_Subset_Members\") AS document_subsets GROUP BY document_subset_id"}
+{"index": 420, "sql": "SELECT document_subset_id , document_subset_name , count(DISTINCT document_object_id) FROM (SELECT * FROM \"Document_Subsets\" NATURAL JOIN \"Document_Subset_Members\") AS document_subsets GROUP BY document_subset_id"}
+{"index": 421, "sql": "SELECT document_subset_id , document_subset_name , count(DISTINCT document_subset_id) FROM document_subsets GROUP BY document_subset_id ORDER BY count(DISTINCT document_subset_id) DESC LIMIT 1"}
+{"index": 422, "sql": "SELECT document_subset_id , document_subset_name , count(*) FROM document_subsets GROUP BY document_subset_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 423, "sql": "SELECT document_object_id FROM document_subset_members WHERE document_subset_id = (SELECT document_subset_id FROM document_subsets WHERE document_subset_name = 'Best for 2000')"}
+{"index": 424, "sql": "SELECT document_object_id FROM document_subset_members WHERE document_subset_id = (SELECT document_subset_id FROM document_subsets WHERE document_subset_name = 'Best for 2000')"}
+{"index": 425, "sql": "SELECT T1.document_subset_name , T2.document_object_id FROM Document_Subsets AS T1 JOIN Document_Subset_Members AS T2 ON T1.document_subset_id = T2.document_subset_id"}
+{"index": 426, "sql": "SELECT T1.document_subset_name , T2.document_object_id FROM Document_Subsets AS T1 JOIN Document_Subset_Members AS T2 ON T1.document_subset_id = T2.document_subset_id"}
+{"index": 427, "sql": "SELECT T1.Collection_Name FROM Collections AS T1 JOIN Documents_in_collections AS T2 ON T1.Collection_ID = T2.Collection_ID JOIN Document_objects AS T3 ON T2.Document_object_id = T3.document_object_id WHERE T3.owner = 'Ransom'"}
+{"index": 428, "sql": "SELECT T1.collection_name FROM Collections AS T1 JOIN Documents_in_collections AS T2 ON T1.collection_id = T2.collection_id JOIN Document_objects AS T3 ON T2.document_object_id = T3.document_object_id WHERE T3.owner = 'Ransom'"}
+{"index": 429, "sql": "SELECT count(*) , document_object_id FROM Documents_in_collections GROUP BY document_object_id"}
+{"index": 430, "sql": "SELECT document_object_id , count(*) FROM Documents_in_collections GROUP BY document_object_id"}
+{"index": 431, "sql": "SELECT count(*) FROM collections AS t1 JOIN documents_in_collections AS t2 ON t1.collection_id = t2.collection_id WHERE t1.collection_name = \"Best\""}
+{"index": 432, "sql": "SELECT count(*) FROM collections AS t1 JOIN documents_in_collections AS t2 ON t1.collection_id = t2.collection_id WHERE t1.collection_name = \"Best\""}
+{"index": 433, "sql": "SELECT document_object_id FROM collections AS t1 JOIN documents_in_collections AS t2 ON t1.collection_id = t2.collection_id WHERE t1.collection_name = \"Best\""}
+{"index": 434, "sql": "SELECT count(*) FROM collections AS t1 JOIN documents_in_collections AS t2 ON t1.collection_id = t2.collection_id WHERE t1.collection_name = \"Best\""}
+{"index": 435, "sql": "SELECT T1.collection_name , T1.collection_id , count(*) FROM Collections AS T1 JOIN Documents_in_collections AS T2 ON T1.collection_id = T2.collection_id GROUP BY T1.collection_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 436, "sql": "SELECT T1.collection_name , T1.collection_id , count(*) FROM collections AS T1 JOIN documents_in_collections AS T2 ON T1.collection_id = T2.collection_id WHERE T1.collection_name = \"Best\" GROUP BY T1.collection_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 437, "sql": "SELECT DISTINCT T2.document_object_id FROM Document_Subsets AS T1 JOIN Document_Objects AS T2 ON T1.document_subset_id = T2.document_object_id JOIN Collections AS T3 ON T3.collection_id = T3.collection_id WHERE T1.document_subset_name = \"Best for 2000\" AND T3.collection_name = \"Best\""}
+{"index": 438, "sql": "SELECT DISTINCT document_object_id FROM Document_Subsets AS T1 JOIN Document_Objects AS T2 ON T1.document_subset_id = T2.document_object_id JOIN Collections AS T3 ON T3.collection_id = T2.parent_document_object_id WHERE T1.document_subset_name = 'Best for 2000' AND T3.collection_name = 'Best'"}
+{"index": 439, "sql": "SELECT document_object_id FROM collections AS t1 JOIN documents_in_collections AS t2 ON t1.collection_id = t2.collection_id WHERE t1.collection_name = \"Best\" EXCEPT SELECT document_object_id FROM document_subset_members AS t3 JOIN document_subsets AS t4 ON t3.document_subset_id = t4.document_subset_id WHERE t4.document_subset_name = \"Best for 2000\""}
+{"index": 440, "sql": "SELECT DISTINCT document_object_id FROM collections AS t1 JOIN documents_in_collections AS t2 ON t1.collection_id = t2.collection_id JOIN document_subsets AS t3 ON t2.document_object_id = t3.document_subset_id WHERE t1.collection_name = \"Best\" EXCEPT SELECT DISTINCT document_object_id FROM collections AS t1 JOIN documents_in_collections AS t2 ON t1.collection_id = t2.collection_id JOIN document_subsets AS t3 ON t2.document_object_id = t3.document_subset_id WHERE t3.document_subset_name = \"Best for 2000\""}
+{"index": 441, "sql": "SELECT T1.document_object_id FROM Document_Objects AS T1 JOIN Document_Subsets AS T2 ON T1.document_object_id = T2.document_subset_id WHERE T2.document_subset_name = \"Best for 2000\" UNION SELECT T3.document_object_id FROM Document_Objects AS T3 JOIN Collections AS T4 ON T3.document_object_id = T4.collection_id WHERE T4.collection_name = \"Best\""}
+{"index": 442, "sql": "SELECT DISTINCT document_object_id FROM document_subset_members WHERE document_subset_id = ( SELECT document_subset_id FROM document_subsets WHERE document_subset_name = 'Best for 2000') OR document_object_id IN ( SELECT document_object_id FROM collections WHERE collection_name = 'Best' )"}
+{"index": 443, "sql": "SELECT T1.collection_name FROM collections AS T1 JOIN documents_in_collections AS T2 ON T1.collection_id = T2.collection_id WHERE T1.collection_name = \"Best\""}
+{"index": 444, "sql": "SELECT T1.collection_name FROM Collections AS T1 JOIN Documents_in_collections AS T2 ON T1.collection_id = T2.collection_id WHERE T1.collection_name = \"Best\""}
+{"index": 445, "sql": "SELECT count(*) FROM collections AS t1 JOIN documents_in_collections AS t2 ON t1.collection_id = t2.collection_id WHERE t1.collection_name = \"Best\""}
+{"index": 446, "sql": "SELECT count(*) FROM Collections AS T1 JOIN Documents_in_collections AS T2 ON T1.collection_id = T2.collection_id WHERE T1.collection_name = \"Best\""}
+{"index": 447, "sql": "SELECT T1.Collection_Name FROM Collections AS T1 JOIN Document_Subsets AS T2 ON T1.Collection_ID = T1.Collection_ID WHERE T1.Collection_Name = \"Best\""}
+{"index": 448, "sql": "SELECT T2.Collection_Subset_Name FROM Collections AS T1 JOIN Collection_Subsets AS T2 ON T1.Collection_ID = T1.Collection_ID WHERE T1.Collection_Name = \"Best\""}
+{"index": 449, "sql": "SELECT count(*) FROM city"}
+{"index": 450, "sql": "SELECT count(*) FROM city"}
+{"index": 451, "sql": "SELECT DISTINCT state FROM city"}
+{"index": 452, "sql": "SELECT DISTINCT state FROM city"}
+{"index": 453, "sql": "SELECT count(DISTINCT country) FROM city"}
+{"index": 454, "sql": "SELECT count(*) FROM city"}
+{"index": 455, "sql": "SELECT city_name , city_code , state , country FROM city"}
+{"index": 456, "sql": "SELECT city_name , city_code , state , country FROM city"}
+{"index": 457, "sql": "SELECT latitude , longitude FROM city WHERE city_name = \"Baltimore\""}
+{"index": 458, "sql": "SELECT latitude , longitude FROM city WHERE city_name = \"Baltimore\""}
+{"index": 459, "sql": "SELECT city_name FROM city WHERE state = \"PA\""}
+{"index": 460, "sql": "SELECT city_name FROM city WHERE state = 'PA'"}
+{"index": 461, "sql": "SELECT count(*) FROM city WHERE country = \"Canada\""}
+{"index": 462, "sql": "SELECT count(*) FROM city WHERE country = 'Canada'"}
+{"index": 463, "sql": "SELECT city_name FROM city WHERE country = 'USA' ORDER BY latitude"}
+{"index": 464, "sql": "SELECT city_name FROM city WHERE country = 'USA' ORDER BY latitude"}
+{"index": 465, "sql": "SELECT state , count(*) FROM city GROUP BY state"}
+{"index": 466, "sql": "SELECT count(*) , state FROM city GROUP BY state"}
+{"index": 467, "sql": "SELECT count(*) , country FROM city GROUP BY country"}
+{"index": 468, "sql": "SELECT count(*) , country FROM city GROUP BY country"}
+{"index": 469, "sql": "SELECT state FROM city GROUP BY state HAVING count(*) >= 2"}
+{"index": 470, "sql": "SELECT state FROM city GROUP BY state HAVING count(*) >= 2"}
+{"index": 471, "sql": "SELECT state FROM city GROUP BY state ORDER BY count(*) DESC LIMIT 1"}
+{"index": 472, "sql": "SELECT state FROM city GROUP BY state ORDER BY count(*) DESC LIMIT 1"}
+{"index": 473, "sql": "SELECT country FROM city GROUP BY country ORDER BY count(*) LIMIT 1"}
+{"index": 474, "sql": "SELECT country FROM city GROUP BY country ORDER BY count(*) LIMIT 1"}
+{"index": 475, "sql": "SELECT T1.fname , T1.lname FROM student AS T1 JOIN city AS T2 ON T1.city_code = T2.city_code WHERE T2.state = \"MD\""}
+{"index": 476, "sql": "SELECT fname , lname FROM student WHERE city_code = \"MD\""}
+{"index": 477, "sql": "SELECT count(*) FROM city WHERE country = \"CHINA\""}
+{"index": 478, "sql": "SELECT count(*) FROM city WHERE country = \"CHINA\""}
+{"index": 479, "sql": "SELECT t1.fname , t1.major FROM student AS t1 JOIN city AS t2 ON t1.city_code = t2.city_code WHERE t2.city_name = \"Baltimore\""}
+{"index": 480, "sql": "SELECT t1.fname , t1.major FROM student AS t1 JOIN city AS t2 ON t1.city_code = t2.city_code WHERE t2.city_name = \"Baltimore\""}
+{"index": 481, "sql": "SELECT count(*) , country FROM city GROUP BY country"}
+{"index": 482, "sql": "SELECT count(*) , country FROM city GROUP BY country"}
+{"index": 483, "sql": "SELECT count(*) , city_code FROM student GROUP BY city_code"}
+{"index": 484, "sql": "SELECT count(*) , city_code FROM student GROUP BY city_code"}
+{"index": 485, "sql": "SELECT state FROM city GROUP BY state ORDER BY count(*) DESC LIMIT 1"}
+{"index": 486, "sql": "SELECT state FROM city GROUP BY state ORDER BY count(*) DESC LIMIT 1"}
+{"index": 487, "sql": "SELECT country FROM city GROUP BY country ORDER BY count(*) LIMIT 1"}
+{"index": 488, "sql": "SELECT country FROM city GROUP BY country ORDER BY count(*) ASC LIMIT 1"}
+{"index": 489, "sql": "SELECT T1.city_name FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code GROUP BY T1.city_code HAVING count(*) >= 3"}
+{"index": 490, "sql": "SELECT T1.city_name FROM city AS T1 JOIN student AS T2 ON T1.city_code = T2.city_code GROUP BY T1.city_name HAVING count(*) >= 3"}
+{"index": 491, "sql": "SELECT state FROM city GROUP BY state HAVING count(*) > 5"}
+{"index": 492, "sql": "SELECT state FROM city GROUP BY state HAVING count(*) > 5"}
+{"index": 493, "sql": "SELECT StuID FROM Student EXCEPT SELECT StuID FROM Student WHERE city_code IN (SELECT city_code FROM city WHERE country = 'USA')"}
+{"index": 494, "sql": "SELECT StuID FROM Student EXCEPT SELECT advisor FROM Student WHERE city_code IN (SELECT city_code FROM city WHERE country = 'USA')"}
+{"index": 495, "sql": "SELECT StuID FROM Student WHERE sex = 'F' AND city_code IN (SELECT city_code FROM city WHERE state = 'PA')"}
+{"index": 496, "sql": "SELECT StuID FROM (SELECT * FROM \"Student\" NATURAL JOIN \"City\") AS Student WHERE sex = 'F' AND state = 'PA'"}
+{"index": 497, "sql": "SELECT StuID FROM Student WHERE sex = 'M' EXCEPT SELECT StuID FROM Student WHERE country = \"USA\""}
+{"index": 498, "sql": "SELECT StuID FROM Student WHERE sex = 'M' AND city_code NOT IN (SELECT city_code FROM city WHERE country = 'USA')"}
+{"index": 499, "sql": "SELECT distance FROM direct_distance WHERE city1_code = \"BAL\" AND city2_code = \"CHI\""}
+{"index": 500, "sql": "SELECT distance FROM direct_distance WHERE city1_code = \"BAL\" AND city2_code = \"CHI\""}
+{"index": 501, "sql": "SELECT distance FROM direct_distance WHERE city1_code = \"B\" AND city2_code = \"N\""}
+{"index": 502, "sql": "SELECT distance FROM direct_distance WHERE city1_code = \"B\" AND city2_code = \"N\""}
+{"index": 503, "sql": "SELECT avg(distance) , min(distance) , max(distance) FROM direct_distance"}
+{"index": 504, "sql": "SELECT avg(distance) , min(distance) , max(distance) FROM direct_distance"}
+{"index": 505, "sql": "SELECT city1_code , city2_code FROM direct_distance ORDER BY distance DESC LIMIT 2"}
+{"index": 506, "sql": "SELECT city1_code FROM direct_distance ORDER BY distance DESC LIMIT 1"}
+{"index": 507, "sql": "SELECT DISTINCT T1.city_code FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code WHERE T2.distance > ( SELECT avg(distance) FROM direct_distance )"}
+{"index": 508, "sql": "SELECT DISTINCT T1.city_code FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code WHERE T2.distance > (SELECT avg(distance) FROM direct_distance)"}
+{"index": 509, "sql": "SELECT DISTINCT T1.city_code FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code WHERE T2.distance < 1000"}
+{"index": 510, "sql": "SELECT DISTINCT T1.city_code FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code WHERE T2.distance < 1000"}
+{"index": 511, "sql": "SELECT sum(distance) FROM direct_distance WHERE city1_code = \"BAL\""}
+{"index": 512, "sql": "SELECT sum(distance) FROM direct_distance WHERE city1_code = \"BAL\""}
+{"index": 513, "sql": "SELECT avg(distance) FROM direct_distance AS T1 JOIN city AS T2 ON T1.city1_code = T2.city_code WHERE T2.city_name = \"Boston\""}
+{"index": 514, "sql": "SELECT avg(distance) FROM direct_distance AS T1 JOIN city AS T2 ON T1.city1_code = T2.city_code WHERE T2.city_name = \"Boston\""}
+{"index": 515, "sql": "SELECT T1.city_name FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code WHERE T1.city_name = \"Chicago\" ORDER BY T2.distance LIMIT 1"}
+{"index": 516, "sql": "SELECT T1.city_name FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code WHERE T2.distance = (SELECT min(distance) FROM direct_distance WHERE city1_code = (SELECT city_code FROM city WHERE city_name = \"Chicago\") )"}
+{"index": 517, "sql": "SELECT T1.city_name FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code WHERE T1.city_name = \"Boston\" ORDER BY T2.distance DESC LIMIT 1"}
+{"index": 518, "sql": "SELECT T2.city_name FROM direct_distance AS T1 JOIN city AS T2 ON T1.city1_code = T2.city_code WHERE T1.distance = (SELECT max(distance) FROM direct_distance AS T1 JOIN city AS T2 ON T1.city1_code = T2.city_code WHERE T2.city_name = \"Boston\")"}
+{"index": 519, "sql": "SELECT T1.city_code , sum(T2.distance) FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city2_code GROUP BY T1.city_code"}
+{"index": 520, "sql": "SELECT T1.city_code , sum(T2.distance) FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code GROUP BY T1.city_code"}
+{"index": 521, "sql": "SELECT T1.city_name , avg(T2.distance) FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code GROUP BY T1.city_name"}
+{"index": 522, "sql": "SELECT T1.city_name , avg(T2.distance) FROM city AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code GROUP BY T1.city_name"}
+{"index": 523, "sql": "SELECT T1.distance FROM direct_distance AS T1 JOIN student AS T2 ON T1.city1_code = T2.city_code WHERE T2.fname = \"Linda\" AND T2.lname = \"Smith\" INTERSECT SELECT T1.distance FROM direct_distance AS T1 JOIN student AS T2 ON T1.city1_code = T2.city_code WHERE T2.fname = \"Tracy\" AND T2.lname = \"Kim\""}
+{"index": 524, "sql": "SELECT T1.distance FROM direct_distance AS T1 JOIN city AS T2 ON T1.city1_code = T2.city_code JOIN student AS T3 ON T3.city_code = T2.city_code WHERE T3.fname = \"Linda\" AND T3.lname = \"Smith\" INTERSECT SELECT T1.distance FROM direct_distance AS T1 JOIN city AS T2 ON T1.city2_code = T2.city_code JOIN student AS T3 ON T3.city_code = T2.city_code WHERE T3.fname = \"Tracy\" AND T3.lname = \"Kim\""}
+{"index": 525, "sql": "SELECT fname , lname FROM student WHERE Fname = \"Linda\" AND Lname = \"Smith\""}
+{"index": 526, "sql": "SELECT T1.fname , T1.lname FROM student AS T1 JOIN direct_distance AS T2 ON T1.city_code = T2.city1_code WHERE T2.distance = (SELECT max(distance) FROM direct_distance AS T3 JOIN student AS T4 ON T3.city1_code = T4.city_code WHERE T4.fname = \"Linda\" AND T4.lname = \"Smith\")"}
+{"index": 527, "sql": "SELECT t1.state FROM city AS t1 JOIN student AS t2 ON t1.city_code = t2.city_code WHERE t2.fname = \"Linda\""}
+{"index": 528, "sql": "SELECT state FROM city WHERE city_name = \"Los Angeles\""}
+{"index": 529, "sql": "SELECT * FROM Sailors WHERE age > 30"}
+{"index": 530, "sql": "SELECT * FROM Sailors WHERE age > 30"}
+{"index": 531, "sql": "SELECT name , age FROM Sailors WHERE age < 30"}
+{"index": 532, "sql": "SELECT name , age FROM Sailors WHERE age < 30"}
+{"index": 533, "sql": "SELECT T2.name FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T1.sid = 1"}
+{"index": 534, "sql": "SELECT DISTINCT bid FROM Reserves WHERE sid = 1"}
+{"index": 535, "sql": "SELECT T1.name FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid WHERE T2.bid = 102"}
+{"index": 536, "sql": "SELECT T1.name FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid WHERE T2.bid = 102"}
+{"index": 537, "sql": "SELECT DISTINCT bid FROM Reserves"}
+{"index": 538, "sql": "SELECT bid FROM Reserves"}
+{"index": 539, "sql": "SELECT name FROM sailors WHERE name LIKE '%e%'"}
+{"index": 540, "sql": "SELECT name FROM sailors WHERE name LIKE '%e%'"}
+{"index": 541, "sql": "SELECT DISTINCT sid FROM Sailors WHERE age < (SELECT max(age) FROM sailors)"}
+{"index": 542, "sql": "SELECT DISTINCT sid FROM Sailors WHERE age != (SELECT min(age) FROM sailors)"}
+{"index": 543, "sql": "SELECT DISTINCT name FROM sailors WHERE age > (SELECT max(age) FROM sailors WHERE rating > 7)"}
+{"index": 544, "sql": "SELECT DISTINCT name FROM sailors WHERE age > (SELECT min(age) FROM sailors WHERE rating > 7)"}
+{"index": 545, "sql": "SELECT T1.name , T1.sid FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid GROUP BY T1.sid HAVING count(*) >= 1"}
+{"index": 546, "sql": "SELECT T1.name , T1.sid FROM sailors AS T1 JOIN reserves AS T2 ON T1.sid = T2.sid GROUP BY T1.sid HAVING count(*) >= 1"}
+{"index": 547, "sql": "SELECT T1.sid , T1.name FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid GROUP BY T1.sid HAVING count(*) > 1"}
+{"index": 548, "sql": "SELECT DISTINCT T1.name FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid GROUP BY T1.name HAVING count(*) >= 2"}
+{"index": 549, "sql": "SELECT T1.sid FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T2.color = \"red\" OR T2.color = \"blue\""}
+{"index": 550, "sql": "SELECT T1.sid FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T2.color = \"red\" OR T2.color = \"blue\""}
+{"index": 551, "sql": "SELECT T1.name , T1.sid FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.color = \"red\" OR T3.color = \"blue\""}
+{"index": 552, "sql": "SELECT T1.name , T1.sid FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.color = \"red\" OR T3.color = \"blue\""}
+{"index": 553, "sql": "SELECT T1.sid FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T2.color = \"red\" INTERSECT SELECT T1.sid FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T2.color = \"blue\""}
+{"index": 554, "sql": "SELECT T1.sid FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T2.color = \"red\" INTERSECT SELECT T1.sid FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T2.color = \"blue\""}
+{"index": 555, "sql": "SELECT T1.name , T1.sid FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.color = \"red\" INTERSECT SELECT T1.name , T1.sid FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.color = \"blue\""}
+{"index": 556, "sql": "SELECT T1.name , T1.sid FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.color = \"red\" INTERSECT SELECT T1.name , T1.sid FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.color = \"blue\""}
+{"index": 557, "sql": "SELECT sid FROM Sailors EXCEPT SELECT sid FROM Reserves"}
+{"index": 558, "sql": "SELECT sid FROM Sailors EXCEPT SELECT sid FROM Reserves"}
+{"index": 559, "sql": "SELECT name , sid FROM Sailors WHERE sid NOT IN (SELECT sid FROM Reserves)"}
+{"index": 560, "sql": "SELECT name , sid FROM Sailors WHERE sid NOT IN (SELECT sid FROM Reserves)"}
+{"index": 561, "sql": "SELECT sid FROM Sailors EXCEPT SELECT sid FROM Reserves"}
+{"index": 562, "sql": "SELECT sid FROM Sailors EXCEPT SELECT sid FROM Reserves"}
+{"index": 563, "sql": "SELECT T2.name FROM Reserves AS T1 JOIN Sailors AS T2 ON T1.sid = T2.sid WHERE T1.bid = 103"}
+{"index": 564, "sql": "SELECT T2.name FROM Reserves AS T1 JOIN Sailors AS T2 ON T1.sid = T2.sid WHERE T1.bid = 103"}
+{"index": 565, "sql": "SELECT name FROM sailors WHERE rating > (SELECT max(rating) FROM sailors WHERE name = 'Luis')"}
+{"index": 566, "sql": "SELECT name FROM sailors WHERE rating > (SELECT max(rating) FROM sailors WHERE name = 'Luis')"}
+{"index": 567, "sql": "SELECT name FROM sailors WHERE rating > (SELECT max(rating) FROM sailors WHERE name = 'Luis')"}
+{"index": 568, "sql": "SELECT name FROM sailors WHERE rating > (SELECT max(rating) FROM sailors WHERE name = 'Luis')"}
+{"index": 569, "sql": "SELECT T1.name , T1.sid FROM sailors AS T1 JOIN reserves AS T2 ON T1.sid = T2.sid WHERE T1.rating > 2"}
+{"index": 570, "sql": "SELECT T1.name , T1.sid FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid WHERE T1.rating >= 3"}
+{"index": 571, "sql": "SELECT name , age FROM Sailors ORDER BY age DESC LIMIT 1"}
+{"index": 572, "sql": "SELECT name , age FROM Sailors ORDER BY age DESC LIMIT 1"}
+{"index": 573, "sql": "SELECT count(*) FROM Sailors"}
+{"index": 574, "sql": "SELECT count(*) FROM Sailors"}
+{"index": 575, "sql": "SELECT avg(age) FROM Sailors WHERE rating = 7"}
+{"index": 576, "sql": "SELECT avg(age) FROM Sailors WHERE rating = 7"}
+{"index": 577, "sql": "SELECT count(*) FROM Sailors WHERE name LIKE 'D%'"}
+{"index": 578, "sql": "SELECT count(*) FROM Sailors WHERE name LIKE 'D%'"}
+{"index": 579, "sql": "SELECT avg(rating) , max(age) FROM Sailors"}
+{"index": 580, "sql": "SELECT avg(rating) , max(age) FROM Sailors"}
+{"index": 581, "sql": "SELECT count(*) , T1.name FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid GROUP BY T1.name"}
+{"index": 582, "sql": "SELECT count(*) , T1.name FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid GROUP BY T1.name"}
+{"index": 583, "sql": "SELECT count(*) , T1.name FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid WHERE T2.sid > 50 GROUP BY T1.name"}
+{"index": 584, "sql": "SELECT count(*) , T1.name FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid WHERE T2.sid > 50 GROUP BY T1.name"}
+{"index": 585, "sql": "SELECT count(*) , T1.name FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid GROUP BY T1.name HAVING count(*) > 1"}
+{"index": 586, "sql": "SELECT count(*) , T2.name FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid GROUP BY T2.name HAVING count(*) > 1"}
+{"index": 587, "sql": "SELECT count(*) , T2.name FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T1.sid > 1 GROUP BY T2.name"}
+{"index": 588, "sql": "SELECT count(*) , T2.name FROM Reserves AS T1 JOIN Boats AS T2 ON T1.bid = T2.bid WHERE T1.sid IN ( SELECT sid FROM sailors WHERE age > 1 ) GROUP BY T2.name"}
+{"index": 589, "sql": "SELECT rating , avg(age) FROM sailors AS T1 JOIN reserves AS T2 ON T1.sid = T2.sid WHERE T2.bid IN (SELECT bid FROM boats WHERE color = \"red\") GROUP BY rating"}
+{"index": 590, "sql": "SELECT T1.rating , avg(T2.age) FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid WHERE T1.color = \"red\" GROUP BY T1.rating"}
+{"index": 591, "sql": "SELECT name , rating , age FROM Sailors ORDER BY rating , age"}
+{"index": 592, "sql": "SELECT name , rating , age FROM sailors ORDER BY rating , age"}
+{"index": 593, "sql": "SELECT count(*) FROM Boats"}
+{"index": 594, "sql": "SELECT count(*) FROM Boats"}
+{"index": 595, "sql": "SELECT count(*) FROM boats WHERE color = \"red\""}
+{"index": 596, "sql": "SELECT count(*) FROM boats WHERE color = \"red\""}
+{"index": 597, "sql": "SELECT T1.name FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid JOIN Sailors AS T3 ON T2.sid = T3.sid WHERE T3.age BETWEEN 20 AND 30"}
+{"index": 598, "sql": "SELECT T1.name FROM Boats AS T1 JOIN Reserves AS T2 ON T1.bid = T2.bid WHERE T2.sid IN (SELECT sid FROM Sailors WHERE age BETWEEN 20 AND 30)"}
+{"index": 599, "sql": "SELECT T1.name FROM sailors AS T1 JOIN reserves AS T2 ON T1.sid = T2.sid JOIN boats AS T3 ON T2.bid = T3.bid WHERE T3.color = \"red\" AND T1.rating > (SELECT max(rating) FROM sailors)"}
+{"index": 600, "sql": "SELECT T1.name FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.color = \"red\" AND T1.rating > (SELECT max(rating) FROM sailors)"}
+{"index": 601, "sql": "SELECT max(rating) FROM Sailors"}
+{"index": 602, "sql": "SELECT max(rating) FROM Sailors"}
+{"index": 603, "sql": "SELECT T1.name FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.name = \"Melon\""}
+{"index": 604, "sql": "SELECT T1.name FROM Sailors AS T1 JOIN Reserves AS T2 ON T1.sid = T2.sid JOIN Boats AS T3 ON T2.bid = T3.bid WHERE T3.name = \"Melon\""}
+{"index": 605, "sql": "SELECT name , age FROM Sailors ORDER BY rating DESC"}
+{"index": 606, "sql": "SELECT name , age FROM Sailors ORDER BY rating DESC"}
+{"index": 607, "sql": "SELECT Model FROM headphone ORDER BY Price DESC LIMIT 1"}
+{"index": 608, "sql": "SELECT Model FROM headphone ORDER BY Price DESC LIMIT 1"}
+{"index": 609, "sql": "SELECT DISTINCT Model FROM headphone ORDER BY Model"}
+{"index": 610, "sql": "SELECT DISTINCT Model FROM headphone ORDER BY Model ASC"}
+{"index": 611, "sql": "SELECT CLASS FROM headphone GROUP BY CLASS ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 612, "sql": "SELECT CLASS FROM headphone GROUP BY CLASS ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 613, "sql": "SELECT CLASS FROM headphone GROUP BY CLASS HAVING COUNT(*) > 2"}
+{"index": 614, "sql": "SELECT CLASS FROM headphone GROUP BY CLASS HAVING COUNT(*) <= 2"}
+{"index": 615, "sql": "SELECT count(*) , CLASS FROM headphone WHERE Price > 200 GROUP BY CLASS"}
+{"index": 616, "sql": "SELECT CLASS , count(*) FROM headphone WHERE price > 200 GROUP BY CLASS"}
+{"index": 617, "sql": "SELECT count(DISTINCT Earpads) FROM headphone"}
+{"index": 618, "sql": "SELECT count(DISTINCT Earpads) FROM headphone"}
+{"index": 619, "sql": "SELECT Earpads FROM headphone GROUP BY Earpads ORDER BY COUNT(*) DESC LIMIT 2"}
+{"index": 620, "sql": "SELECT Earpads FROM headphone GROUP BY Earpads ORDER BY COUNT(*) DESC LIMIT 2"}
+{"index": 621, "sql": "SELECT Model , CLASS , Construction FROM headphone ORDER BY Price ASC LIMIT 1"}
+{"index": 622, "sql": "SELECT Model , CLASS , Construction FROM headphone ORDER BY Price ASC LIMIT 1"}
+{"index": 623, "sql": "SELECT Construction , avg(Price) FROM headphone GROUP BY Construction"}
+{"index": 624, "sql": "SELECT avg(Price) , Construction FROM headphone GROUP BY Construction"}
+{"index": 625, "sql": "SELECT CLASS FROM headphone WHERE Earpads = \"Bowls\" INTERSECT SELECT CLASS FROM headphone WHERE Earpads = \"Comfort Pads\""}
+{"index": 626, "sql": "SELECT CLASS FROM headphone WHERE Earpads = \"Bowls\" INTERSECT SELECT CLASS FROM headphone WHERE Earpads = \"Comfort Pads\""}
+{"index": 627, "sql": "SELECT Earpads FROM headphone WHERE Construction != 'Plastic'"}
+{"index": 628, "sql": "SELECT Earpads FROM headphone WHERE Construction != 'Plastic'"}
+{"index": 629, "sql": "SELECT Model FROM headphone WHERE Price < (SELECT avg(Price) FROM headphone)"}
+{"index": 630, "sql": "SELECT Model FROM headphone WHERE Price < (SELECT avg(Price) FROM headphone)"}
+{"index": 631, "sql": "SELECT Name FROM store ORDER BY Date_Opened"}
+{"index": 632, "sql": "SELECT Name FROM store ORDER BY Date_Opened"}
+{"index": 633, "sql": "SELECT Name , Parking FROM store WHERE Neighborhood = \"Tarzana\""}
+{"index": 634, "sql": "SELECT Name , Parking FROM store WHERE Neighborhood = \"Tarzana\""}
+{"index": 635, "sql": "SELECT count(DISTINCT Neighborhood) FROM store"}
+{"index": 636, "sql": "SELECT count(DISTINCT neighborhood) FROM store"}
+{"index": 637, "sql": "SELECT neighborhood , count(*) FROM store GROUP BY neighborhood"}
+{"index": 638, "sql": "SELECT neighborhood , count(*) FROM store GROUP BY neighborhood"}
+{"index": 639, "sql": "SELECT T2.Name , SUM(T1.Quantity) FROM stock AS T1 JOIN store AS T2 ON T1.Store_ID = T2.Store_ID GROUP BY T1.Store_ID ORDER BY SUM(T1.Quantity) DESC LIMIT 1"}
+{"index": 640, "sql": "SELECT T2.Name , sum(T1.Quantity) FROM stock AS T1 JOIN store AS T2 ON T1.Store_ID = T2.Store_ID GROUP BY T2.Name"}
+{"index": 641, "sql": "SELECT Name FROM store WHERE Store_ID NOT IN (SELECT Store_ID FROM stock)"}
+{"index": 642, "sql": "SELECT Name FROM store WHERE Store_ID NOT IN (SELECT Store_ID FROM stock)"}
+{"index": 643, "sql": "SELECT Model FROM headphone WHERE Headphone_ID NOT IN (SELECT Headphone_ID FROM stock)"}
+{"index": 644, "sql": "SELECT Model FROM headphone EXCEPT SELECT T1.Model FROM headphone AS T1 JOIN stock AS T2 ON T1.Headphone_ID = T2.Headphone_ID"}
+{"index": 645, "sql": "SELECT T2.Model FROM stock AS T1 JOIN headphone AS T2 ON T1.Headphone_ID = T2.Headphone_ID GROUP BY T1.Headphone_ID ORDER BY sum(T1.Quantity) DESC LIMIT 1"}
+{"index": 646, "sql": "SELECT T2.Model FROM stock AS T1 JOIN headphone AS T2 ON T1.Headphone_ID = T2.Headphone_ID GROUP BY T1.Headphone_ID ORDER BY sum(T1.Quantity) DESC LIMIT 1"}
+{"index": 647, "sql": "SELECT sum(stock.Quantity) FROM stock JOIN store ON stock.Store_ID = store.Store_ID WHERE store.Name = \"Woodman\""}
+{"index": 648, "sql": "SELECT sum(quantity) FROM stock AS T1 JOIN store AS T2 ON T1.store_id = T2.store_id WHERE T2.name = \"Woodman\""}
+{"index": 649, "sql": "SELECT neighborhood FROM store EXCEPT SELECT t1.neighborhood FROM store AS t1 JOIN stock AS t2 ON t1.store_id = t2.store_id"}
+{"index": 650, "sql": "SELECT neighborhood FROM store WHERE store_id NOT IN (SELECT store_id FROM stock)"}
+{"index": 651, "sql": "SELECT count(*) FROM author"}
+{"index": 652, "sql": "SELECT count(*) FROM author"}
+{"index": 653, "sql": "SELECT count(*) FROM Paper"}
+{"index": 654, "sql": "SELECT count(*) FROM paper"}
+{"index": 655, "sql": "SELECT count(*) FROM affiliation"}
+{"index": 656, "sql": "SELECT count(*) FROM affiliation"}
+{"index": 657, "sql": "SELECT count(*) FROM paper AS T1 JOIN affiliation AS T2 ON T2.affiliation_id = T2.affiliation_id WHERE T2.address = 'In.' AND T1.venue = 'NAACL 2000'"}
+{"index": 658, "sql": "SELECT count(*) FROM paper AS T1 JOIN citation AS T2 ON T1.paper_id = T2.cited_paper_id JOIN affiliation AS T3 ON T3.affiliation_id = T3.affiliation_id WHERE T1.venue = 'NAACL' AND T3.address = 'In.' AND T1.year = 2000"}
+{"index": 659, "sql": "SELECT count(*) FROM paper AS T1 JOIN author_list AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name = \"Columbia University\" AND T1.year = 2009"}
+{"index": 660, "sql": "SELECT count(*) FROM paper AS T1 JOIN author_list AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name = 'Columbia University' AND T1.year = 2009"}
+{"index": 661, "sql": "SELECT name , address FROM affiliation"}
+{"index": 662, "sql": "SELECT name , address FROM affiliation"}
+{"index": 663, "sql": "SELECT venue , YEAR FROM Paper ORDER BY YEAR"}
+{"index": 664, "sql": "SELECT DISTINCT venue FROM paper ORDER BY YEAR"}
+{"index": 665, "sql": "SELECT t1.title , t1.paper_id FROM Paper AS t1 JOIN Author_list AS t2 ON t1.paper_id = t2.paper_id JOIN affiliation AS t3 ON t2.affiliation_id = t3.affiliation_id WHERE t3.name = \"Harvard University\""}
+{"index": 666, "sql": "SELECT t1.title , t1.paper_id FROM paper AS t1 JOIN author_list AS t2 ON t1.paper_id = t2.paper_id JOIN affiliation AS t3 ON t2.affiliation_id = t3.affiliation_id WHERE t3.name = 'Harvard University'"}
+{"index": 667, "sql": "SELECT t1.title , t1.paper_id FROM Paper AS t1 JOIN Author_list AS t2 ON t1.paper_id = t2.paper_id JOIN author AS t3 ON t2.author_id = t3.author_id WHERE t3.name = \"Mckeown\""}
+{"index": 668, "sql": "SELECT t1.title , t1.paper_id FROM Paper AS t1 JOIN Author_list AS t2 ON t1.paper_id = t2.paper_id JOIN author AS t3 ON t2.author_id = t3.author_id WHERE t3.name = \"Mckeown\""}
+{"index": 669, "sql": "SELECT T2.title , T2.paper_id FROM author_list AS T1 JOIN paper AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T1.affiliation_id = T3.affiliation_id WHERE T3.name = 'Stanford University' INTERSECT SELECT T2.title , T2.paper_id FROM author_list AS T1 JOIN paper AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T1.affiliation_id = T3.affiliation_id WHERE T3.name = 'Columbia University'"}
+{"index": 670, "sql": "SELECT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name = 'Columbia University' INTERSECT SELECT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name = 'Stanford University'"}
+{"index": 671, "sql": "SELECT DISTINCT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN Author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown\" AND T3.name = \"Kathleen\" AND T3.name = \"Rambow\" AND T2.affiliation_id = \"1\""}
+{"index": 672, "sql": "SELECT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN Author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown\" AND T3.name = \"Kathleen\" AND T3.name = \"Rambow\""}
+{"index": 673, "sql": "SELECT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id WHERE T2.author_id IN (SELECT author_id FROM author WHERE name = 'Mckeown') EXCEPT SELECT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id WHERE T2.author_id IN (SELECT author_id FROM author WHERE name = 'Rambow')"}
+{"index": 674, "sql": "SELECT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN Author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown\" EXCEPT SELECT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN Author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Rambow\""}
+{"index": 675, "sql": "SELECT T2.title , T2.paper_id FROM Author_list AS T1 JOIN Paper AS T2 ON T1.paper_id = T2.paper_id JOIN Author AS T3 ON T1.author_id = T3.author_id WHERE T3.name IN ('Mckeown','Kathleen','Rambow')"}
+{"index": 676, "sql": "SELECT T1.title , T1.paper_id FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN Author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = 'Mckeown' OR T3.name = 'Kathleen' OR T3.name = 'Rambow'"}
+{"index": 677, "sql": "SELECT T1.name , count(*) FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id GROUP BY T1.author_id ORDER BY count(*) DESC"}
+{"index": 678, "sql": "SELECT author_id , COUNT(*) FROM Author_list GROUP BY author_id ORDER BY COUNT(*) DESC"}
+{"index": 679, "sql": "SELECT affiliation_id , COUNT(*) FROM author_list GROUP BY affiliation_id ORDER BY COUNT(*) ASC"}
+{"index": 680, "sql": "SELECT T1.name FROM affiliation AS T1 JOIN author_list AS T2 ON T1.affiliation_id = T2.affiliation_id GROUP BY T1.affiliation_id ORDER BY count(*)"}
+{"index": 681, "sql": "SELECT T2.name FROM author_list AS T1 JOIN author AS T2 ON T1.author_id = T2.author_id GROUP BY T1.author_id HAVING count(*) > 50"}
+{"index": 682, "sql": "SELECT T2.name FROM author_list AS T1 JOIN author AS T2 ON T1.author_id = T2.author_id GROUP BY T1.author_id HAVING count(*) > 50"}
+{"index": 683, "sql": "SELECT T2.name FROM author_list AS T1 JOIN author AS T2 ON T1.author_id = T2.author_id GROUP BY T1.author_id HAVING count(*) = 1"}
+{"index": 684, "sql": "SELECT T2.name FROM author_list AS T1 JOIN author AS T2 ON T1.author_id = T2.author_id GROUP BY T1.author_id HAVING count(*) = 1"}
+{"index": 685, "sql": "SELECT venue , YEAR FROM Paper GROUP BY venue , YEAR ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 686, "sql": "SELECT venue , YEAR FROM paper GROUP BY venue , YEAR ORDER BY count(*) DESC LIMIT 1"}
+{"index": 687, "sql": "SELECT venue FROM paper GROUP BY venue ORDER BY count(*) ASC LIMIT 1"}
+{"index": 688, "sql": "SELECT venue FROM Paper GROUP BY venue ORDER BY COUNT(*) ASC LIMIT 1"}
+{"index": 689, "sql": "SELECT count(*) FROM citation AS T1 JOIN paper AS T2 ON T1.cited_paper_id = T2.paper_id WHERE T1.paper_id = 'A00-1002'"}
+{"index": 690, "sql": "SELECT count(*) FROM citation AS T1 JOIN paper AS T2 ON T1.cited_paper_id = T2.paper_id WHERE T1.paper_id = \"A00-1002\""}
+{"index": 691, "sql": "SELECT count(*) FROM citation AS T1 JOIN paper AS T2 ON T1.cited_paper_id = T2.paper_id WHERE T1.paper_id = \"D12-1027\""}
+{"index": 692, "sql": "SELECT count(*) FROM citation AS T1 JOIN paper AS T2 ON T1.cited_paper_id = T2.paper_id WHERE T1.paper_id = \"D12-1027\""}
+{"index": 693, "sql": "SELECT paper_id , count(*) FROM citation GROUP BY paper_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 694, "sql": "SELECT paper_id , count(*) FROM citation GROUP BY paper_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 695, "sql": "SELECT t1.title FROM paper AS t1 JOIN citation AS t2 ON t1.paper_id = t2.cited_paper_id GROUP BY t2.cited_paper_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 696, "sql": "SELECT t1.title FROM paper AS t1 JOIN citation AS t2 ON t1.paper_id = t2.cited_paper_id GROUP BY t2.cited_paper_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 697, "sql": "SELECT t1.title , COUNT(*) FROM Paper AS t1 JOIN Citation AS t2 ON t1.paper_id = t2.cited_paper_id GROUP BY t1.paper_id ORDER BY COUNT(*) DESC LIMIT 10"}
+{"index": 698, "sql": "SELECT t1.title , COUNT(*) FROM paper AS t1 JOIN citation AS t2 ON t1.paper_id = t2.cited_paper_id GROUP BY t1.paper_id ORDER BY COUNT(*) DESC LIMIT 10"}
+{"index": 699, "sql": "SELECT count(*) FROM citation AS T1 JOIN author_list AS T2 ON T1.cited_paper_id = T2.paper_id JOIN author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown , Kathleen\""}
+{"index": 700, "sql": "SELECT count(*) FROM citation AS T1 JOIN author_list AS T2 ON T1.cited_paper_id = T2.paper_id JOIN author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown\" AND T2.affiliation_id = (SELECT affiliation_id FROM author_list WHERE author_id = \"Kathleen\")"}
+{"index": 701, "sql": "SELECT count(*) FROM citation AS T1 JOIN author_list AS T2 ON T1.cited_paper_id = T2.paper_id JOIN author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown , Kathleen\""}
+{"index": 702, "sql": "SELECT count(*) FROM citation AS T1 JOIN author_list AS T2 ON T1.cited_paper_id = T2.paper_id JOIN author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown\" AND T3.email = \"kathleen.mckeown@math.ucla.edu\""}
+{"index": 703, "sql": "SELECT T1.name , count(*) FROM Author AS T1 JOIN Citation AS T2 ON T1.author_id = T2.cited_paper_id GROUP BY T1.author_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 704, "sql": "SELECT T1.name , count(*) FROM Author AS T1 JOIN Citation AS T2 ON T1.author_id = T2.cited_paper_id GROUP BY T1.author_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 705, "sql": "SELECT T1.venue , T1.year FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN Author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown , Kathleen\""}
+{"index": 706, "sql": "SELECT T1.venue , T1.year FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN Author AS T3 ON T2.author_id = T3.author_id WHERE T3.name = \"Mckeown , Kathleen\""}
+{"index": 707, "sql": "SELECT T1.venue , T1.year FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name = \"Columbia University\""}
+{"index": 708, "sql": "SELECT T1.venue , T1.year FROM Paper AS T1 JOIN Author_list AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name = \"Columbia University\""}
+{"index": 709, "sql": "SELECT T2.author_id FROM paper AS T1 JOIN author_list AS T2 ON T1.paper_id = T2.paper_id WHERE T1.year = 2009 GROUP BY T2.author_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 710, "sql": "SELECT T1.name FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id WHERE T2.paper_id IN ( SELECT T3.paper_id FROM citation AS T3 JOIN paper AS T4 ON T3.cited_paper_id = T4.paper_id WHERE T4.year = 2009 GROUP BY T3.paper_id ORDER BY count(*) DESC LIMIT 1 )"}
+{"index": 711, "sql": "SELECT T1.name FROM affiliation AS T1 JOIN author_list AS T2 ON T1.affiliation_id = T2.affiliation_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T3.year = 2009 GROUP BY T1.affiliation_id ORDER BY count(*) DESC LIMIT 3"}
+{"index": 712, "sql": "SELECT T1.name FROM affiliation AS T1 JOIN author_list AS T2 ON T1.affiliation_id = T2.affiliation_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T3.year = 2009 GROUP BY T1.name ORDER BY count(*) DESC LIMIT 3"}
+{"index": 713, "sql": "SELECT count(*) FROM paper AS T1 JOIN affiliation AS T2 ON T1.paper_id = T2.affiliation_id WHERE T2.name = \"Columbia University\" AND T1.year >= 2009"}
+{"index": 714, "sql": "SELECT count(*) FROM affiliation AS T1 JOIN author_list AS T2 ON T1.affiliation_id = T2.affiliation_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T1.name = \"Columbia University\" AND T3.year >= 2009"}
+{"index": 715, "sql": "SELECT count(*) FROM paper AS T1 JOIN author_list AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name = \"Stanford University\" AND T1.year BETWEEN 2000 AND 2009"}
+{"index": 716, "sql": "SELECT count(*) FROM paper AS T1 JOIN author_list AS T2 ON T1.paper_id = T2.paper_id JOIN affiliation AS T3 ON T2.affiliation_id = T3.affiliation_id WHERE T3.name = \"Stanford University\" AND T1.year BETWEEN 2000 AND 2009"}
+{"index": 717, "sql": "SELECT t1.title FROM paper AS t1 JOIN author_list AS t2 ON t1.paper_id = t2.paper_id GROUP BY t1.paper_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 718, "sql": "SELECT t1.title FROM paper AS t1 JOIN author_list AS t2 ON t1.paper_id = t2.paper_id GROUP BY t1.paper_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 719, "sql": "SELECT count(*) FROM author_list AS T1 JOIN author AS T2 ON T1.author_id = T2.author_id WHERE T2.name = \"Mckeown , Kathleen\""}
+{"index": 720, "sql": "SELECT count(*) FROM author_list AS T1 JOIN author AS T2 ON T1.author_id = T2.author_id WHERE T2.name = \"Mckeown\" AND T1.affiliation_id = (SELECT affiliation_id FROM author_list AS T3 JOIN author AS T4 ON T3.author_id = T4.author_id WHERE T4.name = \"Kathleen\")"}
+{"index": 721, "sql": "SELECT T1.name FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id WHERE T1.name = \"Mckeown\" INTERSECT SELECT T1.name FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id WHERE T1.name = \"Kathleen\""}
+{"index": 722, "sql": "SELECT T2.name FROM author_list AS T1 JOIN author AS T2 ON T1.author_id = T2.author_id WHERE T1.affiliation_id = (SELECT T3.affiliation_id FROM author_list AS T3 JOIN paper AS T4 ON T3.paper_id = T4.paper_id WHERE T4.title = 'Mckeown , Kathleen' GROUP BY T3.affiliation_id ORDER BY count(*) DESC LIMIT 1) GROUP BY T2.name HAVING count(*) >= 1"}
+{"index": 723, "sql": "SELECT paper_id FROM paper WHERE title LIKE '%translation%'"}
+{"index": 724, "sql": "SELECT paper_id FROM Paper WHERE title LIKE '%translation%'"}
+{"index": 725, "sql": "SELECT paper_id , title FROM Paper EXCEPT SELECT T1.paper_id , T1.title FROM Paper AS T1 JOIN Citation AS T2 ON T1.paper_id = T2.cited_paper_id"}
+{"index": 726, "sql": "SELECT paper_id , title FROM Paper WHERE paper_id NOT IN ( SELECT cited_paper_id FROM Citation )"}
+{"index": 727, "sql": "SELECT T1.name FROM affiliation AS T1 JOIN author_list AS T2 ON T1.affiliation_id = T2.affiliation_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T1.address LIKE '%China%' GROUP BY T1.affiliation_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 728, "sql": "SELECT T1.name FROM affiliation AS T1 JOIN author_list AS T2 ON T1.affiliation_id = T2.affiliation_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T1.address LIKE '%China%' GROUP BY T1.affiliation_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 729, "sql": "SELECT count(*) , YEAR FROM paper GROUP BY YEAR , venue"}
+{"index": 730, "sql": "SELECT venue , year , count(*) FROM paper GROUP BY venue , year"}
+{"index": 731, "sql": "SELECT count(*) , T1.affiliation_id FROM affiliation AS T1 JOIN author_list AS T2 ON T1.affiliation_id = T2.affiliation_id GROUP BY T1.affiliation_id"}
+{"index": 732, "sql": "SELECT T1.affiliation_id , count(*) FROM Author_list AS T1 JOIN Paper AS T2 ON T1.paper_id = T2.paper_id GROUP BY T1.affiliation_id"}
+{"index": 733, "sql": "SELECT t1.title FROM paper AS t1 JOIN citation AS t2 ON t1.paper_id = t2.paper_id GROUP BY t1.paper_id HAVING count(*) > 50"}
+{"index": 734, "sql": "SELECT t1.title FROM paper AS t1 JOIN citation AS t2 ON t1.paper_id = t2.paper_id GROUP BY t1.paper_id HAVING count(*) > 50"}
+{"index": 735, "sql": "SELECT COUNT(DISTINCT author_id) FROM Author_list WHERE paper_id NOT IN ( SELECT cited_paper_id FROM citation GROUP BY cited_paper_id HAVING COUNT(*) > 50 )"}
+{"index": 736, "sql": "SELECT COUNT(DISTINCT T1.author_id) FROM Author_list AS T1 JOIN Paper AS T2 ON T1.paper_id = T2.paper_id WHERE T2.paper_id NOT IN ( SELECT cited_paper_id FROM citation GROUP BY cited_paper_id HAVING count(*) > 50 )"}
+{"index": 737, "sql": "SELECT T1.name FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T3.venue = 'NAACL' AND T3.year = 2009 UNION SELECT T1.name FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T3.venue = 'ACL' AND T3.year = 2009"}
+{"index": 738, "sql": "SELECT T1.name FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T3.venue = 'NAACL' INTERSECT SELECT T1.name FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id JOIN paper AS T3 ON T2.paper_id = T3.paper_id WHERE T3.venue = 'ACL' AND T3.year = 2009"}
+{"index": 739, "sql": "SELECT T1.name FROM author AS T1 JOIN author_list AS T2 ON T1.author_id = T2.author_id WHERE T2.paper_id = ( SELECT paper_id FROM paper WHERE venue = \"ACL\" )"}
+{"index": 740, "sql": "SELECT name FROM author WHERE author_id NOT IN ( SELECT author_id FROM Author_list AS T1 JOIN Paper AS T2 ON T1.paper_id = T2.paper_id WHERE T2.venue = 'ACL' )"}
+{"index": 741, "sql": "SELECT count(*) FROM conference"}
+{"index": 742, "sql": "SELECT count(*) FROM conference"}
+{"index": 743, "sql": "SELECT DISTINCT Conference_Name FROM conference"}
+{"index": 744, "sql": "SELECT DISTINCT Conference_Name FROM conference"}
+{"index": 745, "sql": "SELECT Conference_Name , YEAR , LOCATION FROM conference"}
+{"index": 746, "sql": "SELECT Conference_Name , YEAR , LOCATION FROM conference"}
+{"index": 747, "sql": "SELECT Conference_Name , COUNT(*) FROM conference GROUP BY Conference_Name"}
+{"index": 748, "sql": "SELECT Conference_Name , COUNT(*) FROM conference GROUP BY Conference_Name"}
+{"index": 749, "sql": "SELECT YEAR , COUNT(*) FROM conference GROUP BY YEAR"}
+{"index": 750, "sql": "SELECT YEAR , count(*) FROM conference GROUP BY YEAR"}
+{"index": 751, "sql": "SELECT YEAR FROM conference GROUP BY YEAR ORDER BY count(*) ASC LIMIT 1"}
+{"index": 752, "sql": "SELECT YEAR FROM conference GROUP BY YEAR ORDER BY count(*) ASC LIMIT 1"}
+{"index": 753, "sql": "SELECT LOCATION FROM conference GROUP BY LOCATION HAVING COUNT(*) >= 2"}
+{"index": 754, "sql": "SELECT LOCATION FROM conference GROUP BY LOCATION HAVING COUNT(*) >= 2"}
+{"index": 755, "sql": "SELECT institution_name , LOCATION , founded FROM institution"}
+{"index": 756, "sql": "SELECT institution_name , LOCATION , founded FROM institution"}
+{"index": 757, "sql": "SELECT count(*) FROM institution WHERE founded BETWEEN 1850 AND 1900"}
+{"index": 758, "sql": "SELECT count(*) FROM institution WHERE founded BETWEEN 1850 AND 1900"}
+{"index": 759, "sql": "SELECT institution_name , LOCATION FROM institution ORDER BY founded DESC LIMIT 1"}
+{"index": 760, "sql": "SELECT institution_name , LOCATION FROM institution ORDER BY founded DESC LIMIT 1"}
+{"index": 761, "sql": "SELECT T1.Institution_Name , COUNT(*) FROM institution AS T1 JOIN staff AS T2 ON T1.Institution_ID = T2.Institution_ID WHERE T1.Founded > 1800 GROUP BY T1.Institution_ID"}
+{"index": 762, "sql": "SELECT Institution_ID , COUNT(*) FROM institution WHERE Founded > 1800 GROUP BY Institution_ID"}
+{"index": 763, "sql": "SELECT institution_name FROM institution WHERE institution_id NOT IN (SELECT institution_id FROM staff)"}
+{"index": 764, "sql": "SELECT institution_name FROM institution WHERE institution_id NOT IN (SELECT institution_id FROM staff)"}
+{"index": 765, "sql": "SELECT name FROM staff WHERE age > (SELECT avg(age) FROM staff)"}
+{"index": 766, "sql": "SELECT name FROM staff WHERE age > (SELECT avg(age) FROM staff)"}
+{"index": 767, "sql": "SELECT max(age) , min(age) FROM staff WHERE nationality = 'United States'"}
+{"index": 768, "sql": "SELECT max(Age) , min(Age) FROM staff"}
+{"index": 769, "sql": "SELECT T1.Conference_Name FROM conference AS T1 JOIN conference_participation AS T2 ON T1.Conference_ID = T2.Conference_ID JOIN staff AS T3 ON T2.staff_id = T3.staff_id WHERE T3.Nationality = 'Canada'"}
+{"index": 770, "sql": "SELECT T1.Conference_Name FROM conference AS T1 JOIN conference_participation AS T2 ON T1.Conference_ID = T2.Conference_ID JOIN staff AS T3 ON T2.staff_id = T3.staff_id WHERE T3.nationality = 'Canada'"}
+{"index": 771, "sql": "SELECT T1.name FROM staff AS T1 JOIN conference_participation AS T2 ON T1.staff_id = T2.staff_id WHERE role = 'Speaker' INTERSECT SELECT T1.name FROM staff AS T1 JOIN conference_participation AS T2 ON T1.staff_id = T2.staff_id WHERE role = 'Sponsor'"}
+{"index": 772, "sql": "SELECT T1.name FROM staff AS T1 JOIN conference_participation AS T2 ON T1.staff_id = T2.staff_id WHERE T2.role = 'Speaker' INTERSECT SELECT T1.name FROM staff AS T1 JOIN conference_participation AS T2 ON T1.staff_id = T2.staff_id WHERE T2.role = 'Sponsor'"}
+{"index": 773, "sql": "SELECT T1.institution_name FROM institution AS T1 JOIN conference_participation AS T2 ON T1.institution_id = T2.staff_id JOIN conference AS T3 ON T2.conference_id = T3.conference_id WHERE T3.conference_name = 'ACL' INTERSECT SELECT T1.institution_name FROM institution AS T1 JOIN conference_participation AS T2 ON T1.institution_id = T2.staff_id JOIN conference AS T3 ON T2.conference_id = T3.conference_id WHERE T3.conference_name = 'Naccl'"}
+{"index": 774, "sql": "SELECT T1.name FROM staff AS T1 JOIN conference_participation AS T2 ON T1.staff_id = T2.staff_id JOIN conference AS T3 ON T2.conference_id = T3.Conference_ID WHERE T3.Conference_Name = \"ACL\" INTERSECT SELECT T1.name FROM staff AS T1 JOIN conference_participation AS T2 ON T1.staff_id = T2.staff_id JOIN conference AS T3 ON T2.conference_id = T3.Conference_ID WHERE T3.Conference_Name = \"Naccl\""}
+{"index": 775, "sql": "SELECT T1.name FROM staff AS T1 JOIN conference_participation AS T2 ON T1.staff_id = T2.staff_id WHERE T2.Conference_ID IN (SELECT Conference_ID FROM conference WHERE YEAR = 2003 UNION SELECT Conference_ID FROM conference WHERE YEAR = 2004)"}
+{"index": 776, "sql": "SELECT T1.name FROM staff AS T1 JOIN conference_participation AS T2 ON T1.staff_id = T2.staff_id WHERE T2.Conference_ID >= 2003 AND T2.Conference_ID <= 2004"}
+{"index": 777, "sql": "SELECT T1.Conference_Name , T1.Year , COUNT(*) FROM conference AS T1 JOIN conference_participation AS T2 ON T1.Conference_ID = T2.Conference_ID GROUP BY T1.Conference_ID"}
+{"index": 778, "sql": "SELECT T1.Conference_Name , T1.Year , COUNT(*) FROM conference AS T1 JOIN conference_participation AS T2 ON T1.Conference_ID = T2.Conference_ID GROUP BY T1.Conference_ID"}
+{"index": 779, "sql": "SELECT T1.Conference_Name FROM conference AS T1 JOIN conference_participation AS T2 ON T1.Conference_ID = T2.Conference_ID GROUP BY T2.Conference_ID ORDER BY count(*) DESC LIMIT 2"}
+{"index": 780, "sql": "SELECT T1.Conference_Name FROM conference AS T1 JOIN conference_participation AS T2 ON T1.Conference_ID = T2.Conference_ID GROUP BY T2.Conference_ID ORDER BY COUNT(*) DESC LIMIT 2"}
+{"index": 781, "sql": "SELECT name , nationality FROM staff WHERE staff_id NOT IN (SELECT T1.staff_id FROM conference_participation AS T1 JOIN conference AS T2 ON T1.conference_id = T2.conference_id WHERE T2.conference_name = 'ACL')"}
+{"index": 782, "sql": "SELECT name , nationality FROM staff WHERE staff_id NOT IN (SELECT T1.staff_id FROM conference_participation AS T1 JOIN conference AS T2 ON T1.conference_id = T2.conference_id WHERE T2.conference_name = \"ACL\")"}
+{"index": 783, "sql": "SELECT T1.institution_name , T1.location FROM institution AS T1 JOIN staff AS T2 ON T1.institution_id = T2.institution_id WHERE T2.name NOT IN ( SELECT T3.staff_id FROM conference_participation AS T3 JOIN conference AS T4 ON T3.conference_id = T4.conference_id WHERE T4.year = 2004 )"}
+{"index": 784, "sql": "SELECT T1.institution_name , T1.location FROM institution AS T1 JOIN staff AS T2 ON T1.institution_id = T2.institution_id WHERE T2.name NOT IN ( SELECT T3.staff_id FROM conference_participation AS T3 JOIN conference AS T4 ON T3.conference_id = T4.conference_id WHERE T4.year = 2004 )"}
+{"index": 785, "sql": "SELECT name FROM district ORDER BY area_km DESC LIMIT 1"}
+{"index": 786, "sql": "SELECT area_km , government_website FROM district ORDER BY Population ASC LIMIT 1"}
+{"index": 787, "sql": "SELECT name , population FROM district WHERE area_km > (SELECT avg(area_km) FROM district)"}
+{"index": 788, "sql": "SELECT max(area_km) , avg(area_km) FROM district"}
+{"index": 789, "sql": "SELECT sum(population) FROM district ORDER BY area_km DESC LIMIT 3"}
+{"index": 790, "sql": "SELECT district_id , name , government_website FROM district ORDER BY Population ASC"}
+{"index": 791, "sql": "SELECT name FROM district WHERE government_website LIKE '%gov%'"}
+{"index": 792, "sql": "SELECT district_id , name FROM district WHERE population > 4000 OR area_km > 3000"}
+{"index": 793, "sql": "SELECT Name , Speach_title FROM spokesman"}
+{"index": 794, "sql": "SELECT avg(Points) , avg(Age) FROM spokesman WHERE Rank_position = 1"}
+{"index": 795, "sql": "SELECT name , points FROM spokesman WHERE age < 40"}
+{"index": 796, "sql": "SELECT name FROM spokesman ORDER BY age DESC LIMIT 1"}
+{"index": 797, "sql": "SELECT Name FROM spokesman WHERE Points < (SELECT avg(Points) FROM spokesman)"}
+{"index": 798, "sql": "SELECT T2.name FROM spokesman_district AS T1 JOIN district AS T2 ON T1.district_id = T2.district_id GROUP BY T1.district_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 799, "sql": "SELECT T1.Name FROM spokesman AS T1 JOIN spokesman_district AS T2 ON T1.Spokesman_ID = T2.Spokesman_ID WHERE T2.Start_year < 2004"}
+{"index": 800, "sql": "SELECT T2.District_ID , COUNT(*) FROM spokesman_district AS T1 JOIN district AS T2 ON T1.District_ID = T2.District_ID GROUP BY T1.District_ID"}
+{"index": 801, "sql": "SELECT T3.name FROM spokesman AS T1 JOIN spokesman_district AS T2 ON T1.spokesman_id = T2.spokesman_id JOIN district AS T3 ON T2.district_id = T3.district_id WHERE T1.rank_position = 1 INTERSECT SELECT T3.name FROM spokesman AS T1 JOIN spokesman_district AS T2 ON T1.spokesman_id = T2.spokesman_id JOIN district AS T3 ON T2.district_id = T3.district_id WHERE T1.rank_position = 2"}
+{"index": 802, "sql": "SELECT T1.name FROM district AS T1 JOIN spokesman_district AS T2 ON T1.district_id = T2.district_id GROUP BY T1.district_id HAVING count(*) > 1"}
+{"index": 803, "sql": "SELECT count(*) FROM district WHERE district_id NOT IN (SELECT district_id FROM spokesman_district)"}
+{"index": 804, "sql": "SELECT Name FROM spokesman WHERE Spokesman_ID NOT IN (SELECT Spokesman_ID FROM spokesman_district)"}
+{"index": 805, "sql": "SELECT sum(population) , avg(population) FROM district WHERE district_id IN (SELECT DISTINCT district_id FROM spokesman_district)"}
+{"index": 806, "sql": "SELECT title FROM sculptures ORDER BY YEAR DESC LIMIT 1"}
+{"index": 807, "sql": "SELECT title FROM sculptures ORDER BY YEAR DESC LIMIT 1"}
+{"index": 808, "sql": "SELECT title , LOCATION FROM paintings ORDER BY YEAR DESC LIMIT 1"}
+{"index": 809, "sql": "SELECT t1.title , t1.location FROM paintings AS t1 JOIN artists AS t2 ON t1.painterid = t2.artistid ORDER BY t1.year DESC LIMIT 1"}
+{"index": 810, "sql": "SELECT title FROM Sculptures WHERE location = \"Gallery 226\""}
+{"index": 811, "sql": "SELECT title FROM Sculptures WHERE location = \"Gallery 226\""}
+{"index": 812, "sql": "SELECT title , LOCATION FROM paintings"}
+{"index": 813, "sql": "SELECT title , LOCATION FROM paintings"}
+{"index": 814, "sql": "SELECT title , LOCATION FROM Sculptures"}
+{"index": 815, "sql": "SELECT title , LOCATION FROM Sculptures"}
+{"index": 816, "sql": "SELECT medium FROM paintings WHERE paintingID = 80"}
+{"index": 817, "sql": "SELECT medium FROM paintings WHERE paintingID = 80"}
+{"index": 818, "sql": "SELECT fname , lname FROM Artists WHERE birthYear > 1850"}
+{"index": 819, "sql": "SELECT fname , lname FROM Artists WHERE birthYear > 1850"}
+{"index": 820, "sql": "SELECT title , YEAR FROM Sculptures WHERE LOCATION != \"Gallery 226\""}
+{"index": 821, "sql": "SELECT title , year FROM Sculptures WHERE LOCATION != \"Gallery 226\""}
+{"index": 822, "sql": "SELECT DISTINCT t1.fname , t1.lname FROM Artists AS t1 JOIN Sculptures AS t2 ON t1.artistID = t2.sculptorID WHERE t2.year < 1900"}
+{"index": 823, "sql": "SELECT DISTINCT t1.fname , t1.lname FROM Artists AS t1 JOIN Sculptures AS t2 ON t1.artistID = t2.sculptorID WHERE t2.year < 1900"}
+{"index": 824, "sql": "SELECT DISTINCT T1.birthYear FROM Artists AS T1 JOIN Sculptures AS T2 ON T1.artistID = T2.sculptorID WHERE T2.year > 1920"}
+{"index": 825, "sql": "SELECT DISTINCT T1.birthYear FROM Artists AS T1 JOIN Sculptures AS T2 ON T1.artistID = T2.sculptorID WHERE T2.year > 1920"}
+{"index": 826, "sql": "SELECT fname , lname FROM artists ORDER BY deathyear DESC LIMIT 1"}
+{"index": 827, "sql": "SELECT fname , lname FROM artists ORDER BY birthYear DESC LIMIT 1"}
+{"index": 828, "sql": "SELECT birthYear FROM Artists ORDER BY birthYear ASC LIMIT 1"}
+{"index": 829, "sql": "SELECT deathYear FROM Artists ORDER BY birthYear ASC LIMIT 1"}
+{"index": 830, "sql": "SELECT fname , deathYear - birthYear FROM Artists ORDER BY deathYear - birthYear DESC LIMIT 1"}
+{"index": 831, "sql": "SELECT fname , deathYear - birthYear FROM Artists ORDER BY deathYear - birthYear DESC LIMIT 1"}
+{"index": 832, "sql": "SELECT count(*) FROM paintings WHERE LOCATION = \"Gallery 240\""}
+{"index": 833, "sql": "SELECT count(*) FROM paintings WHERE LOCATION = \"Gallery 240\""}
+{"index": 834, "sql": "SELECT COUNT(*) FROM Paintings WHERE YEAR = (SELECT max(YEAR) FROM Paintings)"}
+{"index": 835, "sql": "SELECT COUNT(*) FROM paintings ORDER BY year DESC LIMIT 1"}
+{"index": 836, "sql": "SELECT t1.title , t1.year FROM paintings AS t1 JOIN artists AS t2 ON t1.painterid = t2.artistid WHERE t2.fname = \"Mary\""}
+{"index": 837, "sql": "SELECT t1.title , t1.year FROM paintings AS t1 JOIN artists AS t2 ON t1.painterid = t2.artistid WHERE t2.fname = \"Mary\""}
+{"index": 838, "sql": "SELECT width_mm FROM paintings WHERE painterID IN ( SELECT artistID FROM artists WHERE birthYear < 1850 )"}
+{"index": 839, "sql": "SELECT width_mm FROM paintings WHERE painterid IN (SELECT painterid FROM artists WHERE birthyear > 1850)"}
+{"index": 840, "sql": "SELECT T1.location , T1.medium FROM paintings AS T1 JOIN artists AS T2 ON T1.painterid = T2.artistid WHERE T2.fname = \"Pablo\""}
+{"index": 841, "sql": "SELECT location , medium FROM paintings AS T1 JOIN artists AS T2 ON T1.painterid = T2.artistid WHERE T2.fname = \"Pablo\""}
+{"index": 842, "sql": "SELECT DISTINCT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID JOIN Sculptures AS T3 ON T1.artistID = T3.sculptorID"}
+{"index": 843, "sql": "SELECT DISTINCT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID JOIN Sculptures AS T3 ON T1.artistID = T3.sculptorID"}
+{"index": 844, "sql": "SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.medium = \"oil\" EXCEPT SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.medium = \"lithography\""}
+{"index": 845, "sql": "SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.medium = \"oil\" INTERSECT SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.medium = \"lithography\""}
+{"index": 846, "sql": "SELECT T1.birthYear FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.year = 1884 AND T2.mediumOn = \"canvas\""}
+{"index": 847, "sql": "SELECT T1.birthYear FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.year = 1884"}
+{"index": 848, "sql": "SELECT DISTINCT t1.fname FROM artists AS t1 JOIN paintings AS t2 ON t1.artistid = t2.painterid WHERE t2.medium = \"oil\" AND t2.location = \"Gallery 241\""}
+{"index": 849, "sql": "SELECT T1.fname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.medium = \"oil\" AND T2.location = \"Gallery 241\""}
+{"index": 850, "sql": "SELECT count(*) , medium FROM paintings GROUP BY medium"}
+{"index": 851, "sql": "SELECT count(*) , medium FROM paintings GROUP BY medium"}
+{"index": 852, "sql": "SELECT medium , avg(height_mm) FROM paintings GROUP BY medium"}
+{"index": 853, "sql": "SELECT medium , avg(height_mm) FROM paintings GROUP BY medium"}
+{"index": 854, "sql": "SELECT count(*) , location FROM paintings WHERE year < 1900 GROUP BY location"}
+{"index": 855, "sql": "SELECT count(*) , location FROM paintings WHERE year < 1900 GROUP BY location"}
+{"index": 856, "sql": "SELECT title FROM paintings WHERE medium = \"oil\" AND year > 1910"}
+{"index": 857, "sql": "SELECT title FROM paintings WHERE medium = \"oil\" AND YEAR > 1910"}
+{"index": 858, "sql": "SELECT DISTINCT T1.painterID FROM Paintings AS T1 JOIN Artists AS T2 ON T1.painterID = T2.artistID WHERE T1.medium = \"oil\" AND T1.location = \"Gallery 240\""}
+{"index": 859, "sql": "SELECT DISTINCT T1.painterID FROM paintings AS T1 JOIN artists AS T2 ON T1.painterID = T2.artistID WHERE T1.medium = \"oil\" AND T1.location = \"Gallery 240\""}
+{"index": 860, "sql": "SELECT DISTINCT title FROM paintings WHERE height_mm > ( SELECT min(height_mm) FROM paintings WHERE mediumOn = \"canvas\")"}
+{"index": 861, "sql": "SELECT DISTINCT t1.title FROM paintings AS t1 JOIN paintings AS t2 ON t1.painterid = t2.painterid WHERE t1.height_mm > t2.height_mm AND t2.mediumon = 'canvas'"}
+{"index": 862, "sql": "SELECT DISTINCT paintingID FROM paintings WHERE YEAR > (SELECT min(YEAR) FROM paintings WHERE LOCATION = \"Gallery 240\")"}
+{"index": 863, "sql": "SELECT DISTINCT paintingID FROM paintings WHERE YEAR > (SELECT min(YEAR) FROM paintings WHERE LOCATION = \"Gallery 240\")"}
+{"index": 864, "sql": "SELECT painterID FROM paintings WHERE year = (SELECT max(YEAR) FROM paintings)"}
+{"index": 865, "sql": "SELECT painterID FROM paintings WHERE YEAR = (SELECT max(YEAR) FROM paintings)"}
+{"index": 866, "sql": "SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Sculptures AS T2 ON T1.artistID = T2.sculptorID WHERE T2.title LIKE \"%female%\""}
+{"index": 867, "sql": "SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Sculptures AS T2 ON T1.artistID = T2.sculptorID WHERE T2.title LIKE \"%female%\""}
+{"index": 868, "sql": "SELECT DISTINCT title FROM paintings ORDER BY title"}
+{"index": 869, "sql": "SELECT DISTINCT title FROM paintings ORDER BY title"}
+{"index": 870, "sql": "SELECT DISTINCT title FROM paintings ORDER BY height_mm"}
+{"index": 871, "sql": "SELECT title FROM paintings ORDER BY height_mm ASC"}
+{"index": 872, "sql": "SELECT t2.title FROM paintings AS t1 JOIN sculptures AS t2 ON t1.painterid = t2.sculptorid WHERE t1.year >= 1900 AND t1.year <= 1950"}
+{"index": 873, "sql": "SELECT t1.title , t2.title FROM paintings AS t1 JOIN sculptures AS t2 ON t1.painterID = t2.sculptorID WHERE t1.year >= 1900 AND t1.year <= 1950"}
+{"index": 874, "sql": "SELECT t1.title , t3.title FROM paintings AS t1 JOIN artists AS t2 ON t1.painterid = t2.artistid JOIN sculptures AS t3 ON t3.sculptorid = t2.artistid WHERE t2.artistid = 222"}
+{"index": 875, "sql": "SELECT t1.title , t3.title FROM paintings AS t1 JOIN artists AS t2 ON t1.painterid = t2.artistid JOIN sculptures AS t3 ON t3.sculptorid = t2.artistid WHERE t2.artistid = 222"}
+{"index": 876, "sql": "SELECT T1.artistID FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.year < 1900 GROUP BY T1.artistID ORDER BY count(*) DESC LIMIT 1"}
+{"index": 877, "sql": "SELECT T1.artistID FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.year < 1900 GROUP BY T1.artistID ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 878, "sql": "SELECT t1.fname FROM artists AS t1 JOIN sculptures AS t2 ON t1.artistid = t2.sculptorid GROUP BY t2.sculptorid ORDER BY count(*) DESC LIMIT 1"}
+{"index": 879, "sql": "SELECT T2.fname FROM Sculptures AS T1 JOIN Artists AS T2 ON T1.sculptorID = T2.artistID GROUP BY T1.sculptorID ORDER BY count(*) DESC LIMIT 1"}
+{"index": 880, "sql": "SELECT title FROM paintings WHERE width_mm < 600 OR height_mm > 800"}
+{"index": 881, "sql": "SELECT title FROM paintings WHERE width_mm < 600 OR height_mm > 800"}
+{"index": 882, "sql": "SELECT DISTINCT location FROM paintings WHERE year < 1885 OR year > 1930"}
+{"index": 883, "sql": "SELECT DISTINCT location FROM paintings WHERE year < 1885 OR year > 1930"}
+{"index": 884, "sql": "SELECT paintingID FROM paintings WHERE height_mm BETWEEN 500 AND 2000"}
+{"index": 885, "sql": "SELECT paintingID FROM paintings WHERE height_mm > 500 AND height_mm < 2000"}
+{"index": 886, "sql": "SELECT DISTINCT location FROM paintings WHERE medium = \"on panel\" INTERSECT SELECT DISTINCT location FROM paintings WHERE medium = \"on canvas\""}
+{"index": 887, "sql": "SELECT DISTINCT location FROM paintings WHERE medium = \"on panel\" INTERSECT SELECT DISTINCT location FROM paintings WHERE medium = \"on canvas\""}
+{"index": 888, "sql": "SELECT DISTINCT location FROM paintings WHERE year > 1885 AND year < 1930"}
+{"index": 889, "sql": "SELECT DISTINCT location FROM paintings WHERE year < 1885 INTERSECT SELECT DISTINCT location FROM paintings WHERE year > 1930"}
+{"index": 890, "sql": "SELECT avg(height_mm) , avg(width_mm) FROM paintings WHERE medium = \"oil\" AND LOCATION != \"Gallery 241\""}
+{"index": 891, "sql": "SELECT avg(height_mm) , avg(width_mm) FROM paintings WHERE medium = \"oil\" AND LOCATION = \"Gallery 241\""}
+{"index": 892, "sql": "SELECT max(height_mm) , paintingID FROM paintings WHERE year < 1900"}
+{"index": 893, "sql": "SELECT height_mm , paintingID FROM paintings WHERE year < 1900 ORDER BY height_mm DESC LIMIT 1"}
+{"index": 894, "sql": "SELECT max(height_mm) , max(width_mm) , year FROM paintings GROUP BY year"}
+{"index": 895, "sql": "SELECT max(height_mm) , max(width_mm) , year FROM paintings GROUP BY year"}
+{"index": 896, "sql": "SELECT avg(height_mm) , avg(width_mm) , T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID GROUP BY T1.fname , T1.lname ORDER BY T1.fname , T1.lname"}
+{"index": 897, "sql": "SELECT avg(height_mm) , avg(width_mm) , T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID GROUP BY T1.fname , T1.lname ORDER BY T1.fname , T1.lname"}
+{"index": 898, "sql": "SELECT T1.fname , count(*) FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID GROUP BY T1.artistID HAVING count(*) >= 2"}
+{"index": 899, "sql": "SELECT T1.fname , count(*) FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID GROUP BY T1.artistID HAVING count(*) >= 2"}
+{"index": 900, "sql": "SELECT T1.deathYear FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID GROUP BY T1.artistID HAVING COUNT(*) <= 3"}
+{"index": 901, "sql": "SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID GROUP BY T1.artistID HAVING COUNT(*) < 4 ORDER BY T1.deathYear"}
+{"index": 902, "sql": "SELECT T1.deathYear FROM Artists AS T1 JOIN Sculptures AS T2 ON T1.artistID = T2.sculptorID GROUP BY T2.sculptorID ORDER BY count(*) ASC LIMIT 1"}
+{"index": 903, "sql": "SELECT T1.deathYear FROM Artists AS T1 JOIN Sculptures AS T2 ON T1.artistID = T2.sculptorID GROUP BY T1.artistID ORDER BY count(*) ASC LIMIT 1"}
+{"index": 904, "sql": "SELECT paintingID , height_mm FROM paintings WHERE LOCATION = \"Gallery 240\" ORDER BY width_mm DESC LIMIT 1"}
+{"index": 905, "sql": "SELECT height_mm , paintingID FROM paintings WHERE LOCATION = \"Gallery 240\" ORDER BY height_mm DESC LIMIT 1"}
+{"index": 906, "sql": "SELECT paintingID FROM paintings WHERE YEAR < (SELECT min(YEAR) FROM paintings WHERE LOCATION = \"Gallery 240\")"}
+{"index": 907, "sql": "SELECT paintingID FROM paintings WHERE YEAR < (SELECT max(YEAR) FROM paintings WHERE LOCATION = \"Gallery 240\")"}
+{"index": 908, "sql": "SELECT paintingID FROM paintings WHERE height_mm > (SELECT max(height_mm) FROM paintings WHERE year > 1900)"}
+{"index": 909, "sql": "SELECT paintingID FROM paintings WHERE height_mm > (SELECT max(height_mm) FROM paintings WHERE year > 1900)"}
+{"index": 910, "sql": "SELECT t1.fname , t1.lname FROM Artists AS t1 JOIN Paintings AS t2 ON t1.artistID = t2.painterID WHERE t2.medium = \"oil\" GROUP BY t1.artistID ORDER BY count(*) DESC LIMIT 3"}
+{"index": 911, "sql": "SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID WHERE T2.medium = \"oil\" GROUP BY T1.artistID ORDER BY count(*) DESC LIMIT 1"}
+{"index": 912, "sql": "SELECT paintingID , LOCATION , title FROM paintings WHERE medium = \"oil\" ORDER BY YEAR"}
+{"index": 913, "sql": "SELECT paintingID , LOCATION , title FROM paintings WHERE medium = \"oil\" ORDER BY YEAR"}
+{"index": 914, "sql": "SELECT height_mm , LOCATION , title FROM paintings WHERE height_mm > 1000 ORDER BY title"}
+{"index": 915, "sql": "SELECT title , YEAR , LOCATION FROM paintings WHERE height_mm > 1000 ORDER BY YEAR"}
+{"index": 916, "sql": "SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID EXCEPT SELECT T1.fname , T1.lname FROM Artists AS T1 JOIN Sculptures AS T2 ON T1.artistID = T2.sculptorID"}
+{"index": 917, "sql": "SELECT DISTINCT T1.fname , T1.lname FROM Artists AS T1 JOIN Paintings AS T2 ON T1.artistID = T2.painterID EXCEPT SELECT DISTINCT T1.fname , T1.lname FROM Artists AS T1 JOIN Sculptures AS T3 ON T1.artistID = T3.sculptorID"}
+{"index": 918, "sql": "SELECT DISTINCT location FROM paintings WHERE year < 1885 EXCEPT SELECT DISTINCT location FROM paintings WHERE mediumOn = 'canvas'"}
+{"index": 919, "sql": "SELECT * FROM paintings WHERE year < 1885 AND mediumOn != \"canvas\""}
+{"index": 920, "sql": "SELECT count(*) FROM race"}
+{"index": 921, "sql": "SELECT count(*) FROM race"}
+{"index": 922, "sql": "SELECT Winning_driver , Winning_team FROM race ORDER BY Winning_team ASC"}
+{"index": 923, "sql": "SELECT Winning_driver , Winning_team FROM race ORDER BY Winning_team"}
+{"index": 924, "sql": "SELECT T1.Driver_Name FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T2.Pole_Position != \"Junior Strous\""}
+{"index": 925, "sql": "SELECT T1.Driver_Name FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T2.Pole_Position != \"Junior Strous\""}
+{"index": 926, "sql": "SELECT Constructor FROM driver ORDER BY Age ASC"}
+{"index": 927, "sql": "SELECT DISTINCT Constructor FROM driver ORDER BY Age ASC"}
+{"index": 928, "sql": "SELECT DISTINCT Entrant FROM driver WHERE Age >= 20"}
+{"index": 929, "sql": "SELECT DISTINCT entrant FROM driver WHERE age >= 20"}
+{"index": 930, "sql": "SELECT max(age) , min(age) FROM driver"}
+{"index": 931, "sql": "SELECT max(age) , min(age) FROM driver"}
+{"index": 932, "sql": "SELECT count(DISTINCT engine) FROM driver WHERE age > 30 OR age < 20"}
+{"index": 933, "sql": "SELECT count(DISTINCT engine) FROM driver WHERE age > 30 OR age < 20"}
+{"index": 934, "sql": "SELECT Driver_Name FROM driver ORDER BY Driver_Name DESC"}
+{"index": 935, "sql": "SELECT Driver_Name FROM driver ORDER BY Driver_Name DESC"}
+{"index": 936, "sql": "SELECT T1.Driver_Name , T2.Race_Name FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID"}
+{"index": 937, "sql": "SELECT T1.Driver_Name , T2.Race_Name FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID"}
+{"index": 938, "sql": "SELECT T1.Driver_Name , COUNT(*) FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID GROUP BY T1.Driver_ID"}
+{"index": 939, "sql": "SELECT T1.Driver_ID , count(*) FROM race AS T1 JOIN driver AS T2 ON T1.Driver_ID = T2.Driver_ID GROUP BY T1.Driver_ID"}
+{"index": 940, "sql": "SELECT T1.age FROM driver AS T1 JOIN race AS T2 ON T1.driver_id = T2.driver_id GROUP BY T1.driver_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 941, "sql": "SELECT T1.age FROM driver AS T1 JOIN race AS T2 ON T1.driver_id = T2.driver_id GROUP BY T2.driver_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 942, "sql": "SELECT T1.Driver_Name , T1.Age FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID GROUP BY T1.Driver_ID HAVING COUNT(*) >= 2"}
+{"index": 943, "sql": "SELECT T1.Driver_Name , T1.Age FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID GROUP BY T1.Driver_ID HAVING COUNT(*) >= 2"}
+{"index": 944, "sql": "SELECT race_name FROM race WHERE driver_id IN ( SELECT driver_id FROM driver WHERE age >= 26 )"}
+{"index": 945, "sql": "SELECT T1.Race_Name FROM race AS T1 JOIN driver AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T2.Age >= 26"}
+{"index": 946, "sql": "SELECT driver_name FROM driver WHERE Constructor != \"Bugatti\""}
+{"index": 947, "sql": "SELECT driver_name FROM driver WHERE Constructor != 'Bugatti'"}
+{"index": 948, "sql": "SELECT Constructor , COUNT(*) FROM driver GROUP BY Constructor"}
+{"index": 949, "sql": "SELECT Constructor , COUNT(*) FROM driver GROUP BY Constructor"}
+{"index": 950, "sql": "SELECT Engine FROM driver GROUP BY Engine ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 951, "sql": "SELECT engine FROM driver GROUP BY engine ORDER BY count(*) DESC LIMIT 1"}
+{"index": 952, "sql": "SELECT DISTINCT engine FROM driver GROUP BY engine HAVING count(*) >= 2"}
+{"index": 953, "sql": "SELECT Engine FROM driver GROUP BY Engine HAVING COUNT(*) >= 2"}
+{"index": 954, "sql": "SELECT driver_name FROM driver WHERE driver_id NOT IN (SELECT driver_id FROM race)"}
+{"index": 955, "sql": "SELECT driver_name FROM driver WHERE driver_id NOT IN (SELECT driver_id FROM race)"}
+{"index": 956, "sql": "SELECT Constructor FROM driver WHERE Age < 20 INTERSECT SELECT Constructor FROM driver WHERE Age > 30"}
+{"index": 957, "sql": "SELECT Constructor FROM driver WHERE Age < 20 INTERSECT SELECT Constructor FROM driver WHERE Age > 30"}
+{"index": 958, "sql": "SELECT Team FROM race GROUP BY Team HAVING COUNT(*) > 1"}
+{"index": 959, "sql": "SELECT Winning_team FROM race GROUP BY Winning_team HAVING COUNT(*) > 1"}
+{"index": 960, "sql": "SELECT T1.Driver_Name FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T2.Pole_Position = \"James Hinchcliffe\" INTERSECT SELECT T1.Driver_Name FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T2.Pole_Position = \"Carl Skerlong\""}
+{"index": 961, "sql": "SELECT T1.Driver_Name FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T2.Pole_Position = 'James Hinchcliffe' INTERSECT SELECT T1.Driver_Name FROM driver AS T1 JOIN race AS T2 ON T1.Driver_ID = T2.Driver_ID WHERE T2.Pole_Position = 'Carl Skerlong'"}
+{"index": 962, "sql": "SELECT driver_name FROM driver WHERE driver_id NOT IN (SELECT driver_id FROM race WHERE pole_position = \"James Hinchcliffe\")"}
+{"index": 963, "sql": "SELECT driver_name FROM driver WHERE driver_id NOT IN (SELECT driver_id FROM race WHERE pole_position = \"James Hinchcliffe\")"}
+{"index": 964, "sql": "SELECT DISTINCT country , town_city FROM Addresses"}
+{"index": 965, "sql": "SELECT country , town_city FROM Addresses"}
+{"index": 966, "sql": "SELECT town_city , county_state_province FROM Addresses"}
+{"index": 967, "sql": "SELECT county_state_province FROM Addresses"}
+{"index": 968, "sql": "SELECT feature_description FROM Features WHERE feature_name = \"rooftop\""}
+{"index": 969, "sql": "SELECT feature_description FROM Features WHERE feature_name = \"rooftop\""}
+{"index": 970, "sql": "SELECT t1.feature_name , t1.feature_description FROM Features AS t1 JOIN Property_Features AS t2 ON t1.feature_id = t2.feature_id GROUP BY t1.feature_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 971, "sql": "SELECT t1.feature_name , t1.feature_description FROM Features AS t1 JOIN Property_Features AS t2 ON t1.feature_id = t2.feature_id GROUP BY t1.feature_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 972, "sql": "SELECT min(room_count) FROM properties"}
+{"index": 973, "sql": "SELECT min(room_count) FROM properties"}
+{"index": 974, "sql": "SELECT count(*) FROM Properties WHERE parking_lots = 'Y' OR garage_yn = 'Y'"}
+{"index": 975, "sql": "SELECT count(*) FROM properties WHERE parking_lots = 'Y' OR garage_yn = 'Y'"}
+{"index": 976, "sql": "SELECT T1.age_category_code FROM Ref_Age_Categories AS T1 JOIN Users AS T2 ON T1.age_category_code = T2.age_category_code WHERE T2.other_user_details LIKE '%Mother%'"}
+{"index": 977, "sql": "SELECT age_category_description FROM Ref_Age_Categories WHERE age_category_description LIKE \"%Mother%\""}
+{"index": 978, "sql": "SELECT T1.first_name FROM Users AS T1 JOIN Properties AS T2 ON T1.user_id = T2.owner_user_id GROUP BY T1.user_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 979, "sql": "SELECT T1.first_name FROM Users AS T1 JOIN Properties AS T2 ON T1.user_id = T2.owner_user_id GROUP BY T1.user_id ORDER BY count(*) DESC LIMIT 1"}
+{"index": 980, "sql": "SELECT avg(room_count) FROM properties WHERE garage_yn = 'Y'"}
+{"index": 981, "sql": "SELECT avg(room_count) FROM properties AS T1 JOIN property_features AS T2 ON T1.property_id = T2.property_id JOIN Features AS T3 ON T2.feature_id = T3.feature_id WHERE T3.feature_name = \"garden\""}
+{"index": 982, "sql": "SELECT DISTINCT t2.town_city FROM properties AS t1 JOIN addresses AS t2 ON t1.property_address_id = t2.address_id JOIN property_features AS t3 ON t1.property_id = t3.property_id JOIN features AS t4 ON t3.feature_id = t4.feature_id WHERE t4.feature_name = \"swimming pool\""}
+{"index": 983, "sql": "SELECT DISTINCT t1.town_city FROM addresses AS t1 JOIN properties AS t2 ON t1.address_id = t2.property_address_id WHERE t2.garage_yn = 'Y'"}
+{"index": 984, "sql": "SELECT property_id , vendor_requested_price FROM properties ORDER BY vendor_requested_price LIMIT 1"}
+{"index": 985, "sql": "SELECT property_id , vendor_requested_price FROM properties ORDER BY vendor_requested_price LIMIT 1"}
+{"index": 986, "sql": "SELECT avg(room_count) FROM properties"}
+{"index": 987, "sql": "SELECT avg(room_count) FROM properties"}
+{"index": 988, "sql": "SELECT count(DISTINCT room_size) FROM Rooms"}
+{"index": 989, "sql": "SELECT count(DISTINCT room_size) FROM Rooms"}
+{"index": 990, "sql": "SELECT user_id , search_string FROM User_searches GROUP BY user_id HAVING count(*) >= 2"}
+{"index": 991, "sql": "SELECT user_id , search_seq FROM User_searches GROUP BY user_id HAVING count(*) >= 2"}
+{"index": 992, "sql": "SELECT search_datetime FROM User_Searches ORDER BY search_datetime DESC LIMIT 1"}
+{"index": 993, "sql": "SELECT search_datetime FROM User_searches ORDER BY search_datetime DESC LIMIT 1"}
+{"index": 994, "sql": "SELECT search_datetime , search_string FROM User_searches ORDER BY search_string DESC"}
+{"index": 995, "sql": "SELECT search_string , search_datetime FROM User_searches ORDER BY search_string DESC"}
+{"index": 996, "sql": "SELECT T1.zip_postcode FROM addresses AS T1 JOIN properties AS T2 ON T1.address_id = T2.property_address_id JOIN user_property_history AS T3 ON T2.property_id = T3.property_id GROUP BY T1.zip_postcode HAVING count(*) >= 3"}
+{"index": 997, "sql": "SELECT zip_postcode FROM addresses EXCEPT SELECT zip_postcode FROM addresses AS T1 JOIN user_property_history AS T2 ON T1.address_id = T2.property_id GROUP BY T1.zip_postcode HAVING count(*) >= 2"}
+{"index": 998, "sql": "SELECT T1.user_category_code , T1.user_id FROM Users AS T1 JOIN User_searches AS T2 ON T1.user_id = T2.user_id GROUP BY T1.user_id HAVING count(*) = 1"}
+{"index": 999, "sql": "SELECT user_id , user_category_code FROM Users WHERE user_id NOT IN ( SELECT user_id FROM User_searches GROUP BY user_id HAVING count(*) > 1 )"}
+{"index": 1000, "sql": "SELECT T1.age_category_description FROM Ref_Age_Categories AS T1 JOIN Users AS T2 ON T1.age_category_code = T2.age_category_code WHERE T2.user_address_id IN ( SELECT user_address_id FROM User_Searches ORDER BY search_datetime LIMIT 1 )"}
+{"index": 1001, "sql": "SELECT T1.age_category_description FROM Ref_Age_Categories AS T1 JOIN Users AS T2 ON T1.age_category_code = T2.age_category_code WHERE T2.user_id IN ( SELECT user_id FROM User_searches ORDER BY search_datetime LIMIT 1 )"}
+{"index": 1002, "sql": "SELECT login_name FROM Users WHERE user_category_code = \"Senior Citizen\" ORDER BY first_name"}
+{"index": 1003, "sql": "SELECT login_name FROM Users WHERE is_seller = 'N' ORDER BY first_name"}
+{"index": 1004, "sql": "SELECT count(*) FROM users WHERE is_buyer = 'Y'"}
+{"index": 1005, "sql": "SELECT count(*) FROM users WHERE is_buyer = 'Y'"}
+{"index": 1006, "sql": "SELECT date_registered FROM Users WHERE login_name = \"ratione\""}
+{"index": 1007, "sql": "SELECT date_registered FROM Users WHERE login_name = \"ratione\""}
+{"index": 1008, "sql": "SELECT T1.first_name , T1.middle_name , T1.last_name , T1.login_name FROM Users AS T1 JOIN Ref_User_Categories AS T2 ON T1.user_category_code = T2.user_category_code WHERE T2.user_category_description = 'Seller' AND T1.is_seller = 1"}
+{"index": 1009, "sql": "SELECT first_name , middle_name , last_name , login_name FROM Users WHERE is_seller = 'Y'"}
+{"index": 1010, "sql": "SELECT t1.line_1_number_building , t1.line_2_number_street , t1.town_city FROM addresses AS t1 JOIN ref_user_categories AS t2 ON t1.county_state_province = t2.user_category_code WHERE t2.user_category_code = 'Senior Citizen'"}
+{"index": 1011, "sql": "SELECT town_city , line_1_number_building , line_2_number_street FROM Addresses WHERE address_id IN ( SELECT user_address_id FROM Users WHERE user_category_code = \"Senior Citizen\")"}
+{"index": 1012, "sql": "SELECT count(*) FROM ( SELECT property_id FROM Property_Features GROUP BY property_id HAVING count(*) >= 2 )"}
+{"index": 1013, "sql": "SELECT count(*) FROM ( SELECT property_id FROM Property_Features GROUP BY property_id HAVING count(*) >= 2 )"}
+{"index": 1014, "sql": "SELECT count(*) , property_id FROM Property_Photos GROUP BY property_id"}
+{"index": 1015, "sql": "SELECT count(*) , property_id FROM Property_Photos GROUP BY property_id"}
+{"index": 1016, "sql": "SELECT T1.user_id , count(*) FROM User_Property_History AS T1 JOIN Properties AS T2 ON T1.property_id = T2.property_id GROUP BY T1.user_id"}
+{"index": 1017, "sql": "SELECT T1.user_id , count(*) FROM User_Property_History AS T1 JOIN Properties AS T2 ON T1.property_id = T2.property_id JOIN Property_Photos AS T3 ON T2.property_id = T3.property_id GROUP BY T1.user_id"}
+{"index": 1018, "sql": "SELECT sum(T2.price_max) FROM users AS T1 JOIN properties AS T2 ON T1.user_id = T2.owner_user_id WHERE T1.age_category_code = 'single mother' OR T1.age_category_code = 'student'"}
+{"index": 1019, "sql": "SELECT max(price_max) FROM Properties WHERE owner_user_id IN (SELECT user_id FROM Users WHERE is_seller = 'Y' AND is_buyer = 'N' AND age_category_code = 'Single mother or student')"}
+{"index": 1020, "sql": "SELECT datestamp , T1.property_name FROM Properties AS T1 JOIN User_Property_History AS T2 ON T1.property_id = T2.property_id ORDER BY datestamp"}
+{"index": 1021, "sql": "SELECT datestamp , T2.property_name FROM User_Property_History AS T1 JOIN Properties AS T2 ON T1.property_id = T2.property_id ORDER BY datestamp"}
+{"index": 1022, "sql": "SELECT property_type_description , property_type_code FROM Ref_Property_Types GROUP BY property_type_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 1023, "sql": "SELECT property_type_code , property_type_description FROM Ref_Property_Types GROUP BY property_type_code ORDER BY count(*) DESC LIMIT 1"}
+{"index": 1024, "sql": "SELECT age_category_description FROM Ref_Age_Categories WHERE age_category_code = \"Over 60\""}
+{"index": 1025, "sql": "SELECT age_category_description FROM Ref_Age_Categories WHERE age_category_code = \"Over 60\""}
+{"index": 1026, "sql": "SELECT room_size , count(*) FROM Rooms GROUP BY room_size"}
+{"index": 1027, "sql": "SELECT count(*) , room_size FROM Rooms GROUP BY room_size"}
+{"index": 1028, "sql": "SELECT T1.country FROM addresses AS T1 JOIN users AS T2 ON T1.address_id = T2.user_address_id WHERE T2.first_name = \"Robbie\""}
+{"index": 1029, "sql": "SELECT T2.country FROM Users AS T1 JOIN Addresses AS T2 ON T1.user_address_id = T2.address_id WHERE T1.first_name = \"Robbie\""}
+{"index": 1030, "sql": "SELECT T1.first_name , T1.middle_name , T1.last_name FROM Users AS T1 JOIN Properties AS T2 ON T1.user_id = T2.owner_user_id"}
+{"index": 1031, "sql": "SELECT T1.first_name , T1.middle_name , T1.last_name FROM Users AS T1 JOIN Properties AS T2 ON T1.user_id = T2.owner_user_id"}
+{"index": 1032, "sql": "SELECT search_string FROM User_Searches WHERE user_id NOT IN (SELECT owner_user_id FROM Properties)"}
+{"index": 1033, "sql": "SELECT search_string FROM User_searches WHERE user_id NOT IN ( SELECT owner_user_id FROM Properties )"}
+{"index": 1034, "sql": "SELECT T1.first_name , T1.user_id FROM Users AS T1 JOIN User_Property_History AS T2 ON T1.user_id = T2.user_id JOIN Properties AS T3 ON T3.property_id = T2.property_id GROUP BY T1.user_id HAVING count(*) >= 2 AND count(*) <= 2"}
+{"index": 1035, "sql": "SELECT T1.first_name , T1.user_id FROM Users AS T1 JOIN User_searches AS T2 ON T1.user_id = T2.user_id GROUP BY T1.user_id HAVING count(*) <= 2 INTERSECT SELECT T1.first_name , T1.user_id FROM Users AS T1 JOIN Properties AS T2 ON T1.user_id = T2.owner_user_id GROUP BY T1.user_id HAVING count(*) <= 2"}
+{"index": 1036, "sql": "SELECT Flavor FROM goods WHERE Food = \"Cake\" ORDER BY Price DESC LIMIT 1"}
+{"index": 1037, "sql": "SELECT id , flavor FROM goods WHERE food = \"Cake\" ORDER BY price DESC LIMIT 1"}
+{"index": 1038, "sql": "SELECT Flavor , Price FROM goods WHERE Food = \"Cookie\" ORDER BY Price ASC LIMIT 1"}
+{"index": 1039, "sql": "SELECT id , flavor FROM goods WHERE food = \"Cookie\" ORDER BY price LIMIT 1"}
+{"index": 1040, "sql": "SELECT id FROM goods WHERE flavor = \"Apple\""}
+{"index": 1041, "sql": "SELECT id FROM goods WHERE flavor = \"Apple\""}
+{"index": 1042, "sql": "SELECT id FROM goods WHERE price < 3"}
+{"index": 1043, "sql": "SELECT id FROM goods WHERE price < 3"}
+{"index": 1044, "sql": "SELECT DISTINCT T2.CustomerId FROM items AS T1 JOIN receipts AS T2 ON T1.Receipt = T2.ReceiptNumber JOIN goods AS T3 ON T1.Item = T3.Id WHERE T3.Food = \"Cake\" AND T3.Flavor = \"Lemon\""}
+{"index": 1045, "sql": "SELECT DISTINCT T2.CustomerId FROM goods AS T1 JOIN items AS T3 ON T1.Id = T3.Item JOIN receipts AS T2 ON T2.CustomerId = T2.CustomerId WHERE T1.Flavor = \"Lemon\" AND T1.Food = \"Cake\""}
+{"index": 1046, "sql": "SELECT food , count(*) FROM goods GROUP BY food"}
+{"index": 1047, "sql": "SELECT count(*) , food FROM goods GROUP BY food"}
+{"index": 1048, "sql": "SELECT DISTINCT T1.id FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid WHERE T1.id NOT IN ( SELECT customerId FROM receipts GROUP BY customerId HAVING count(*) < 15 )"}
+{"index": 1049, "sql": "SELECT DISTINCT T1.Id FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid GROUP BY T1.id HAVING count(*) >= 15"}
+{"index": 1050, "sql": "SELECT T2.lastname FROM receipts AS T1 JOIN customers AS T2 ON T1.customerid = T2.id JOIN items AS T3 ON T3.item = T1.item WHERE T3.Food = \"Bakery\" GROUP BY T1.customerid HAVING count(*) > 10"}
+{"index": 1051, "sql": "SELECT T2.lastname FROM receipts AS T1 JOIN customers AS T2 ON T1.customerid = T2.id WHERE T1.date LIKE \"%bakery%\" GROUP BY T1.customerid HAVING count(*) > 10"}
+{"index": 1052, "sql": "SELECT count(*) FROM goods WHERE Flavor = \"Cakes\""}
+{"index": 1053, "sql": "SELECT count(*) FROM goods WHERE Flavor = \"Cakes\""}
+{"index": 1054, "sql": "SELECT Flavor FROM goods WHERE Food = \"Croissant\""}
+{"index": 1055, "sql": "SELECT Flavor FROM goods WHERE Food = \"Croissant\""}
+{"index": 1056, "sql": "SELECT DISTINCT T1.Item FROM items AS T1 JOIN receipts AS T2 ON T1.Receipt = T2.ReceiptNumber WHERE T2.CustomerId = 15"}
+{"index": 1057, "sql": "SELECT DISTINCT T1.Item FROM items AS T1 JOIN receipts AS T2 ON T1.Receipt = T2.ReceiptNumber WHERE T2.CustomerId = 15"}
+{"index": 1058, "sql": "SELECT avg(price) , max(price) , min(price) , food FROM goods GROUP BY food"}
+{"index": 1059, "sql": "SELECT avg(price) , min(price) , max(price) , food FROM goods GROUP BY food"}
+{"index": 1060, "sql": "SELECT Receipt FROM goods WHERE Food = \"Cake\" INTERSECT SELECT Receipt FROM goods WHERE Food = \"Cookie\""}
+{"index": 1061, "sql": "SELECT Receipt FROM items WHERE Item = \"cake\" INTERSECT SELECT Receipt FROM items WHERE Item = \"cookies\""}
+{"index": 1062, "sql": "SELECT DISTINCT T1.ReceiptNumber FROM receipts AS T1 JOIN customers AS T2 ON T1.CustomerId = T2.Id JOIN items AS T3 ON T3.Item = T1.Item WHERE T2.LastName = \"LOGAN\" AND T3.Food = \"Croissant\""}
+{"index": 1063, "sql": "SELECT T1.ReceiptNumber FROM receipts AS T1 JOIN customers AS T2 ON T1.CustomerId = T2.Id JOIN items AS T3 ON T3.Item = T1.Item WHERE T2.LastName = \"Logan\" AND T3.Flavor = \"Croissant\""}
+{"index": 1064, "sql": "SELECT T1.ReceiptNumber , T1.Date FROM receipts AS T1 JOIN items AS T2 ON T1.ReceiptNumber = T2.ReceiptNumber ORDER BY T2.Price DESC LIMIT 1"}
+{"index": 1065, "sql": "SELECT T1.ReceiptNumber , T1.Date FROM receipts AS T1 JOIN items AS T2 ON T1.ReceiptNumber = T2.ReceiptNumber ORDER BY T2.Price DESC LIMIT 1"}
+{"index": 1066, "sql": "SELECT Item FROM items GROUP BY Item ORDER BY count(*) ASC LIMIT 1"}
+{"index": 1067, "sql": "SELECT Item FROM items GROUP BY Item ORDER BY count(*) ASC LIMIT 1"}
+{"index": 1068, "sql": "SELECT Food , count(*) FROM goods GROUP BY Food"}
+{"index": 1069, "sql": "SELECT count(*) , food FROM goods GROUP BY food"}
+{"index": 1070, "sql": "SELECT avg(Price) , Food FROM goods GROUP BY Food"}
+{"index": 1071, "sql": "SELECT avg(Price) , Food FROM goods GROUP BY Food"}
+{"index": 1072, "sql": "SELECT id FROM goods WHERE flavor = \"Apricot\" AND price < 5"}
+{"index": 1073, "sql": "SELECT id FROM goods WHERE flavor = \"Apricot\" AND price < 5"}
+{"index": 1074, "sql": "SELECT Flavor FROM goods WHERE Price > 10"}
+{"index": 1075, "sql": "SELECT Flavor FROM goods WHERE Price > 10"}
+{"index": 1076, "sql": "SELECT DISTINCT id , price FROM goods WHERE price < (SELECT avg(price) FROM goods)"}
+{"index": 1077, "sql": "SELECT DISTINCT id , price FROM goods WHERE price < (SELECT avg(price) FROM goods)"}
+{"index": 1078, "sql": "SELECT DISTINCT id FROM goods WHERE price < ( SELECT min(price) FROM goods WHERE food = \"Tart\")"}
+{"index": 1079, "sql": "SELECT DISTINCT id FROM goods WHERE price < (SELECT min(price) FROM goods WHERE food = 'Tart')"}
+{"index": 1080, "sql": "SELECT DISTINCT T2.ReceiptNumber FROM items AS T1 JOIN receipts AS T2 ON T1.Item = T2.Item WHERE T1.Price > 13"}
+{"index": 1081, "sql": "SELECT DISTINCT T2.ReceiptNumber FROM items AS T1 JOIN receipts AS T2 ON T1.Item = T2.Item WHERE T1.Price > 13"}
+{"index": 1082, "sql": "SELECT T2.Date FROM items AS T1 JOIN receipts AS T2 ON T1.Item = T2.Item WHERE T1.Price > 15"}
+{"index": 1083, "sql": "SELECT T1.Date FROM receipts AS T1 JOIN customers AS T2 ON T1.CustomerId = T2.Id JOIN items AS T3 ON T3.Item = T2.Id JOIN goods AS T4 ON T4.Id = T3.Item WHERE T4.Price > 15"}
+{"index": 1084, "sql": "SELECT id FROM goods WHERE FLAVOR LIKE \"%APP%\""}
+{"index": 1085, "sql": "SELECT id FROM goods WHERE id LIKE \"%APP%\""}
+{"index": 1086, "sql": "SELECT id , price FROM goods WHERE id LIKE \"70%\""}
+{"index": 1087, "sql": "SELECT id , price FROM goods WHERE id LIKE \"70%\""}
+{"index": 1088, "sql": "SELECT lastname FROM customers ORDER BY lastname"}
+{"index": 1089, "sql": "SELECT lastname FROM customers ORDER BY lastname"}
+{"index": 1090, "sql": "SELECT id FROM goods ORDER BY id"}
+{"index": 1091, "sql": "SELECT DISTINCT id FROM goods"}
+{"index": 1092, "sql": "SELECT DISTINCT T2.Receipt FROM receipts AS T1 JOIN items AS T2 ON T1.ReceiptNumber = T2.Receipt WHERE T2.Item = \"Apple Pie\" INTERSECT SELECT DISTINCT T2.Receipt FROM receipts AS T1 JOIN items AS T2 ON T1.ReceiptNumber = T2.Receipt WHERE T1.CustomerId = 12"}
+{"index": 1093, "sql": "SELECT Receipt FROM items AS T1 JOIN receipts AS T2 ON T1.Receipt = T2.ReceiptNumber WHERE T1.Item = \"Apple Pie\" OR T2.CustomerId = 12"}
+{"index": 1094, "sql": "SELECT Date FROM receipts ORDER BY Date DESC LIMIT 1"}
+{"index": 1095, "sql": "SELECT ReceiptNumber , max(Date) FROM receipts GROUP BY ReceiptNumber ORDER BY Date DESC LIMIT 1"}
+{"index": 1096, "sql": "SELECT * FROM receipts WHERE Date = (SELECT min(Date) FROM receipts) UNION SELECT * FROM goods WHERE price > 10"}
+{"index": 1097, "sql": "SELECT ReceiptNumber FROM items AS T1 JOIN goods AS T2 ON T1.Item = T2.Id WHERE T2.Price > 10 UNION SELECT ReceiptNumber FROM receipts ORDER BY Date ASC LIMIT 1"}
+{"index": 1098, "sql": "SELECT id FROM goods WHERE food = \"Cookie\" INTERSECT SELECT id FROM goods WHERE food = \"Cake\" INTERSECT SELECT id FROM goods WHERE price BETWEEN 3 AND 7"}
+{"index": 1099, "sql": "SELECT id FROM goods WHERE flavor = \"Cookies\" OR flavor = \"Cakes\" AND price BETWEEN 3 AND 7"}
+{"index": 1100, "sql": "SELECT T1.firstname , T1.lastname FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid ORDER BY T2.date LIMIT 1"}
+{"index": 1101, "sql": "SELECT T1.firstname , T1.lastname FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid ORDER BY T2.date LIMIT 1"}
+{"index": 1102, "sql": "SELECT avg(price) FROM goods WHERE flavor = \"Blackberry\" OR flavor = \"Blueberry\""}
+{"index": 1103, "sql": "SELECT avg(price) FROM goods WHERE flavor = \"Blackberry\" OR flavor = \"Blueberry\""}
+{"index": 1104, "sql": "SELECT min(price) FROM goods WHERE flavor = \"Cheese\""}
+{"index": 1105, "sql": "SELECT Flavor FROM goods WHERE Flavor = \"Cheese\" ORDER BY Price ASC LIMIT 1"}
+{"index": 1106, "sql": "SELECT max(Price) , min(Price) , avg(Price) FROM goods ORDER BY Flavor"}
+{"index": 1107, "sql": "SELECT max(Price) , min(Price) , avg(Price) , Flavor FROM goods GROUP BY Flavor ORDER BY Flavor"}
+{"index": 1108, "sql": "SELECT min(Price) , max(Price) , Food FROM goods GROUP BY Food ORDER BY Food"}
+{"index": 1109, "sql": "SELECT min(Price) , max(Price) FROM goods WHERE Food = \"food\" ORDER BY Food"}
+{"index": 1110, "sql": "SELECT date FROM receipts GROUP BY date ORDER BY count(*) DESC LIMIT 3"}
+{"index": 1111, "sql": "SELECT Date FROM receipts GROUP BY Date ORDER BY count(*) DESC LIMIT 3"}
+{"index": 1112, "sql": "SELECT T1.firstname , T1.lastname FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid GROUP BY T2.customerid ORDER BY count(*) DESC LIMIT 1"}
+{"index": 1113, "sql": "SELECT customerId , count(*) FROM receipts GROUP BY customerId ORDER BY count(*) DESC LIMIT 1"}
+{"index": 1114, "sql": "SELECT count(DISTINCT customerid) , date FROM receipts GROUP BY date"}
+{"index": 1115, "sql": "SELECT count(*) , T1.Date FROM receipts AS T1 JOIN customers AS T2 ON T1.customerid = T2.id GROUP BY T1.Date"}
+{"index": 1116, "sql": "SELECT T1.firstname , T1.lastname FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid JOIN items AS T3 ON T3.item = T2.Item WHERE T3.flavor = \"Apple\" AND T3.food = \"Tart\""}
+{"index": 1117, "sql": "SELECT DISTINCT T1.firstname , T1.lastname FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid JOIN items AS T3 ON T3.item = T2.Item WHERE T3.Flavor = \"Tart\" AND T3.Food = \"Apple\""}
+{"index": 1118, "sql": "SELECT id FROM goods WHERE price < ( SELECT min(price) FROM goods WHERE food = \"Croissant\")"}
+{"index": 1119, "sql": "SELECT id FROM goods WHERE flavor = \"Cheese\" EXCEPT SELECT id FROM goods WHERE flavor = \"Croissant\""}
+{"index": 1120, "sql": "SELECT id FROM goods WHERE flavor = \"Cakes\" AND price >= (SELECT avg(price) FROM goods WHERE flavor = \"Tart\")"}
+{"index": 1121, "sql": "SELECT id FROM goods WHERE flavor = \"Cakes\" AND price >= (SELECT avg(price) FROM goods WHERE flavor = \"Tart\")"}
+{"index": 1122, "sql": "SELECT id FROM goods WHERE price > (SELECT avg(price) FROM goods)"}
+{"index": 1123, "sql": "SELECT id FROM goods WHERE price > (SELECT avg(price) FROM goods)"}
+{"index": 1124, "sql": "SELECT id , flavor , food FROM goods ORDER BY price"}
+{"index": 1125, "sql": "SELECT id , flavor , food FROM goods ORDER BY price"}
+{"index": 1126, "sql": "SELECT id , flavor FROM goods WHERE food = \"Cake\" ORDER BY flavor"}
+{"index": 1127, "sql": "SELECT id , flavor FROM goods WHERE flavor = \"Cake\" ORDER BY flavor"}
+{"index": 1128, "sql": "SELECT T2.Item FROM goods AS T1 JOIN items AS T2 ON T1.Id = T2.Item WHERE T1.Flavor = \"Chocolate\" GROUP BY T2.Item HAVING COUNT(*) > 10"}
+{"index": 1129, "sql": "SELECT T2.Item FROM goods AS T1 JOIN items AS T2 ON T1.Id = T2.Item WHERE T1.Flavor = \"Chocolate\" GROUP BY T2.Item HAVING count(*) <= 10"}
+{"index": 1130, "sql": "SELECT Flavor FROM goods WHERE Food = \"Cake\" EXCEPT SELECT Flavor FROM goods WHERE Food = \"Tart\""}
+{"index": 1131, "sql": "SELECT Flavor FROM goods WHERE Food = \"Cake\" EXCEPT SELECT Flavor FROM goods WHERE Food = \"Tart\""}
+{"index": 1132, "sql": "SELECT T2.Flavor FROM items AS T1 JOIN goods AS T2 ON T1.Item = T2.Id GROUP BY T1.Item ORDER BY count(*) DESC LIMIT 3"}
+{"index": 1133, "sql": "SELECT T1.Item FROM items AS T1 JOIN receipts AS T2 ON T1.Receipt = T2.ReceiptNumber GROUP BY T1.Item ORDER BY COUNT(*) DESC LIMIT 3"}
+{"index": 1134, "sql": "SELECT DISTINCT T2.CustomerId FROM items AS T1 JOIN receipts AS T2 ON T1.Receipt = T2.ReceiptNumber GROUP BY T2.CustomerId HAVING sum(T1.Price) > 150"}
+{"index": 1135, "sql": "SELECT DISTINCT T1.Id FROM customers AS T1 JOIN receipts AS T2 ON T1.Id = T2.CustomerId WHERE T2.Date LIKE \"%over%150%\""}
+{"index": 1136, "sql": "SELECT T1.id FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid GROUP BY T1.id HAVING avg(T2.price) > 5"}
+{"index": 1137, "sql": "SELECT T1.id FROM customers AS T1 JOIN receipts AS T2 ON T1.id = T2.customerid GROUP BY T2.item HAVING avg(T2.price) > 5"}
+{"index": 1138, "sql": "SELECT T2.Date FROM receipts AS T1 JOIN customers AS T2 ON T1.CustomerId = T2.Id JOIN items AS T3 ON T3.Item = T1.Item WHERE T3.Price > 100 GROUP BY T2.Date HAVING count(*) > 1"}
+{"index": 1139, "sql": "SELECT T2.Date FROM items AS T1 JOIN receipts AS T2 ON T1.Item = T2.Item WHERE T1.Price * T1.Ordinal > 100"}
+{"index": 1140, "sql": "SELECT count(*) FROM driver"}
+{"index": 1141, "sql": "SELECT count(*) FROM driver"}
+{"index": 1142, "sql": "SELECT COUNT(*) , Make FROM driver WHERE Points > 150 GROUP BY Make"}
+{"index": 1143, "sql": "SELECT Make , COUNT(*) FROM driver WHERE Points > 150 GROUP BY Make"}
+{"index": 1144, "sql": "SELECT Make , avg(Age) FROM driver GROUP BY Make"}
+{"index": 1145, "sql": "SELECT avg(T2.Age) , T1.Make FROM driver AS T1 JOIN driver AS T2 ON T1.Country = T2.Country GROUP BY T1.Make"}
+{"index": 1146, "sql": "SELECT avg(Laps) FROM driver WHERE Age < 20"}
+{"index": 1147, "sql": "SELECT avg(Laps) FROM driver WHERE Age < 20"}
+{"index": 1148, "sql": "SELECT Manager , Sponsor FROM team ORDER BY Car_Owner"}
+{"index": 1149, "sql": "SELECT Manager , Sponsor FROM team ORDER BY Car_Owner"}
+{"index": 1150, "sql": "SELECT Make FROM team GROUP BY Make HAVING COUNT(*) > 1"}
+{"index": 1151, "sql": "SELECT Make FROM driver GROUP BY Make HAVING COUNT(*) > 1"}
+{"index": 1152, "sql": "SELECT Make FROM team WHERE Car_Owner = \"Buddy Arrington\""}
+{"index": 1153, "sql": "SELECT Make FROM team WHERE Car_Owner = \"Buddy Arrington\""}
+{"index": 1154, "sql": "SELECT max(Points) , min(Points) FROM driver"}
+{"index": 1155, "sql": "SELECT max(Points) , min(Points) FROM driver"}
+{"index": 1156, "sql": "SELECT count(*) FROM driver WHERE Points < 150"}
+{"index": 1157, "sql": "SELECT count(*) FROM driver WHERE Points < 150"}
+{"index": 1158, "sql": "SELECT Driver FROM driver ORDER BY Age ASC"}
+{"index": 1159, "sql": "SELECT Driver FROM driver ORDER BY Age ASC"}
+{"index": 1160, "sql": "SELECT Driver FROM driver ORDER BY Points DESC"}
+{"index": 1161, "sql": "SELECT Driver FROM driver ORDER BY Points DESC"}
+{"index": 1162, "sql": "SELECT T1.Driver , T2.Country FROM driver AS T1 JOIN country AS T2 ON T1.Country = T2.Country_id"}
+{"index": 1163, "sql": "SELECT T1.Driver , T2.Country FROM driver AS T1 JOIN country AS T2 ON T1.Country = T2.Country_ID"}
+{"index": 1164, "sql": "SELECT max(T1.Points) FROM driver AS T1 JOIN country AS T2 ON T1.Country = T2.Country_ID WHERE T2.Capital = \"Dublin\""}
+{"index": 1165, "sql": "SELECT max(T1.Points) FROM driver AS T1 JOIN country AS T2 ON T1.Country = T2.Country_ID WHERE T2.Capital = \"Dublin\""}
+{"index": 1166, "sql": "SELECT avg(T2.Age) FROM country AS T1 JOIN driver AS T2 ON T1.Country_ID = T2.Country WHERE T1.Official_native_language = \"English\""}
+{"index": 1167, "sql": "SELECT avg(T2.Age) FROM country AS T1 JOIN driver AS T2 ON T1.Country_ID = T2.Country WHERE T1.Official_native_language = \"English\""}
+{"index": 1168, "sql": "SELECT T2.Country FROM driver AS T1 JOIN country AS T2 ON T1.Country = T2.Country_ID WHERE T1.Points > 150"}
+{"index": 1169, "sql": "SELECT T2.Country FROM driver AS T1 JOIN country AS T2 ON T1.Country = T2.Country_ID WHERE T1.Points > 150"}
+{"index": 1170, "sql": "SELECT T1.Capital FROM country AS T1 JOIN driver AS T2 ON T1.Country_ID = T2.Country WHERE T2.Points = (SELECT max(Points) FROM driver)"}
+{"index": 1171, "sql": "SELECT T1.Capital FROM country AS T1 JOIN driver AS T2 ON T1.Country_ID = T2.Country WHERE T2.Points = (SELECT max(Points) FROM driver)"}
+{"index": 1172, "sql": "SELECT Make , COUNT(*) FROM driver GROUP BY Make"}
+{"index": 1173, "sql": "SELECT Make , COUNT(*) FROM driver GROUP BY Make"}
+{"index": 1174, "sql": "SELECT Make FROM driver GROUP BY Make ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 1175, "sql": "SELECT Make FROM driver GROUP BY Make ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 1176, "sql": "SELECT Make FROM driver GROUP BY Make HAVING COUNT(*) >= 3"}
+{"index": 1177, "sql": "SELECT Make FROM driver GROUP BY Make HAVING COUNT(*) >= 3"}
+{"index": 1178, "sql": "SELECT Team FROM team WHERE Team_id NOT IN (SELECT Team_id FROM team_driver)"}
+{"index": 1179, "sql": "SELECT Team FROM team WHERE Team_ID NOT IN (SELECT Team_ID FROM team_driver)"}
+{"index": 1180, "sql": "SELECT T1.Country FROM country AS T1 JOIN driver AS T2 ON T1.Country_ID = T2.Country WHERE T2.Make = \"Dodge\" INTERSECT SELECT T1.Country FROM country AS T1 JOIN driver AS T2 ON T1.Country_ID = T2.Country WHERE T2.Make = \"Chevrolet\""}
+{"index": 1181, "sql": "SELECT T1.Country FROM country AS T1 JOIN driver AS T2 ON T1.Country_ID = T2.Country WHERE T2.Make = \"Dodge\" INTERSECT SELECT T1.Country FROM country AS T1 JOIN driver AS T2 ON T1.Country_ID = T2.Country WHERE T2.Make = \"Chevrolet\""}
+{"index": 1182, "sql": "SELECT sum(Points) , avg(Points) FROM driver"}
+{"index": 1183, "sql": "SELECT sum(points) , avg(points) FROM driver"}
+{"index": 1184, "sql": "SELECT Country FROM country WHERE Country_id NOT IN (SELECT Country FROM driver)"}
+{"index": 1185, "sql": "SELECT Country FROM country WHERE Country_id NOT IN (SELECT Country FROM driver)"}
+{"index": 1186, "sql": "SELECT Manager , Sponsor FROM team GROUP BY Manager , Sponsor ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 1187, "sql": "SELECT Manager , Sponsor FROM team GROUP BY Manager , Sponsor ORDER BY COUNT(*) DESC LIMIT 1"}
+{"index": 1188, "sql": "SELECT T1.Manager , T1.Car_Owner FROM team AS T1 JOIN team_driver AS T2 ON T1.Team_ID = T2.Team_ID GROUP BY T1.Team_ID HAVING COUNT(*) >= 2"}
+{"index": 1189, "sql": "SELECT T2.Manager , T2.Car_Owner FROM team_driver AS T1 JOIN team AS T2 ON T1.Team_ID = T2.Team_ID GROUP BY T1.Team_ID HAVING COUNT(*) >= 2"}
+{"index": 1190, "sql": "SELECT count(*) FROM authors"}
+{"index": 1191, "sql": "SELECT DISTINCT author_name FROM authors"}
+{"index": 1192, "sql": "SELECT author_name , other_details FROM authors"}
+{"index": 1193, "sql": "SELECT other_details FROM authors WHERE author_name = \"Addison Denesik\""}
+{"index": 1194, "sql": "SELECT count(*) FROM Documents"}
+{"index": 1195, "sql": "SELECT author_name FROM documents WHERE document_id = 4"}
+{"index": 1196, "sql": "SELECT T2.author_name FROM documents AS T1 JOIN authors AS T2 ON T1.author_name = T2.author_name WHERE T1.document_name = \"Travel to Brazil\""}
+{"index": 1197, "sql": "SELECT count(*) FROM documents AS T1 JOIN authors AS T2 ON T1.author_name = T2.author_name WHERE T2.author_name = \"Era Kerluke\""}
+{"index": 1198, "sql": "SELECT document_name , document_description FROM Documents"}
+{"index": 1199, "sql": "SELECT T1.document_id , T1.document_name FROM Documents AS T1 JOIN authors AS T2 ON T1.author_name = T2.author_name WHERE T2.author_name = \"Bianka Cummings\""}
+{"index": 1200, "sql": "SELECT T1.author_name , T1.other_details FROM authors AS T1 JOIN documents AS T2 ON T1.author_name = T2.author_name WHERE T2.document_name = \"Travel to China\""}
+{"index": 1201, "sql": "SELECT T1.author_name , count(*) FROM authors AS T1 JOIN documents AS T2 ON T1.author_name = T2.author_name GROUP BY T1.author_name"}
+{"index": 1202, "sql": "SELECT T1.author_name FROM authors AS T1 JOIN documents AS T2 ON T1.author_name = T2.author_name GROUP BY T1.author_name ORDER BY count(*) DESC LIMIT 1"}
+{"index": 1203, "sql": "SELECT T1.author_name FROM authors AS T1 JOIN documents AS T2 ON T1.author_name = T2.author_name GROUP BY T1.author_name HAVING count(*) >= 2"}
+{"index": 1204, "sql": "SELECT count(*) FROM Business_processes"}
+{"index": 1205, "sql": "SELECT next_process_id , process_name , process_description FROM Business_processes WHERE process_id = 9"}
+{"index": 1206, "sql": "SELECT process_name FROM Business_processes WHERE process_id = 9"}
+{"index": 1207, "sql": "SELECT count(*) FROM Process_outcomes"}
+{"index": 1208, "sql": "SELECT process_outcome_code , process_outcome_description FROM Process_outcomes"}
+{"index": 1209, "sql": "SELECT process_outcome_description FROM Process_outcomes WHERE process_outcome_code = \"working\""}
+{"index": 1210, "sql": "SELECT count(*) FROM process_status"}
+{"index": 1211, "sql": "SELECT process_status_code , process_status_description FROM Process_Status"}
+{"index": 1212, "sql": "SELECT process_status_description FROM Process_Status WHERE process_status_code = \"ct\""}
+{"index": 1213, "sql": "SELECT count(*) FROM staff"}
+{"index": 1214, "sql": "SELECT staff_id , staff_details FROM Staff"}
+{"index": 1215, "sql": "SELECT staff_details FROM Staff WHERE staff_id = 100"}
+{"index": 1216, "sql": "SELECT count(*) FROM Ref_Staff_Roles"}
+{"index": 1217, "sql": "SELECT staff_role_code , staff_role_description FROM Ref_Staff_Roles"}
+{"index": 1218, "sql": "SELECT staff_role_description FROM Ref_Staff_Roles WHERE staff_role_code = \"HR\""}
+{"index": 1219, "sql": "SELECT count(*) FROM Documents AS T1 JOIN Documents_Processes AS T2 ON T1.document_id = T2.document_id"}
+{"index": 1220, "sql": "SELECT process_id FROM Documents_processes"}
+{"index": 1221, "sql": "SELECT document_id FROM Documents EXCEPT SELECT document_id FROM Documents_Processes"}
+{"index": 1222, "sql": "SELECT process_id FROM Documents_Processes EXCEPT SELECT document_id FROM Documents"}
+{"index": 1223, "sql": "SELECT T3.process_outcome_description , T4.process_status_description FROM Documents AS T1 JOIN Documents_Processes AS T2 ON T1.document_id = T2.document_id JOIN Process_outcomes AS T3 ON T2.process_outcome_code = T3.process_outcome_code JOIN Process_status AS T4 ON T2.process_status_code = T4.process_status_code WHERE T1.document_id = 0"}
+{"index": 1224, "sql": "SELECT T3.process_name FROM documents AS T1 JOIN documents_processes AS T2 ON T1.document_id = T2.document_id JOIN business_processes AS T3 ON T2.process_id = T3.process_id WHERE T1.document_name = \"Travel to Brazil\""}
+{"index": 1225, "sql": "SELECT process_id , count(*) FROM Documents_Processes GROUP BY process_id"}
+{"index": 1226, "sql": "SELECT count(*) FROM Documents AS T1 JOIN Documents_Processes AS T2 ON T1.document_id = T2.document_id WHERE T2.process_id = 9 AND T1.document_id = 0"}
+{"index": 1227, "sql": "SELECT staff_id , count(*) FROM Staff_in_processes GROUP BY staff_id"}
+{"index": 1228, "sql": "SELECT staff_role_code , count(*) FROM Staff_in_processes GROUP BY staff_role_code"}
+{"index": 1229, "sql": "SELECT count(DISTINCT staff_role_code) FROM staff_in_processes WHERE staff_id = 3"}
