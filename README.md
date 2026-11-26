@@ -6,16 +6,6 @@
 
 A very small language model that turns a plain English question into a database query.
 
-You ask:
-
-> What is the average, minimum, and maximum age of all singers from France?
-
-It looks at the tables in the database and writes:
-
-```sql
-SELECT avg(age), min(age), max(age) FROM singer WHERE country = 'France'
-```
-
 Big models are good at this. I wanted to see how far a tiny one can get, trained at home on one gaming graphics card. Minnow starts from [Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct), a model with about 500 million parameters. That is a tiny fraction of the size of the models behind the well-known chat assistants.
 
 ## Where it stands
