@@ -67,7 +67,7 @@ def test_headline_list_comes_first_when_a_published_score_is_given(repo):
     (repo / STANDING_FILE).write_text(json.dumps(table), encoding="utf-8")
 
     assert standing_table(repo).splitlines()[:4] == [
-        "- **1.5 times fewer mistakes.** It now gets 50 of every 100 questions wrong. Before "
+        "- **~2x fewer mistakes.** It now gets 50 of every 100 questions wrong. Before "
         "training it got 75 wrong, more than half.",
         "- **2.0 times as many right.** It answers 2 of the 4 questions correctly, up from 1.",
         "- **33% on questions it had never seen.** Other-0.5B, a published model of the same "
@@ -87,7 +87,7 @@ def test_more_than_half_is_only_said_when_true(repo):
     make_run(repo / "five/good", 4, 5)
 
     assert standing_table(repo).startswith(
-        "- **2.0 times fewer mistakes.** It now gets 20 of every 100 questions wrong. Before "
+        "- **~2x fewer mistakes.** It now gets 20 of every 100 questions wrong. Before "
         "training it got 40 wrong.\n"
     )
 
