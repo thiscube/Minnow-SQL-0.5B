@@ -24,6 +24,10 @@ The test is [Spider][spider], a standard benchmark. An answer only counts when t
 
 <!-- standing:start -->
 
+- **Half the mistakes:** 55 of 100 questions wrong before training, now 29.
+- **1.6 times as many right:** 469 of 1,034 before training, now 736.
+- **77% on questions it never saw:** the published SLM-SQL-0.5B, same size, reports 73.5% on Spider test.
+
 |  | Spider dev (1,034 questions) | Spider test, the half for choosing settings (1,230 questions) | Spider test, the half scored once at the end (917 questions) |
 | --- | ---: | ---: | ---: |
 | The model before any training | 45.36% |  |  |
