@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)
 
-A very small language model that turns a plain English question into a database query.
+Minnow-SQL-0.5B is a 0.5-billion-parameter model that turns plain English questions into SQLite queries, trained on a single 8 GB gaming GPU.
 
 Big models are good at this. I wanted to see how far a tiny one can get, trained at home on one gaming graphics card. Minnow starts from [Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct), a model with about 500 million parameters. That is a tiny fraction of the size of the models behind the well-known chat assistants.
 
