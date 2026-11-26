@@ -22,6 +22,9 @@ model = ["torch==2.11.0", "transformers==5.23.0", "accelerate==1.16.0", "peft==0
 [tool.setuptools]
 packages = ["minnow"]
 
+[tool.setuptools.package-data]
+minnow = ["fonts/*"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"

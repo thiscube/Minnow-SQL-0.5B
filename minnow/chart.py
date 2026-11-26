@@ -6,8 +6,10 @@ It paints its own light background, so it reads the same on a light and on a dar
 The same input always gives the same text.
 """
 
+import base64
 from collections.abc import Sequence
 from html import escape
+from pathlib import Path
 
 Labelled = tuple[str, float]
 WIDTH = 720
@@ -36,6 +38,16 @@ _BAR_COLOR = "#c2c0b6"
 _BEST_COLOR = "#2f6f73"
 _FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif"
 _TITLE_FONT = f"Sora, {_FONT}"
+# built into the chart, because a chart shown as an image cannot load fonts from elsewhere
+_SORA = Path(__file__).parent / "fonts" / "sora-500-latin.woff2"
+
+
+def _font_face() -> str:
+    data = base64.b64encode(_SORA.read_bytes()).decode("ascii")
+    return (
+        "<defs><style>@font-face{font-family:Sora;font-weight:500;"
+        f"src:url(data:font/woff2;base64,{data}) format('woff2')}}</style></defs>"
+    )
 
 
 def _number(value: float) -> str:
@@ -73,8 +85,10 @@ def _frame(title: str, description: str, tall: int) -> list[str]:
         f'font-family="{_FONT}">',
         f'<title id="chart-title">{escape(title)}</title>',
         f'<desc id="chart-desc">{escape(description)}</desc>',
+        _font_face(),
         f'<rect width="{WIDTH}" height="{tall}" rx="12" fill="{_SURFACE}"/>',
-        f'<text x="{_MARGIN}" y="34" font-size="18" font-family="{_TITLE_FONT}" fill="{_INK}">'
+        f'<text x="{_MARGIN}" y="34" font-size="18" font-weight="500" '
+        f'font-family="{_TITLE_FONT}" fill="{_INK}">'
         f"{escape(title)}</text>",
     ]
 
