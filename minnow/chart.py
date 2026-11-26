@@ -32,10 +32,10 @@ _INK = "#141413"
 _SECONDARY_INK = "#5e5d59"
 _MUTED_INK = "#a3a198"
 _BAR_COLOR = "#c2c0b6"
-# the best bar stands out in a warm clay colour, every other bar stays a quiet grey
-_BEST_COLOR = "#d97757"
+# the best bar stands out in a deep teal, every other bar stays a quiet grey
+_BEST_COLOR = "#2f6f73"
 _FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif"
-_TITLE_FONT = "Georgia, 'Times New Roman', serif"
+_TITLE_FONT = f"Sora, {_FONT}"
 
 
 def _number(value: float) -> str:
