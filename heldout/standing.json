@@ -1,4 +1,5 @@
 {
+  "published": {"name": "SLM-SQL-0.5B", "score": 73.5},
   "columns": [
     {"title": "Spider dev", "folder": "results"},
     {"title": "Spider test, the half for choosing settings", "folder": "heldout/validation"},

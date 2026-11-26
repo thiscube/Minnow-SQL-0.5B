@@ -62,6 +62,32 @@ def test_table_reads_every_score_from_the_run_files(repo):
     )
 
 
+def test_headline_list_comes_first_when_a_published_score_is_given(repo):
+    table = dict(TABLE, published={"name": "Other-0.5B", "score": 60.5})
+    (repo / STANDING_FILE).write_text(json.dumps(table), encoding="utf-8")
+
+    assert standing_table(repo).splitlines()[:4] == [
+        "- **1.5 times fewer mistakes:** 75 of 100 questions wrong before training, now 50.",
+        "- **2.0 times as many right:** 1 of 4 before training, now 2.",
+        "- **33% on questions it never saw:** the published Other-0.5B, same size, reports "
+        "60.5% on Spider test.",
+        "",
+    ]
+
+
+def test_halved_mistakes_are_called_half(repo):
+    table = {
+        "published": {"name": "Other", "score": 1},
+        "columns": [{"title": "Five", "folder": "five"}],
+        "rows": [{"label": "a", "runs": ["base"]}, {"label": "b", "runs": ["good"]}],
+    }
+    (repo / STANDING_FILE).write_text(json.dumps(table), encoding="utf-8")
+    make_run(repo / "five/base", 1, 5)
+    make_run(repo / "five/good", 3, 5)
+
+    assert standing_table(repo).startswith("- **Half the mistakes:**")
+
+
 def test_question_count_is_written_with_a_thousands_comma(repo):
     table = dict(TABLE, rows=[{"label": "One model", "runs": ["big", None]}])
     table["columns"] = TABLE["columns"][:1]

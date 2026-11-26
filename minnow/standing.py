@@ -34,8 +34,28 @@ def _column(root: Path, column: Mapping[str, str], names: Sequence[str | None]) 
     return [header, *(f"{run.execution_accuracy:.2f}%" if run else "" for run in runs)]
 
 
+def _highlights(root: Path, table: Mapping) -> list[str]:
+    """Return the headline list: first row against second row, and the second row's last cell."""
+    first, last = table["columns"][0]["folder"], table["columns"][-1]["folder"]
+    before = judged_run(root / first / table["rows"][0]["runs"][0], "", "")
+    after = judged_run(root / first / table["rows"][1]["runs"][0], "", "")
+    unseen = judged_run(root / last / table["rows"][1]["runs"][-1], "", "")
+    published = table["published"]
+    wrong_before, wrong_after = before.total - before.correct, after.total - after.correct
+    fewer = wrong_before / wrong_after
+    mistakes = "Half the mistakes" if abs(fewer - 2) < 0.25 else f"{fewer:.1f} times fewer mistakes"
+    return [
+        f"- **{mistakes}:** {round(100 * wrong_before / before.total)} of 100 questions wrong "
+        f"before training, now {round(100 * wrong_after / after.total)}.",
+        f"- **{after.correct / before.correct:.1f} times as many right:** {before.correct:,} of "
+        f"{before.total:,} before training, now {after.correct:,}.",
+        f"- **{unseen.execution_accuracy:.0f}% on questions it never saw:** the published "
+        f"{published['name']}, same size, reports {published['score']:g}% on Spider test.",
+    ]
+
+
 def standing_table(root: Path) -> str:
-    """Return the score table that heldout/standing.json describes, as Markdown."""
+    """Return the headline list and the score table that heldout/standing.json describes."""
     table = json.loads(read_text(root / STANDING_FILE))
     rows = table["rows"]
     columns = [
@@ -43,6 +63,8 @@ def standing_table(root: Path) -> str:
         for position, column in enumerate(table["columns"])
     ]
     lines = [
+        *(_highlights(root, table) if "published" in table else []),
+        *([""] if "published" in table else []),
         _line(["", *(column[0] for column in columns)]),
         _line(["---", *("---:" for _ in columns)]),
     ]
