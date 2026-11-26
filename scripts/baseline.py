@@ -10,8 +10,7 @@ import time
 from pathlib import Path
 
 import torch
-from peft import PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from generation import generate, load, peak_memory, sample_shared
 
 from minnow.evaluate import (
     CANDIDATES_FILE,
@@ -23,6 +22,7 @@ from minnow.evaluate import (
     load_predictions,
 )
 from minnow.execution import run_query
+from minnow.fanout import CACHE_GIGABYTES, Fanout
 from minnow.outcomes import OUTCOMES_FILE, breakdown, format_breakdown, judge_all, save_outcomes
 from minnow.prompt import SYSTEM, chat_prompt, extract_sql
 from minnow.prompts import PromptBook
@@ -46,23 +46,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--value-hints", action="store_true", help="list mentioned values")
     parser.add_argument("--samples", type=int, default=1, help="candidate queries per question")
     parser.add_argument("--temperature", type=float, default=0.8, help="for the extra candidates")
+    parser.add_argument("--share-prompt", action="store_true", help="encode once for all samples")
+    parser.add_argument("--cache-gb", type=float, default=CACHE_GIGABYTES, help="max GB of cache")
+    parser.add_argument("--limit", type=int, help="score only the first questions, as a check")
+    parser.add_argument("--device", default="cuda", help="cpu runs in full precision, slowly")
     return parser.parse_args()
-
-
-def generate(
-    model: AutoModelForCausalLM,
-    tokenizer: AutoTokenizer,
-    prompts: list[str],
-    max_new_tokens: int,
-    temperature: float | None = None,
-) -> list[str]:
-    """Answer a batch of prompts: greedy, or sampled when a temperature is given."""
-    inputs = tokenizer(prompts, return_tensors="pt", padding=True).to(model.device)
-    how = {"do_sample": True, "temperature": temperature} if temperature else {"do_sample": False}
-    with torch.inference_mode():
-        output = model.generate(**inputs, max_new_tokens=max_new_tokens, **how)
-    new_tokens = output[:, inputs["input_ids"].shape[1] :]
-    return tokenizer.batch_decode(new_tokens, skip_special_tokens=True)
 
 
 def main() -> None:
@@ -80,23 +68,22 @@ def main() -> None:
         "temperature": args.temperature,
         "system_prompt": SYSTEM,
     }
+    # Only written when used, so folders of earlier runs keep matching their settings.
+    shared_gb = args.cache_gb if args.share_prompt else None
+    extras = {"share_prompt_gb": shared_gb, "limit": args.limit, "device": args.device}
+    settings |= {key: value for key, value in extras.items() if value not in (None, "cuda")}
     claim_run_folder(args.out, settings)
     predictions_file = args.out / "predictions.jsonl"
     drop_unfinished_line(predictions_file)
     drop_unfinished_line(args.out / CANDIDATES_FILE)
-    examples = load_split(args.spider, args.split)
+    examples = load_split(args.spider, args.split)[: args.limit]
     done = load_predictions(predictions_file)
     todo = [index for index in range(len(examples)) if index not in done]
     print(f"{len(done)} of {len(examples)} already predicted, {len(todo)} to go.")
 
     started = time.monotonic()
     if todo:
-        tokenizer = AutoTokenizer.from_pretrained(args.model, padding_side="left")
-        model = AutoModelForCausalLM.from_pretrained(
-            args.model, dtype=torch.bfloat16, device_map="cuda"
-        )
-        if args.adapter:
-            model = PeftModel.from_pretrained(model, args.adapter)
+        model, tokenizer = load(args.model, args.adapter, args.device)
         book = PromptBook(args.spider, examples, args.sample_rows, args.value_hints)
         # Answers depend a little on batch mates, so batches are fixed blocks of the split.
         for start in range(0, len(examples), args.batch_size):
@@ -110,9 +97,15 @@ def main() -> None:
             # One greedy answer, then sampled ones; the vote never sees the reference query.
             tokens, heat = args.max_new_tokens, args.temperature
             rounds = [generate(model, tokenizer, prompts, tokens)]
-            for sample in range(1, args.samples):
-                torch.manual_seed(1000 * start + sample)
-                rounds.append(generate(model, tokenizer, prompts, tokens, heat))
+            if args.share_prompt and args.samples > 1:
+                plan = Fanout(
+                    args.samples - 1, tokens, heat, 1000 * start, int(args.cache_gb * 1e9)
+                )
+                rounds += sample_shared(model, tokenizer, prompts, plan)
+            else:
+                for sample in range(1, args.samples):
+                    torch.manual_seed(1000 * start + sample)
+                    rounds.append(generate(model, tokenizer, prompts, tokens, heat))
             for position, index in enumerate(batch):
                 if index not in done:
                     database = database_path(args.spider, examples[index].db_id)
@@ -121,6 +114,7 @@ def main() -> None:
                     append_candidates(args.out / CANDIDATES_FILE, index, options)
                     append_prediction(predictions_file, index, chosen)
             print(f"{batch.stop} of {len(examples)} predicted")
+        print(peak_memory(args.device))
     spent = time.monotonic() - started if todo else 0.0
     generation_seconds = add_generation_seconds(args.out, spent)
 

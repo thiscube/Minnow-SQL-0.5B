@@ -8,49 +8,63 @@ command again: it continues from the latest checkpoint. The finished adapter is 
 """
 
 import argparse
-import json
 import time
+from functools import partial
 from pathlib import Path
 
 import torch
-from peft import LoraConfig, get_peft_model
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    DataCollatorForSeq2Seq,
-    Trainer,
-    TrainingArguments,
-)
+import transformers
+from peft import LoraConfig, PeftModel, get_peft_model
 
+from minnow import sft
 from minnow.evaluate import add_generation_seconds, claim_run_folder
-from minnow.guard import Example, assert_no_leak
+from minnow.guard import assert_no_leak
 from minnow.prompt import SYSTEM
-from minnow.prompts import PromptBook
-from minnow.sft import IGNORED, checked_training_examples, encode
 from minnow.spider import load_split
 
 MODEL = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
 LORA_TARGETS = ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+LORA = {"lora_dropout": 0.05, "target_modules": LORA_TARGETS, "task_type": "CAUSAL_LM"}
+CACHE = Path("outputs/cache")
 
 
-class AnswerOnlyTrainer(Trainer):
+class AnswerOnlyTrainer(transformers.Trainer):
     """Compute the loss from the answer's positions only.
 
     The stock loss scores every position against the whole vocabulary and then ignores the
     prompt. For a long schema that costs gigabytes for nothing. This gives the same loss.
     """
 
+    autocast = False
+
     def compute_loss(self, model, inputs, return_outputs=False, **_):  # noqa: ANN001, ANN201, ANN003
-        """Return the cross-entropy of the answer tokens."""
+        """Return the cross-entropy of the answer tokens, every example counting the same."""
         labels = inputs["labels"][:, 1:]
         base = model.get_base_model()
-        hidden = base.model(
-            input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]
-        ).last_hidden_state[:, :-1]
-        learned = labels != IGNORED
-        logits = base.lm_head(hidden[learned]).float()
-        loss = torch.nn.functional.cross_entropy(logits, labels[learned])
+        learned = labels != sft.IGNORED
+        with torch.autocast("cuda", dtype=torch.bfloat16, enabled=self.autocast):
+            hidden = base.model(
+                input_ids=inputs["input_ids"], attention_mask=inputs["attention_mask"]
+            ).last_hidden_state[:, :-1]
+            logits = base.lm_head(hidden[learned]).float()
+        losses = torch.nn.functional.cross_entropy(logits, labels[learned], reduction="none")
+        share = (1 / learned.sum(1, keepdim=True)).expand_as(learned)[learned]
+        loss = (losses * share).sum() / len(labels)
         return (loss, None) if return_outputs else loss
+
+    def training_step(self, model, inputs, num_items_in_batch=None):  # noqa: ANN001, ANN201
+        """Run a packed update one batch after another, so memory only holds one of them."""
+        if not isinstance(inputs, list):
+            return super().training_step(model, inputs, num_items_in_batch)
+        model.train()
+        torch.cuda.empty_cache()  # the longest batch comes first and sets what gets reserved
+        examples = sum(len(batch["labels"]) for batch in inputs)
+        total = 0.0
+        for batch in inputs:
+            loss = self.compute_loss(model, batch) * len(batch["labels"]) / examples
+            self.accelerator.backward(loss)
+            total += loss.detach()
+        return total
 
 
 def parse_args() -> argparse.Namespace:
@@ -61,7 +75,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--out", type=Path, default=Path("outputs/sft-spider"))
     parser.add_argument("--epochs", type=float, default=3.0)
     parser.add_argument("--learning-rate", type=float, default=2e-4)
-    # Memory grows with the square of the length, so 8 GB holds one long example at a time.
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--accumulate", type=int, default=16, help="batches per weight update")
     parser.add_argument("--max-tokens", type=int, default=1024)
@@ -70,76 +83,66 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--value-hints", action="store_true", help="list mentioned values")
     parser.add_argument("--max-steps", type=int, default=-1, help="stop early, for a test run")
     parser.add_argument("--train-files", nargs="+", default=["train_spider.json"])
+    parser.add_argument("--init-adapter", type=Path, help="start from this adapter's weights")
+    parser.add_argument("--pack", type=int, default=0, help="padded tokens per batch (sft.pack)")
+    parser.add_argument("--autocast", action="store_true", help="bf16 in the LoRA branch too")
+    parser.add_argument("--gradient-checkpointing", action="store_true", help="much less memory")
     return parser.parse_args()
 
 
 def main() -> None:
     """Train, resuming from the latest checkpoint when there is one."""
     args = parse_args()
-    settings = {key: str(value) for key, value in vars(args).items() if key != "out"}
-    claim_run_folder(args.out, {**settings, "system_prompt": SYSTEM})
+    claim_run_folder(args.out, {**sft.run_settings(vars(args)), "system_prompt": SYSTEM})
 
-    examples = checked_training_examples(args.spider, tuple(args.train_files))
+    examples = sft.checked_training_examples(args.spider, tuple(args.train_files))
     dev = load_split(args.spider, "dev.json")
-    assert_no_leak(
-        [Example(e.question, e.db_id) for e in examples],
-        [Example(e.question, e.db_id) for e in dev],
+    assert_no_leak(sft.for_guard(examples), sft.for_guard(dev))
+    tokenizer = transformers.AutoTokenizer.from_pretrained(args.model)
+    dataset = sft.training_set(
+        tokenizer, args.spider, examples, args.max_tokens, args.sample_rows, args.value_hints, CACHE
     )
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
-    book = PromptBook(args.spider, examples, args.sample_rows, args.value_hints)
-    encoded = [encode(tokenizer, book.schema(e), e, args.max_tokens) for e in examples]
-    dataset = [item for item in encoded if item is not None]
     print(f"{len(dataset)} of {len(examples)} examples fit in {args.max_tokens} tokens.")
 
-    model = AutoModelForCausalLM.from_pretrained(
+    model = transformers.AutoModelForCausalLM.from_pretrained(
         args.model, dtype=torch.bfloat16, device_map="cuda"
     )
-    lora = LoraConfig(
-        r=args.lora_rank,
-        lora_alpha=2 * args.lora_rank,
-        lora_dropout=0.05,
-        target_modules=LORA_TARGETS,
-        task_type="CAUSAL_LM",
-    )
-    model = get_peft_model(model, lora)
+    if args.gradient_checkpointing:
+        model.activation_checkpointing_enable()
+    if args.init_adapter:
+        model = PeftModel.from_pretrained(model, args.init_adapter, is_trainable=True)
+    else:
+        lora = LoraConfig(r=args.lora_rank, lora_alpha=2 * args.lora_rank, **LORA)
+        model = get_peft_model(model, lora)
+    pad = tokenizer.pad_token_id
+    packed = partial(sft.packed_update, pad_id=pad, budget=args.pack, wrap=torch.tensor)
+    padding = transformers.DataCollatorForSeq2Seq(tokenizer, label_pad_token_id=sft.IGNORED)
     trainer = AnswerOnlyTrainer(
         model=model,
         train_dataset=dataset,
-        data_collator=DataCollatorForSeq2Seq(tokenizer, padding=True, label_pad_token_id=IGNORED),
-        args=TrainingArguments(
+        data_collator=packed if args.pack else padding,
+        args=transformers.TrainingArguments(
             output_dir=str(args.out),
             num_train_epochs=args.epochs,
             max_steps=args.max_steps,
-            per_device_train_batch_size=args.batch_size,
-            gradient_accumulation_steps=args.accumulate,
             learning_rate=args.learning_rate,
-            lr_scheduler_type="cosine",
-            warmup_steps=50,
-            logging_steps=10,
-            save_steps=100,
-            save_total_limit=2,
-            bf16=True,
-            seed=0,
-            report_to="none",
+            **sft.update_shape(args.batch_size, args.accumulate, args.pack),
+            **sft.TRAINING,
         ),
     )
     # compute_loss returns a mean, so the trainer has to divide it by the batches per update
     trainer.model_accepts_loss_kwargs = False
+    trainer.autocast = args.autocast
     started = time.monotonic()
     trainer.train(resume_from_checkpoint=any(args.out.glob("checkpoint-*")))
     seconds = add_generation_seconds(args.out, time.monotonic() - started)
 
     model.save_pretrained(args.out / "adapter")
-    log = {
-        "examples": len(dataset),
-        "left_out_too_long": len(examples) - len(dataset),
-        "training_seconds": seconds,
-        "peak_gpu_gb": round(torch.cuda.max_memory_allocated() / 1e9, 2),
-        "steps": trainer.state.log_history,
-    }
-    text = json.dumps(log, indent=2) + "\n"
-    (args.out / "training_log.json").write_text(text, encoding="utf-8", newline="\n")
-    print(f"Done in {seconds} s, peak GPU memory {log['peak_gpu_gb']} GB.")
+    peaks = (torch.cuda.max_memory_allocated(), torch.cuda.max_memory_reserved())
+    steps = trainer.state.log_history
+    log = sft.write_training_log(args.out, len(examples), len(dataset), seconds, peaks, steps)
+    print(f"Done in {seconds} s, peak GPU memory {log['peak_gpu_gb']} GB allocated.")
+    print(f"Reserved at most {log['peak_reserved_gb']} GB.")
 
 
 if __name__ == "__main__":

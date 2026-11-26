@@ -8,6 +8,11 @@ command always gives the same slice.
     python -m minnow.synsql data/synsql data/spider --databases 6000 --per-database 2
 
 The questions go to train_synsql.json and each database to database/synsql_<name>/.
+
+More questions on the databases of slices that exist already, with nothing unpacked again:
+
+    python -m minnow.synsql data/synsql data/spider --more-from train_synsql.json
+        --per-level 3 --out-file train_synsql_more.json
 """
 
 import argparse
@@ -17,6 +22,7 @@ import re
 import sqlite3
 import sys
 import zipfile
+from collections import Counter
 from collections.abc import Iterable, Iterator, Sequence
 from contextlib import closing
 from pathlib import Path
@@ -157,14 +163,43 @@ def write_slice(
                 continue
             chosen.extend(runnable)
             used += 1
-    rows = [{"question": e.question, "query": e.query, "db_id": e.db_id} for e in chosen]
-    text = json.dumps(rows, indent=1) + "\n"
-    (spider / out_file).write_text(text, encoding="utf-8", newline="\n")
+    write_questions(spider / out_file, chosen)
     return chosen
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    """Build the slice and print how many questions and databases it has."""
+def write_questions(path: Path, examples: Sequence[SpiderExample]) -> None:
+    """Write questions as a question file in Spider's form."""
+    rows = [{"question": e.question, "query": e.query, "db_id": e.db_id} for e in examples]
+    path.write_text(json.dumps(rows, indent=1) + "\n", encoding="utf-8", newline="\n")
+
+
+def more_questions(
+    items: Iterable[dict], slices: Sequence[SpiderExample], spider: Path, per_level: int
+) -> list[SpiderExample]:
+    """Find up to per_level more runnable questions per level on each database of the slices.
+
+    Nothing is unpacked: only databases the slices already use are looked at. A question the
+    slices already ask on a database is passed over, and so is one whose query does not run.
+    The result is grouped by database in a fixed order, so it is the same on every call.
+    """
+    asked = {(example.db_id, example.question) for example in slices}
+    kept: dict[str, list[SpiderExample]] = {example.db_id: [] for example in slices}
+    count: Counter[tuple[str, str]] = Counter()
+    for item in items:
+        db_id, level = PREFIX + item["db_id"], item["sql_complexity"]
+        if db_id not in kept or count[db_id, level] == per_level or not looks_like_spider(item):
+            continue
+        example = SpiderExample(item["question"], one_line(item["sql"]), db_id)
+        if (db_id, example.question) in asked:
+            continue
+        asked.add((db_id, example.question))
+        if _runs(database_path(spider, db_id), example.query):
+            count[db_id, level] += 1
+            kept[db_id].append(example)
+    return [example for db_id in fixed_order(kept) for example in kept[db_id]]
+
+
+def _options(argv: Sequence[str] | None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Add a SynSQL slice to a Spider folder.")
     parser.add_argument("synsql", type=Path, help="folder with data.json and databases.zip")
     parser.add_argument("spider", type=Path, help="unpacked Spider folder to add to")
@@ -172,11 +207,27 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--per-database", type=int, default=2)
     parser.add_argument("--out-file", default=OUT_FILE, help="question file to write")
     parser.add_argument("--exclude", nargs="*", default=[], help="slices whose databases to skip")
+    parser.add_argument("--more-from", nargs="*", default=[], help="slices to add questions to")
+    parser.add_argument("--per-level", type=int, default=3, help="most per level with --more-from")
     args = parser.parse_args(argv)
-    exclude = frozenset(e.db_id for name in args.exclude for e in load_split(args.spider, name))
-    kept = candidates(read_items(args.synsql / "data.json"), args.per_database)
-    archive = args.synsql / "databases.zip"
-    chosen = write_slice(kept, archive, args.spider, args.databases, args.out_file, exclude)
+    if args.out_file in args.more_from:
+        parser.error("--out-file would overwrite a slice given to --more-from")
+    return args
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    """Build the slice and print how many questions and databases it has."""
+    args = _options(argv)
+    items = read_items(args.synsql / "data.json")
+    if args.more_from:
+        slices = [e for name in args.more_from for e in load_split(args.spider, name)]
+        chosen = more_questions(items, slices, args.spider, args.per_level)
+        write_questions(args.spider / args.out_file, chosen)
+    else:
+        exclude = frozenset(e.db_id for name in args.exclude for e in load_split(args.spider, name))
+        kept = candidates(items, args.per_database)
+        archive = args.synsql / "databases.zip"
+        chosen = write_slice(kept, archive, args.spider, args.databases, args.out_file, exclude)
     used = len({example.db_id for example in chosen})
     print(f"{len(chosen)} questions on {used} databases written to {args.spider / args.out_file}")
     return 0

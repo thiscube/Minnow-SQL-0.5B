@@ -1,16 +1,33 @@
 import json
+import shutil
 
 import pytest
 
+from minnow import sft
 from minnow.guard import LeakError
-from minnow.sft import IGNORED, checked_training_examples, encode
+from minnow.prompts import PromptBook
+from minnow.sft import (
+    IGNORED,
+    checked_training_examples,
+    encode,
+    pack,
+    packed_update,
+    padded,
+    run_settings,
+    training_set,
+    update_shape,
+    write_training_log,
+)
 from minnow.spider import SpiderExample
 
 EXAMPLE = SpiderExample("How many singers?", "SELECT count(*) FROM singer", "concert")
+NAMED = SpiderExample("How old is Ana?", "SELECT age FROM singer WHERE name = 'Ana'", "concert")
 
 
 class CharTokenizer:
     """A stand-in tokenizer: one token per character, with a simple chat layout."""
+
+    name_or_path = "chars"
 
     def __init__(self, answer_first=False):
         self.answer_first = answer_first
@@ -95,3 +112,153 @@ def test_answer_that_adds_no_tokens_is_refused():
 
     with pytest.raises(ValueError, match="do not follow the prompt"):
         encode(tokenizer, "schema", empty, max_tokens=10_000)
+
+
+@pytest.fixture
+def spider(tmp_path, database):
+    folder = tmp_path / "spider"
+    (folder / "database" / "concert").mkdir(parents=True)
+    shutil.copy(database, folder / "database" / "concert" / "concert.sqlite")
+    return folder
+
+
+def item(length):
+    ids = list(range(1, length + 1))
+    return {"input_ids": ids, "attention_mask": [1] * length, "labels": [IGNORED, *ids[1:]]}
+
+
+def test_training_set_encodes_every_example_that_fits_in_order(spider):
+    tokenizer = CharTokenizer()
+    book = PromptBook(spider, [NAMED, EXAMPLE])
+
+    whole = training_set(tokenizer, spider, [NAMED, EXAMPLE], max_tokens=10_000)
+
+    assert whole == [encode(tokenizer, book.schema(e), e, 10_000) for e in (NAMED, EXAMPLE)]
+    shortest = min(len(encoded["input_ids"]) for encoded in whole)
+    assert training_set(tokenizer, spider, [NAMED, EXAMPLE], max_tokens=shortest) == whole[1:]
+
+
+def test_training_set_with_hints_names_the_column_of_a_mentioned_value(spider):
+    plain = training_set(CharTokenizer(), spider, [NAMED], 10_000)
+    hinted = training_set(CharTokenizer(), spider, [NAMED], 10_000, value_hints=True)
+
+    assert "singer.name = 'Ana'" in decode(hinted[0]["input_ids"])
+    assert "singer.name = 'Ana'" not in decode(plain[0]["input_ids"])
+
+
+def test_saved_training_set_is_read_back_without_opening_the_databases(spider, tmp_path):
+    cache = tmp_path / "cache"
+    first = training_set(CharTokenizer(), spider, [NAMED, EXAMPLE], 10_000, cache=cache)
+    shutil.rmtree(spider)
+
+    again = training_set(CharTokenizer(), spider, [NAMED, EXAMPLE], 10_000, cache=cache)
+
+    assert again == first
+    assert len(first) == 2
+    assert [path.suffix for path in cache.iterdir()] == [".json"]
+
+
+def test_saved_training_set_is_not_reused_for_other_examples_or_settings(spider, tmp_path):
+    cache = tmp_path / "cache"
+    other_model = CharTokenizer()
+    other_model.name_or_path = "other"
+
+    training_set(CharTokenizer(), spider, [EXAMPLE], 10_000, cache=cache)
+    training_set(CharTokenizer(), spider, [EXAMPLE, NAMED], 10_000, cache=cache)
+    training_set(CharTokenizer(), spider, [EXAMPLE], 9_000, cache=cache)
+    training_set(CharTokenizer(), spider, [EXAMPLE], 10_000, sample_rows=1, cache=cache)
+    training_set(CharTokenizer(), spider, [EXAMPLE], 10_000, value_hints=True, cache=cache)
+    training_set(other_model, spider, [EXAMPLE], 10_000, cache=cache)
+    shutil.copytree(spider, tmp_path / "other")
+    training_set(CharTokenizer(), tmp_path / "other", [EXAMPLE], 10_000, cache=cache)
+
+    assert len(list(cache.iterdir())) == 7
+
+
+def test_saved_training_set_is_not_reused_after_the_prompt_code_changes(
+    spider, tmp_path, monkeypatch
+):
+    cache = tmp_path / "cache"
+    training_set(CharTokenizer(), spider, [EXAMPLE], 10_000, cache=cache)
+
+    monkeypatch.setattr(sft, "_PROMPT_CODE", ("prompt.py",))
+    training_set(CharTokenizer(), spider, [EXAMPLE], 10_000, cache=cache)
+
+    assert len(list(cache.iterdir())) == 2
+
+
+def test_pack_starts_with_the_longest_and_fills_each_batch_up_to_the_budget():
+    assert pack([100, 400, 200, 300, 50], budget=600) == [[1], [3, 2], [0, 4]]
+
+
+def test_pack_gives_an_example_over_the_budget_a_batch_of_its_own():
+    assert pack([900, 10], budget=500) == [[0], [1]]
+
+
+def test_pack_with_a_tiny_budget_keeps_one_example_per_batch():
+    assert pack([3, 9, 5], budget=1) == [[1], [2], [0]]
+
+
+def test_padding_is_on_the_right_masked_and_never_learned():
+    assert padded([item(3), item(1)], pad_id=0, wrap=list) == {
+        "input_ids": [[1, 2, 3], [1, 0, 0]],
+        "attention_mask": [[1, 1, 1], [1, 0, 0]],
+        "labels": [[IGNORED, 2, 3], [IGNORED, IGNORED, IGNORED]],
+    }
+
+
+def test_packed_update_holds_every_example_once_in_batches_that_fit():
+    batches = packed_update([item(2), item(5), item(1), item(2)], pad_id=0, budget=6, wrap=tuple)
+
+    assert [batch["input_ids"] for batch in batches] == [
+        ([1, 2, 3, 4, 5],),
+        ([1, 2], [1, 2], [1, 0]),
+    ]
+    assert batches[1]["attention_mask"] == ([1, 1], [1, 1], [1, 0])
+
+
+def test_run_settings_of_an_old_command_are_what_old_runs_saved():
+    options = {"out": "outputs/run", "epochs": 2.0, "value_hints": True, "max_steps": -1}
+    unused = {"init_adapter": None, "pack": 0, "autocast": False, "gradient_checkpointing": False}
+
+    assert run_settings({**options, **unused}) == {
+        "epochs": "2.0",
+        "value_hints": "True",
+        "max_steps": "-1",
+    }
+
+
+def test_run_settings_record_the_later_options_once_they_are_used():
+    used = {"sample_rows": 0, "pack": 4096, "autocast": True, "gradient_checkpointing": False}
+
+    assert run_settings(used) == {"sample_rows": "0", "pack": "4096", "autocast": "True"}
+
+
+def test_plain_update_keeps_its_batch_size_and_accumulates():
+    assert update_shape(1, 16, 0) == {
+        "per_device_train_batch_size": 1,
+        "gradient_accumulation_steps": 16,
+    }
+
+
+def test_packed_update_is_handed_over_whole():
+    assert update_shape(1, 16, 4096) == {
+        "per_device_train_batch_size": 16,
+        "gradient_accumulation_steps": 1,
+    }
+
+
+def test_training_log_is_saved_with_sizes_time_and_peak_memory(tmp_path):
+    steps = [{"loss": 0.5, "step": 10}]
+
+    log = write_training_log(tmp_path, 10, 8, 91, (2_010_000_000, 3_094_000_000), steps)
+
+    assert log == {
+        "examples": 8,
+        "left_out_too_long": 2,
+        "training_seconds": 91,
+        "peak_gpu_gb": 2.01,
+        "peak_reserved_gb": 3.09,
+        "steps": steps,
+    }
+    assert json.loads((tmp_path / "training_log.json").read_text(encoding="utf-8")) == log
