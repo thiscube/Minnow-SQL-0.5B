@@ -14,15 +14,17 @@ My PC:
 - **RAM:** 32 GB
 - **System:** Windows 10
 
+You can download the model on [Hugging Face](https://huggingface.co/cubehugging/Minnow-SQL-0.5B).
+
 ## Results
 
-Tested on [Spider][spider], a standard benchmark. An answer only counts if the query runs and returns the right rows.
+Tested on [Spider][spider], a standard SQL benchmark. An answer only counts if the query runs and returns the right rows.
 
 <!-- standing:start -->
 
-- **Half the mistakes:** 55 of 100 questions wrong before training, now 29.
-- **1.6 times as many right:** 469 of 1,034 before training, now 736.
-- **77% on questions it never saw:** the published SLM-SQL-0.5B, same size, reports 73.5% on Spider test.
+- **Half the mistakes.** It now gets 29 of every 100 questions wrong. Before training it got 55 wrong, more than half.
+- **1.6 times as many right.** It answers 736 of the 1,034 questions correctly, up from 469.
+- **77% on questions it had never seen.** SLM-SQL-0.5B, a published model of the same size, reports 73.5%.
 
 |  | Dev | Test A | Test B |
 | --- | ---: | ---: | ---: |
@@ -34,31 +36,28 @@ Tested on [Spider][spider], a standard benchmark. An answer only counts if the q
 
 Test B is the fairest score. I set those questions aside, chose nothing on them, and scored them once at the very end.
 
-> [!NOTE]
-> Still open: putting the model on Hugging Face. See [what is left](#what-is-left).
-
 ## The goal
 
-Reach at least 70% execution accuracy on the Spider development set, with a model this small, on one consumer graphics card. "Execution accuracy" means the share of questions where the model's query returns the same rows as the correct query.
+I wanted at least 70% on Spider's dev set, with a model this small, on one normal graphics card. The score is execution accuracy: the share of questions where the model's query returns the same rows as the correct one.
 
-That goal is reached.
+I got there.
 
 ## How I got there
 
-Each step was measured on the same 1,034 questions, so the gains can be compared.
+I measured every step on the same 1,034 questions, so the steps can be compared fairly.
 
-1. **Start: 45%.** The untouched model. Its most common mistake was asking for a column that does not exist.
-2. **Teach it with examples: 61%.** I showed it about 6,000 questions with their correct queries from Spider's training set. This is ordinary fine-tuning, done with LoRA, which trains a small add-on and leaves the original model as it is.
-3. **Let it try several times: 67%.** The model writes 15 different queries for a question. All of them are run, and the result that most of them agree on wins. Wrong queries tend to be wrong in different ways, and right ones agree.
-4. **Tell it what is in the database: 69%.** If the question says "France" and a column contains the value "France", the prompt now says so. I also added 12,000 machine-written practice questions from [SynSQL-2.5M][omnisql].
-5. **Let three models vote: 73%.** Three models trained in slightly different ways each give their answer, and the majority wins. An answer that returns nothing only wins when no other answer is left.
-6. **Repair queries that fail: 74%.** Sometimes the winning query asks a table for a column that lives in another table. A small program then looks the column up in the database and points the query at the right table. It never sees the correct answer. With this, one model alone gets 71% and the three-model vote 74%.
+1. **Starting point: 45%.** The model as it comes. Its most common mistake was asking for a column that doesn't exist.
+2. **Training on examples: 61%.** I showed it about 6,000 questions from Spider's training set, each with the correct query. I used LoRA, which trains a small add-on and leaves the original model untouched.
+3. **Letting it try several times: 67%.** The model writes 15 different queries for each question. I run all of them, and the result most of them agree on wins. Wrong queries tend to be wrong in different ways, while right ones agree.
+4. **Telling it what's in the database: 69%.** If the question says "France" and a column holds the value "France", the prompt now points that out. I also added 12,000 machine-written practice questions from [SynSQL-2.5M][omnisql].
+5. **Letting three models vote: 73%.** I trained three models in slightly different ways, and the answer most of them give wins. An answer that returns nothing only wins if there's nothing else left.
+6. **Fixing queries that fail: 74%.** Sometimes the winning query asks a table for a column that lives in a different table. A small program looks the column up in the database and points the query at the right table. It never sees the correct answer. With this, one model on its own gets 71%, and the three-model vote gets 74%.
 
-Not everything worked. More training data alone did not help much. A second round of training on questions that need several tables did not help either, and neither did reinforcement learning (rewarding the model when its query returns the right rows). All of it is written up, with numbers, in [FINDINGS.md](FINDINGS.md).
+Not everything worked. Adding more training data on its own barely helped. A second round of training on questions that need several tables didn't help either, and neither did reinforcement learning (rewarding the model whenever its query returns the right rows). I wrote all of it up, with numbers, in [FINDINGS.md](FINDINGS.md).
 
-## Results
+## Every run
 
-Every run I measured, in order. The chart and the table below are made by a script from the runs' own files, so nobody types a score by hand. [results.md](results.md) also shows what kinds of mistakes each run made.
+Here's every run I measured, in order. A script builds the chart and the table from each run's own files, so no score is typed by hand. [results.md](results.md) also breaks down what kinds of mistakes each run made.
 
 <!-- results:start -->
 
@@ -101,47 +100,48 @@ Every run I measured, in order. The chart and the table below are made by a scri
 
 ### How to read the numbers
 
-- **Correct** means the query runs and returns the same rows as the reference query. The order of rows only matters when the question asks for a sorted answer.
+- **Correct means the query runs and returns the same rows as the correct query.** Row order only matters when the question asks for a sorted answer.
 - **A wrong query can get lucky.** Each question is checked on one database. If the right answer is "nothing" and a wrong query also returns nothing, it passes. results.md counts how often that could have happened.
-- **One point up or down means little.** Scoring 200 questions again with a different batch size changed 3 verdicts. Every run uses the same batch size of 16, and I only call something better when it wins by clearly more than a point.
-- **The hints are not cheating.** They come from matching words of the question against the text in the database. The correct query is never used.
-- **The dev score flatters a little.** I picked models and settings while looking at dev scores, so dev is no longer a fair exam. To fix that, I split Spider's separate test set in two by database. One half (1,230 questions) is for choosing settings such as the voting rule. The other half (917 questions) was scored once, at the very end, when nothing was left to choose. That is the last column of the table at the top, and the answers behind it are in [heldout/](heldout).
+- **One point up or down doesn't mean much.** When I scored 200 questions again with a different batch size, 3 answers flipped. So every run uses the same batch size of 16, and I only call something better when it wins by clearly more than a point.
+- **The hints aren't cheating.** They come from matching words in the question against text stored in the database. The correct query is never used.
+- **The dev score is a little flattering.** I picked models and settings while looking at dev scores, so dev isn't a fair exam anymore. To fix that, I split Spider's separate test set in two, by database. Test A (1,230 questions) is for choosing settings like the voting rule. Test B (917 questions) was scored once, at the very end, when there was nothing left to choose. The answers behind both are in [heldout/](heldout).
 
 ### How it compares to published work
 
-| Model | Training | Spider dev EX (%) | Spider test EX (%) | Source |
+| Model | Training | Spider dev (%) | Spider test (%) | Source |
 | --- | --- | ---: | ---: | --- |
 | Qwen2.5-Coder-0.5B | none | 34.5 | | [model card][thesis] |
 | Qwen2.5-Coder-0.5B | fine-tuned | 39.2 | | [model card][thesis] |
 | Qwen2.5-Coder-0.5B-Instruct | none | 44.07 | 44.31 | [SLM-SQL][slm-sql] |
 | SLM-SQL-0.5B | SFT and RL on SynSQL-derived data | 72.08 | 73.50 | [SLM-SQL][slm-sql] |
 
-EX is short for execution accuracy. SLM-SQL is the strongest published result I know of for this exact base model. My numbers land in the same range, but this is not a clean head-to-head:
+SLM-SQL is the strongest published result I know of for this exact base model. My numbers land in the same range, but it isn't a clean head-to-head:
 
-- I did not rerun their models. Their rows are copied from their papers.
-- My best numbers come from three models voting. Theirs is one model with its own way of picking among several tries. My single model is the row above the vote in the table at the top.
-- Their test score covers all 2,147 Spider test questions. Mine are split in two: the 1,230 I used to choose settings and the 917 I scored once.
+- I didn't rerun their models. Their numbers are copied from their papers.
+- My best numbers come from three models voting. Theirs come from one model with its own way of picking among several tries. My single model is the "My best model" row in the table at the top.
+- Their test score covers all 2,147 Spider test questions. Mine is split into Test A (1,230) and Test B (917).
 - I check answers with my own, simpler checker on the original Spider databases. The official test suite is stricter.
 - The two model-card rows start from a slightly different base model.
 
-## What is left
+## What's done
 
 - [x] Project checks: tests, code style, and a guard against training on test questions
-- [x] Measure the untouched model: 45.36%
+- [x] Measure the model as it comes: 45.36%
 - [x] First fine-tune on Spider's training set: 60.64%
 - [x] Improvements: more data, value hints, voting, reinforcement learning
-- [x] Final score on the 917 held-back questions: the last column of the table at the top
-- [ ] Release: the model on Hugging Face, a demo and a write-up
+- [x] Final score on Test B, the 917 held-back questions
+- [x] Release the model on [Hugging Face](https://huggingface.co/cubehugging/Minnow-SQL-0.5B)
+- [ ] A demo and a write-up
 
 ## Limits I set myself
 
 - One NVIDIA RTX 3060 Ti with 8 GB of memory, and 32 GB of RAM.
-- At most $15 for rented graphics cards. Spent so far: $0.
+- At most $15 on rented graphics cards. So far I've spent $0.
 - Spider dev is only ever used for scoring. The model never trains on it.
 
 ## Run it yourself
 
-Everything fits on one 8 GB graphics card. If you stop a training run, the same command picks it up where it stopped.
+Everything fits on one 8 GB graphics card. If you stop a training run, running the same command again picks it up where it left off.
 
 ### Setup
 
@@ -162,23 +162,23 @@ Everything fits on one 8 GB graphics card. If you stop a training run, the same 
 ### Score a model
 
 ```bash
-python scripts/baseline.py                                    # the untouched base model
+python scripts/baseline.py                                    # the model as it comes
 python scripts/baseline.py --adapter outputs/sft/adapter      # a model you trained
 ```
 
 | Option | What it does |
 | --- | --- |
-| `--value-hints` | tells the model which question words appear in the database |
+| `--value-hints` | tells the model which words from the question appear in the database |
 | `--samples 15` | writes 15 queries per question and lets them vote |
 | `--share-prompt` | reads each prompt once for all 15 queries, about 5 times faster |
 | `--sample-rows 1` | shows the model one example row of every table |
 | `--split test_val.json` | scores a different question file from the Spider folder |
 
-Scoring the untouched model takes about 5 minutes and 3 GB of GPU memory on an RTX 3060 Ti.
+Scoring the base model takes about 5 minutes and 3 GB of GPU memory on an RTX 3060 Ti.
 
 ### Train a model
 
-Learning from examples (supervised fine-tuning with LoRA):
+Training on examples (supervised fine-tuning with LoRA):
 
 ```bash
 python scripts/train_sft.py --train-files train_spider.json train_synsql.json --value-hints --epochs 2 --pack 4096 --gradient-checkpointing --autocast --out outputs/sft
@@ -186,13 +186,13 @@ python scripts/train_sft.py --train-files train_spider.json train_synsql.json --
 
 The last three options make it about 3 times faster and keep it at 3 GB of GPU memory. Add `--init-adapter outputs/sft/adapter` to keep training a model you already have.
 
-Learning from trial and error (reinforcement learning), starting from a model trained as above:
+Training by trial and error (reinforcement learning), starting from a model trained as above:
 
 ```bash
 python scripts/train_grpo.py --adapter outputs/sft/adapter --out outputs/grpo --value-hints --learning-rate 5e-6
 ```
 
-Here the model writes 8 queries per question. A query that returns the right rows scores 1, one that only runs scores 0.1, and the model is nudged toward the better ones.
+Here the model writes 8 queries per question. A query that returns the right rows scores 1, one that only runs scores 0.1, and the model gets nudged toward the better ones.
 
 ### Let several models vote
 
@@ -200,15 +200,15 @@ Here the model writes 8 queries per question. A query that returns the right row
 python -m minnow.combine outputs/vote outputs/run-a outputs/run-b outputs/run-c --spider data/spider --prefer-rows
 ```
 
-Takes the answers of the runs you list and keeps the result most of them agree on. `--prefer-rows` makes an empty result the last choice.
+This takes the answers of the runs you list and keeps the result most of them agree on. `--prefer-rows` makes an empty result the last choice.
 
-### Repair queries that fail
+### Fix queries that fail
 
 ```bash
 python -m minnow.repair outputs/run-repaired outputs/run --spider data/spider
 ```
 
-Votes again over the run's saved queries with empty results as the last choice. If the winner still fails because it names a column that is not there, it tries to reach that column another way: the right table alias, a join to the table that has it, or the closest column name. It only ever looks at the database, never at the correct answer.
+This votes again over the run's saved queries, with empty results as the last choice. If the winner still fails because it names a column that isn't there, it tries to reach that column another way: the right table alias, a join to the table that has it, or the closest column name. It only ever looks at the database, never at the correct answer.
 
 ### Split the Spider test set
 
@@ -216,11 +216,11 @@ Votes again over the run's saved queries with empty results as the last choice. 
 python -m minnow.splits data/spider
 ```
 
-Writes `test_val.json` (for choosing settings) and `test_final.json` (scored once at the end).
+This writes `test_val.json` (Test A, for choosing settings) and `test_final.json` (Test B, scored once at the end).
 
 ## How the numbers stay honest
 
-A score is easy to get wrong by accident, so a few things are automatic.
+It's easy to get a score wrong by accident, so a few things are automatic.
 
 **No score is typed by hand.** Three small tools turn a run's files into everything reported here:
 
@@ -230,9 +230,9 @@ python -m minnow.compare results/baseline outputs/run         # which questions 
 python -m minnow.runlog add outputs/run --change "..."        # log the run and rebuild the reports
 ```
 
-`runlog add` rebuilds `results.md`, the chart and the results table in this README. `python -m minnow.runlog check` fails if any of them no longer matches the runs.
+`runlog add` rebuilds `results.md`, the chart and the score tables in this README. `python -m minnow.runlog check` fails if any of them no longer matches the runs.
 
-**The model cannot train on the exam.** `minnow.guard` checks that the training data shares no question and no database with Spider dev. Every training script has to call it before it starts, and a test fails if one does not.
+**The model can't train on the exam.** `minnow.guard` checks that the training data shares no question and no database with Spider dev. Every training script has to call it before it starts, and a test fails if one doesn't.
 
 ```bash
 python -m minnow.guard train.json dev.json
@@ -242,7 +242,7 @@ Both files are JSON lists of objects with `question` and `db_id` fields, the for
 
 ## Dashboard
 
-A local page to browse every logged run: scores, kinds of mistakes, accuracy per database, and each question with the model's query next to the correct one.
+A local page for browsing every logged run: scores, kinds of mistakes, accuracy per database, and each question with the model's query next to the correct one.
 
 ```bash
 python scripts/dashboard.py
@@ -271,7 +271,7 @@ python -m minnow.runlog check
 
 On Windows, `powershell -File scripts/verify.ps1` runs all of them in one go. The same checks run on GitHub for every push to `main`. They cover:
 
-- code style and linting with [ruff](https://docs.astral.sh/ruff/), with limits on how long and tangled a function may get
+- code style and linting with [ruff](https://docs.astral.sh/ruff/), with limits on how long and tangled a function can get
 - unit tests, which have to cover at least 90% of `minnow/`
 - structure tests: every module has a test file, files stay small, and training scripts call the guard
 - the results log: every reported number matches the runs' files
@@ -291,7 +291,7 @@ FINDINGS.md   what each experiment showed and what I decided because of it
 
 ## License
 
-The code is released under the [MIT License](LICENSE). The base model and the datasets come with their own licenses.
+The code is under the [MIT License](LICENSE). The base model and the datasets come with their own licenses.
 
 ## References
 
