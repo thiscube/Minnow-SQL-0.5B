@@ -159,6 +159,7 @@ python scripts/baseline.py --adapter outputs/sft/adapter      # a model you trai
 | --- | --- |
 | `--value-hints` | tells the model which question words appear in the database |
 | `--samples 15` | writes 15 queries per question and lets them vote |
+| `--share-prompt` | reads each prompt once for all 15 queries, about 5 times faster |
 | `--sample-rows 1` | shows the model one example row of every table |
 | `--split test_val.json` | scores a different question file from the Spider folder |
 
@@ -169,8 +170,10 @@ Scoring the untouched model takes about 5 minutes and 3 GB of GPU memory on an R
 Learning from examples (supervised fine-tuning with LoRA):
 
 ```bash
-python scripts/train_sft.py --train-files train_spider.json train_synsql.json --value-hints --epochs 2 --out outputs/sft
+python scripts/train_sft.py --train-files train_spider.json train_synsql.json --value-hints --epochs 2 --pack 4096 --gradient-checkpointing --autocast --out outputs/sft
 ```
+
+The last three options make it about 3 times faster and keep it at 3 GB of GPU memory. Add `--init-adapter outputs/sft/adapter` to keep training a model you already have.
 
 Learning from trial and error (reinforcement learning), starting from a model trained as above:
 
@@ -187,6 +190,14 @@ python -m minnow.combine outputs/vote outputs/run-a outputs/run-b outputs/run-c 
 ```
 
 Takes the answers of the runs you list and keeps the result most of them agree on. `--prefer-rows` makes an empty result the last choice.
+
+### Repair queries that fail
+
+```bash
+python -m minnow.repair outputs/run-repaired outputs/run --spider data/spider
+```
+
+Votes again over the run's saved queries with empty results as the last choice. If the winner still fails because it names a column that is not there, it tries to reach that column another way: the right table alias, a join to the table that has it, or the closest column name. It only ever looks at the database, never at the correct answer.
 
 ### Split the Spider test set
 

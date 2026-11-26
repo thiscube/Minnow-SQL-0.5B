@@ -97,4 +97,7 @@ def sample_shared(
             answers = tokenizer.batch_decode(output[:, ids.shape[1] :], skip_special_tokens=True)
             rounds += by_round(answers, copies)
             del cache, output
+            # without this PyTorch keeps every freed cache size and the card overflows
+            if ids.is_cuda:
+                torch.cuda.empty_cache()
     return rounds

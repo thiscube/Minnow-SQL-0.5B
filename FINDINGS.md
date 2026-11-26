@@ -10,6 +10,24 @@ Each entry has a kind:
 
 ## Timeline
 
+### 2026-11-26 · Decision · Repair first, training only as a gated side bet
+
+- **What:** Three independent analyses of the validation questions (scoring-time fixes, training and data, and a red team attacking the plan) each had to bring measured proof and then agree on one plan for the night.
+- **Evidence:** SLM-SQL's Table 3: the same base model trained on 916,156 synthetic examples, supervised only, reaches 65.31% on Spider dev with 16 samples. This project's model has 68.57% with 12,215 examples plus value hints, and doubling our data earlier moved greedy dev by 1.2 points. A member that was 56 questions better lifted the line-up by only 13. Against that, two scoring fixes measured +18 questions on the validation line-up without any training (next entries).
+- **So what:** Agreed plan: ship the two scoring fixes; drop more candidates, pickers and value repair; spend the GPU first on the candidates that were missing; then one training run on join-heavy SynSQL questions, continued from the hints-trained adapter and kept only if greedy validation reaches 852 of 1,230 (from 830) and the 15-candidate result beats the old one by 12 questions or more.
+
+### 2026-11-26 · Finding · Joins are the weak spot and picking is not: 35% right with two or more joins
+
+- **What:** The failures of the best single model (15 candidates) on the 1,230 validation questions were broken down by what the reference query needs, by database, and by whether any candidate was right. 60 random failures were also read one by one and filed under a root cause.
+- **Evidence:** Right answers by joins in the reference: none 84.8% (630 of 743), one 59.2% (181 of 306), two or more 35.4% (64 of 181). On questions with two or more joins 49% of all candidates do not run. In 278 of the 355 failures none of the 15 candidates is right; across the three line-up models 231 questions have no right candidate. The vote is the same with 10, 12 and 15 candidates (875). A learned picker, tested with one database left out at a time, gets 899 to 901 against 901, and 16 ways of weighting the models give 895 to 906. Root causes of the 60 read failures: join path 17, wrong column or table 16, DISTINCT 10, nesting or set operation 4, select columns 4, text value 3, reference itself wrong 3, sort or limit 2, grouping 1. Five databases (bakery_1, cre_Doc_and_collections, aan_1, address_1, real_estate_rentals) hold 201 of the line-up's 329 failures. Noise, from a paired bootstrap: a difference between two votes needs 12 to 16 questions to be real, between two models 21 to 23. The line-up change of 2026-11-25 from 72.20% to 73.25% (+13) is therefore not proven.
+- **So what:** More candidates, smarter picking and re-weighting are dropped: the right answer is usually not among the candidates at all. What can still move the score is writing better queries for multi-table questions, and repairing the ones that fail for a visible reason.
+
+### 2026-11-26 · Improvement · Training is 3 times faster and scoring with 15 candidates 5 times faster
+
+- **What:** Two measured speed-ups. Training now packs the 16 examples of an update into batches of at most 4,096 padded tokens, recomputes activations instead of storing them (gradient checkpointing) and runs the adapter's own layers in bf16 too. Scoring with several candidates encodes each prompt once and samples all candidates from that one encoding (`--share-prompt`).
+- **Evidence:** Training: 0.18 s per example against 0.55 s, 3.1 GB reserved against a full card. The losses of the first 30 updates match the old way (0.3631, 0.3320, 0.2886 against 0.3634, 0.3331, 0.2902). The old way kept freed memory: 10.4 GB reserved after 3 updates on an 8 GB card, and 28 s per update in tonight's test. That overflow, and not the longer prompts, is probably why the hints run of 2026-11-25 needed 8.75 s per update. Scoring: 96 validation questions with 15 candidates in 52 s against 268 s; the greedy answer is unchanged and the verdict is the same on 95 of 96.
+- **So what:** A training run that took 3 h 40 min now fits in about 70 minutes, and a 15-candidate run takes about 10 minutes instead of 50 to 60. Never train without `--pack` on this card. Runs sampled with `--share-prompt` use new random draws, so compare them with each other, not question by question with older runs.
+
 ### 2026-11-25 · Improvement · Training with value hints gives the best single model and lifts the vote to 73.31% on dev
 
 - **What:** A fresh adapter was trained on Spider train plus the SynSQL slice with value hints in the training prompts (`sft-hintstrained`, 2 epochs, 1,506 updates, 3 hours 40 minutes, peak 5.21 GB). Before, hints were only added at scoring time to a model that had never seen them. The new model was then tried in the three-model vote on `test_val.json`.
