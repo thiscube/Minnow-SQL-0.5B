@@ -214,6 +214,42 @@ def test_block_replaces_only_what_is_between_the_markers():
     )
 
 
+def describe_score_table(root):
+    """Add a heldout/standing.json that names the logged baseline run."""
+    table = {
+        "columns": [{"title": "Spider dev", "folder": "results"}],
+        "rows": [{"label": "Before training", "runs": ["baseline"]}],
+    }
+    (root / "heldout").mkdir()
+    (root / "heldout/standing.json").write_text(json.dumps(table), encoding="utf-8")
+
+
+def test_render_fills_the_score_table_when_the_repository_describes_one(logged):
+    describe_score_table(logged)
+    path = logged / "README.md"
+    markers = "\n<!-- standing:start -->\nold\n<!-- standing:end -->\n"
+    path.write_text(path.read_text(encoding="utf-8") + markers, encoding="utf-8", newline="\n")
+
+    stale = check(logged)
+    render(logged)
+
+    assert stale == ["README.md is out of date: run python -m minnow.runlog render"]
+    assert path.read_text(encoding="utf-8").endswith(
+        "<!-- standing:start -->\n\n"
+        "|  | Spider dev (4 questions) |\n| --- | ---: |\n| Before training | 50.00% |\n"
+        "\n<!-- standing:end -->\n"
+    )
+    assert check(logged) == []
+
+
+def test_score_table_needs_its_own_markers_in_the_readme(logged):
+    describe_score_table(logged)
+
+    (problem,) = check(logged)
+
+    assert problem.startswith("README.md needs the lines <!-- standing:start --> and")
+
+
 def test_render_restores_every_generated_file_byte_for_byte(logged):
     before = {name: (logged / name).read_bytes() for name in GENERATED}
     (logged / "results.md").unlink()

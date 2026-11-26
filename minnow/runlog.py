@@ -8,8 +8,9 @@ Run these from the repository root:
 
 "add" logs a run folder that holds predictions, outcomes and a summary, and copies its files
 into results/. "render" rewrites results.md, results/chart.svg and the results block of
-README.md. "check" changes nothing: it exits with 0 when all of that is up to date and with 1
-when it is not. Exit code 2 means the command could not do its work.
+README.md, and the README's score table when heldout/standing.json describes one. "check"
+changes nothing: it exits with 0 when all of that is up to date and with 1 when it is not.
+Exit code 2 means the command could not do its work.
 """
 
 import argparse
@@ -31,6 +32,7 @@ from minnow.runfiles import (
     read_text,
     verified_counts,
 )
+from minnow.standing import STANDING_END, STANDING_FILE, STANDING_START, standing_table
 
 TARGET_ACCURACY = 70.0
 PUBLISHED_ACCURACY = 72.08
@@ -79,15 +81,21 @@ def chart_svg(runs: Sequence[Run]) -> str:
     return bar_chart(_CHART_TITLE, [(run.name, run.execution_accuracy) for run in runs], markers)
 
 
-def replace_block(readme: str, block: str) -> str:
+def replace_block(readme: str, block: str, start: str = BLOCK_START, end: str = BLOCK_END) -> str:
     """Put the block between the two marker lines of the README text."""
-    before, start, rest = readme.partition(BLOCK_START)
-    _, end, after = rest.partition(BLOCK_END)
-    if not (start and end):
-        raise RunLogError(
-            f"{README_FILE} needs the lines {BLOCK_START} and {BLOCK_END} around its results."
-        )
-    return f"{before}{BLOCK_START}\n\n{block}\n{BLOCK_END}{after}"
+    before, found_start, rest = readme.partition(start)
+    _, found_end, after = rest.partition(end)
+    if not (found_start and found_end):
+        raise RunLogError(f"{README_FILE} needs the lines {start} and {end} around that part.")
+    return f"{before}{start}\n\n{block}\n{end}{after}"
+
+
+def _readme(root: Path, runs: Sequence[Run]) -> str:
+    """Return the README with its generated blocks filled in."""
+    readme = replace_block(read_text(root / README_FILE), readme_block(runs))
+    if (root / STANDING_FILE).is_file():
+        readme = replace_block(readme, standing_table(root), STANDING_START, STANDING_END)
+    return readme
 
 
 def rendered(root: Path, runs: Sequence[Run]) -> dict[str, str]:
@@ -96,7 +104,7 @@ def rendered(root: Path, runs: Sequence[Run]) -> dict[str, str]:
     return {
         RESULTS_FILE: results_markdown(runs, counts),
         CHART_FILE: chart_svg(runs),
-        README_FILE: replace_block(read_text(root / README_FILE), readme_block(runs)),
+        README_FILE: _readme(root, runs),
     }
 
 
