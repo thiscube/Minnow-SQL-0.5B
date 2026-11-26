@@ -34,8 +34,6 @@ Tested on [Spider][spider], a standard SQL benchmark. An answer only counts if t
 
 <!-- standing:end -->
 
-Test B is the fairest score. I set those questions aside, chose nothing on them, and scored them once at the very end.
-
 ## The goal
 
 I wanted at least 70% on Spider's dev set, with a model this small, on one normal graphics card. The score is execution accuracy: the share of questions where the model's query returns the same rows as the correct one.
