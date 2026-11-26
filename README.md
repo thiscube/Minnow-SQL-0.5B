@@ -28,7 +28,7 @@ Tested on [Spider][spider], a standard SQL benchmark. An answer only counts if t
 
 |  | Dev | Test A | Test B |
 | --- | ---: | ---: | ---: |
-| Before training | 45.36% |  |  |
+| Before training | 45.36% | N/A | N/A |
 | My best model | 71.18% | 72.93% | 76.66% |
 | Three models voting | **73.79%** | **74.72%** | **78.19%** |
 
