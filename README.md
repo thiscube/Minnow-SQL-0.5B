@@ -42,16 +42,18 @@ I got there.
 
 ## How I got there
 
-I measured every step on the same 1,034 questions, so the steps can be compared fairly.
+Every step was scored on the same 1,034 questions.
 
-1. **Starting point: 45%.** The model as it comes. Its most common mistake was asking for a column that doesn't exist.
-2. **Training on examples: 61%.** I showed it about 6,000 questions from Spider's training set, each with the correct query. I used LoRA, which trains a small add-on and leaves the original model untouched.
-3. **Letting it try several times: 67%.** The model writes 15 different queries for each question. I run all of them, and the result most of them agree on wins. Wrong queries tend to be wrong in different ways, while right ones agree.
-4. **Telling it what's in the database: 69%.** If the question says "France" and a column holds the value "France", the prompt now points that out. I also added 12,000 machine-written practice questions from [SynSQL-2.5M][omnisql].
-5. **Letting three models vote: 73%.** I trained three models in slightly different ways, and the answer most of them give wins. An answer that returns nothing only wins if there's nothing else left.
-6. **Fixing queries that fail: 74%.** Sometimes the winning query asks a table for a column that lives in a different table. A small program looks the column up in the database and points the query at the right table. It never sees the correct answer. With this, one model on its own gets 71%, and the three-model vote gets 74%.
+| Step | Score | What changed |
+| --- | ---: | --- |
+| Starting point | 45% | The model as it comes |
+| Training on examples | 61% | 6,000 Spider questions with their correct queries |
+| Trying 15 times | 67% | The answer most tries agree on wins |
+| Database hints | 69% | The prompt points out words it found in the database |
+| Three models vote | 73% | Three differently trained models, majority wins |
+| Fixing failed queries | 74% | Broken column names get fixed using the database |
 
-Not everything worked. Adding more training data on its own barely helped. A second round of training on questions that need several tables didn't help either, and neither did reinforcement learning (rewarding the model whenever its query returns the right rows). I wrote all of it up, with numbers, in [FINDINGS.md](FINDINGS.md).
+Not everything worked. More data, a second round of training and reinforcement learning didn't help. The details are in [FINDINGS.md](FINDINGS.md).
 
 ## Every run
 
