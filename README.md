@@ -122,22 +122,6 @@ SLM-SQL is the strongest published result I know of for this exact base model. M
 - I check answers with my own, simpler checker on the original Spider databases. The official test suite is stricter.
 - The two model-card rows start from a slightly different base model.
 
-## What's done
-
-- [x] Project checks: tests, code style, and a guard against training on test questions
-- [x] Measure the model as it comes: 45.36%
-- [x] First fine-tune on Spider's training set: 60.64%
-- [x] Improvements: more data, value hints, voting, reinforcement learning
-- [x] Final score on Test B, the 917 held-back questions
-- [x] Release the model on [Hugging Face](https://huggingface.co/cubehugging/Minnow-SQL-0.5B)
-- [ ] A demo and a write-up
-
-## Limits I set myself
-
-- One NVIDIA RTX 3060 Ti with 8 GB of memory, and 32 GB of RAM.
-- At most $15 on rented graphics cards. So far I've spent $0.
-- Spider dev is only ever used for scoring. The model never trains on it.
-
 ## Run it yourself
 
 Everything fits on one 8 GB graphics card. If you stop a training run, running the same command again picks it up where it left off.
