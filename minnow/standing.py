@@ -47,7 +47,7 @@ def _highlights(root: Path, table: Mapping) -> list[str]:
         f"- **{mistakes}.** It now gets {round(100 * wrong_after / after.total)} of every 100 "
         f"questions wrong. Before training it got {round(100 * wrong_before / before.total)} "
         f"wrong{half}.",
-        f"- **{after.correct / before.correct:.1f} times as many right.** It answers "
+        f"- **{after.correct / before.correct:.1f}x as many right.** It answers "
         f"{after.correct:,} of the {after.total:,} questions correctly, up from "
         f"{before.correct:,}.",
         f"- **{unseen.execution_accuracy:.0f}% on questions it had never seen.** "

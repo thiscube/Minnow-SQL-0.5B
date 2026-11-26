@@ -23,7 +23,7 @@ Tested on [Spider][spider], a standard SQL benchmark. An answer only counts if t
 <!-- standing:start -->
 
 - **~2x fewer mistakes.** It now gets 29 of every 100 questions wrong. Before training it got 55 wrong, more than half.
-- **1.6 times as many right.** It answers 736 of the 1,034 questions correctly, up from 469.
+- **1.6x as many right.** It answers 736 of the 1,034 questions correctly, up from 469.
 - **77% on questions it had never seen.** SLM-SQL-0.5B, a published model of the same size, reports 73.5%.
 
 |  | Dev | Test A | Test B |
