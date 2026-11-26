@@ -6,7 +6,13 @@
 
 Minnow-SQL-0.5B is a 0.5-billion-parameter model that turns plain English questions into SQLite queries, trained on a single 8 GB gaming GPU.
 
-Big models are good at this. I wanted to see how far a tiny one can get, trained at home on one gaming graphics card. Minnow starts from [Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct), a model with about 500 million parameters. That is a tiny fraction of the size of the models behind the well-known chat assistants.
+Big models already write SQL well. I wanted to know how close a tiny one could get, trained at home on my own PC. Minnow starts from [Qwen2.5-Coder-0.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Coder-0.5B-Instruct), which has about 500 million parameters.
+
+My PC:
+- **Graphics card:** NVIDIA RTX 3060 Ti (8 GB)
+- **Processor:** Intel Core i5-12600KF
+- **RAM:** 32 GB
+- **System:** Windows 10
 
 ## Where it stands
 
