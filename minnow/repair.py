@@ -11,6 +11,10 @@ Two steps that use only the database, never the reference query:
 
     python -m minnow.repair outputs/repaired outputs/run --spider data/spider
 
+Several runs of one model on one split can be named. Their candidates are pooled per question,
+all of the first run's and then the next run's, and voted once, so a tie goes to the run named
+first and its greedy answer. Runs of different models are voted by python -m minnow.combine.
+
 The new folder gets predictions.jsonl, outcomes.jsonl and summary.json and no candidates.jsonl,
 so python -m minnow.combine votes over the repaired pick of each run.
 """
@@ -54,6 +58,7 @@ _MAX_ROUNDS = 4
 _CLOSE_ENOUGH = 0.6
 _VOTED = "picks voted again with empty results last"
 _KEPT = "picks kept (no saved candidates)"
+_POOLED = "candidates of the {} runs pooled and voted once with empty results last"
 
 
 def load_schema(database: Path) -> Schema:
@@ -206,41 +211,74 @@ def repair_picks(
     }
 
 
-def _summary(source: Mapping[str, object], voted: bool, counts: Breakdown) -> dict[str, object]:
-    """Return the source run's summary with the new counts and what was done to its picks."""
-    steps = f"{_VOTED if voted else _KEPT}, then repaired where a column was missing"
-    return {
-        **source,
+def pool_candidates(runs: Sequence[Mapping[int, Sequence[str]]]) -> dict[int, list[str]]:
+    """Return each question's candidates of every run: all of the first run's, then the next."""
+    pooled: dict[int, list[str]] = {}
+    for run in runs:
+        for index, candidates in run.items():
+            pooled.setdefault(index, []).extend(candidates)
+    return pooled
+
+
+def _summary(
+    sources: Sequence[Mapping[str, object]], voted: bool, counts: Breakdown
+) -> dict[str, object]:
+    """Return the first run's summary with the new counts and what was done to the picks."""
+    several = len(sources) > 1
+    done = _POOLED.format(len(sources)) if several else _VOTED if voted else _KEPT
+    decodings = " + ".join(str(source["decoding"]) for source in sources)
+    summary = {
+        **sources[0],
         "correct": counts.correct,
         "total": counts.total,
         "execution_accuracy": accuracy(counts.correct, counts.total),
-        "decoding": f"{source['decoding']}; {steps}",
+        "decoding": f"{decodings}; {done}, then repaired where a column was missing",
     }
+    if several:
+        seconds = [source.get("generation_seconds") for source in sources]
+        summary["generation_seconds"] = None if None in seconds else sum(seconds)
+    return summary
+
+
+def _sources(
+    parser: argparse.ArgumentParser, runs: Sequence[Path], split: str
+) -> list[dict[str, object]]:
+    """Return every run's summary, refusing a folder that is no run of that split and model."""
+    sources: list[dict[str, object]] = []
+    for run in runs:
+        for name in (PREDICTIONS_FILE, SUMMARY_FILE):
+            if not (run / name).is_file():
+                parser.error(f"{run / name} does not exist, so there is no run to repair.")
+        source = json.loads(read_text(run / SUMMARY_FILE))
+        if source["split"] != split:
+            parser.error(f"{run} answered {source['split']}, not {split}. Pass its --split.")
+        sources.append(source)
+        if source.get("model") != sources[0].get("model"):
+            parser.error(f"{run} is by another model than {runs[0]}. Use minnow.combine.")
+    return sources
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    """Write a new run folder with a run's picks voted again and repaired, and print its counts."""
+    """Write a new run folder with the picks voted again and repaired, and print its counts."""
     parser = argparse.ArgumentParser(
         description="Vote a run again with empty results last and repair picks that do not run."
     )
     parser.add_argument("out", type=Path, help="new run folder to write")
-    parser.add_argument("run", type=Path, help="run folder to repair")
+    parser.add_argument(
+        "runs", type=Path, nargs="+", metavar="run", help="run folder to repair; more are pooled"
+    )
     parser.add_argument("--spider", type=Path, required=True, help="unpacked Spider folder")
-    parser.add_argument("--split", default="dev.json", help="question file the run answered")
+    parser.add_argument("--split", default="dev.json", help="question file the runs answered")
     args = parser.parse_args(argv)
     if (args.out / PREDICTIONS_FILE).exists():
         parser.error(f"{args.out} already holds a run.")
-    for name in (PREDICTIONS_FILE, SUMMARY_FILE):
-        if not (args.run / name).is_file():
-            parser.error(f"{args.run / name} does not exist, so there is no run to repair.")
-    source = json.loads(read_text(args.run / SUMMARY_FILE))
-    split = args.split.removesuffix(".json")
-    if source["split"] != split:
-        parser.error(f"{args.run} answered {source['split']}, not {split}. Pass its --split.")
+    sources = _sources(parser, args.runs, args.split.removesuffix(".json"))
+    saved = [load_candidates(run / CANDIDATES_FILE) for run in args.runs]
+    if len(saved) > 1 and not all(saved):
+        parser.error("Runs can only be pooled when each of them saved its candidates.")
     examples = load_split(args.spider, args.split)
-    candidates = load_candidates(args.run / CANDIDATES_FILE)
-    voted = combine(examples, [candidates], args.spider, prefer_rows=True)
-    picks = {**load_predictions(args.run / PREDICTIONS_FILE), **voted}
+    voted = combine(examples, [pool_candidates(saved)], args.spider, prefer_rows=True)
+    picks = {**load_predictions(args.runs[0] / PREDICTIONS_FILE), **voted}
     repaired = repair_picks(examples, picks, args.spider)
     args.out.mkdir(parents=True, exist_ok=True)
     for index in sorted(repaired):
@@ -248,7 +286,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     outcomes = judge_all(examples, repaired, args.spider)
     save_outcomes(args.out / OUTCOMES_FILE, outcomes)
     counts = breakdown(outcomes)
-    text = json.dumps(_summary(source, bool(voted), counts), indent=2) + "\n"
+    text = json.dumps(_summary(sources, bool(voted), counts), indent=2) + "\n"
     (args.out / SUMMARY_FILE).write_text(text, encoding="utf-8", newline="\n")
     print(format_breakdown(counts))
     return 0

@@ -6,7 +6,14 @@ import pytest
 from minnow.evaluate import append_candidates, append_prediction, load_predictions
 from minnow.execution import QueryError, run_query
 from minnow.outcomes import load_outcomes
-from minnow.repair import load_schema, main, repair_columns, repair_picks, sources
+from minnow.repair import (
+    load_schema,
+    main,
+    pool_candidates,
+    repair_columns,
+    repair_picks,
+    sources,
+)
 from minnow.runfiles import judged_run
 from minnow.spider import SpiderExample
 
@@ -26,6 +33,8 @@ JOIN = "FROM orders AS T1 JOIN customer AS T2 ON T1.customer_id = T2.customer_id
 MIXED_UP = f"SELECT T1.name {JOIN}"
 EMPTY = "SELECT name FROM customer WHERE city = 'Rome'"
 NAMES = "SELECT name FROM customer"
+CITIES = "SELECT city FROM customer"
+COUNT = "SELECT count(*) FROM orders"
 BROKEN = "SELEC nonsense"
 QUESTIONS = [
     {"question": "Names?", "query": NAMES, "db_id": "shop"},
@@ -251,4 +260,83 @@ def test_command_line_refuses_a_run_that_answered_another_split(tmp_path, spider
         main([str(tmp_path / "out"), str(run), "--spider", str(spider)])
 
     assert "answered test_val, not dev" in capsys.readouterr().err
+    assert not (tmp_path / "out").exists()
+
+
+def two_runs(tmp_path, **second_summary):
+    """Two runs of one model. Question 2 is a tie that only the order of the runs decides."""
+    first = write_run(
+        tmp_path / "first",
+        {0: EMPTY, 1: MIXED_UP, 2: CITIES},
+        {0: [EMPTY, NAMES], 1: [MIXED_UP], 2: [CITIES, COUNT, COUNT]},
+    )
+    second = write_run(
+        tmp_path / "second",
+        {0: EMPTY, 1: BROKEN, 2: NAMES},
+        {0: [EMPTY, EMPTY], 1: [BROKEN, BROKEN], 2: [NAMES, NAMES]},
+        **second_summary,
+    )
+    return str(first), str(second)
+
+
+def test_candidates_are_pooled_run_after_run_and_not_changed():
+    first, second = {0: ["a", "b"], 1: ["c"]}, {0: ["d"], 2: ["e"]}
+
+    assert pool_candidates([first]) == first
+    assert pool_candidates([first, second]) == {0: ["a", "b", "d"], 1: ["c"], 2: ["e"]}
+    assert first == {0: ["a", "b"], 1: ["c"]}
+
+
+def test_command_line_pools_several_runs_and_votes_once(tmp_path, spider):
+    first, second = two_runs(tmp_path, generation_seconds=30)
+    out = tmp_path / "pooled"
+
+    assert main([str(out), first, second, "--spider", str(spider)]) == 0
+
+    # 0: one answer with rows beats three empty ones. 1: nothing runs, so the first run's
+    # greedy answer is kept and repaired. 2: two against two, the first run's pair comes first.
+    assert load_predictions(out / "predictions.jsonl") == {
+        0: NAMES,
+        1: f"SELECT T2.name {JOIN}",
+        2: COUNT,
+    }
+    assert json.loads((out / "summary.json").read_text(encoding="utf-8")) == {
+        **SUMMARY,
+        "correct": 3,
+        "execution_accuracy": 100.0,
+        "generation_seconds": 42,
+        "decoding": "vote over 3 candidates + vote over 3 candidates; candidates of the 2 runs "
+        "pooled and voted once with empty results last, then repaired where a column was missing",
+    }
+    assert judged_run(out, "pooled", "2026-11-26").correct == 3
+
+
+def test_tie_goes_to_the_run_named_first_and_unknown_time_stays_unknown(tmp_path, spider):
+    first, second = two_runs(tmp_path, generation_seconds=None)
+    out = tmp_path / "pooled"
+
+    assert main([str(out), second, first, "--spider", str(spider)]) == 0
+
+    assert load_predictions(out / "predictions.jsonl") == {0: NAMES, 1: BROKEN, 2: NAMES}
+    summary = json.loads((out / "summary.json").read_text(encoding="utf-8"))
+    assert (summary["correct"], summary["generation_seconds"]) == (1, None)
+
+
+@pytest.mark.parametrize(
+    ("other", "reason"),
+    [
+        ({"summary": {"split": "test_val"}}, "second answered test_val, not dev"),
+        ({"summary": {"model": "Other/Model"}}, "second is by another model than"),
+        ({"candidates": None}, "each of them saved its candidates"),
+    ],
+)
+def test_command_line_refuses_runs_that_cannot_be_pooled(tmp_path, spider, capsys, other, reason):
+    first = write_run(tmp_path / "first", {0: NAMES}, {0: [NAMES]})
+    candidates = other.get("candidates", {0: [NAMES]})
+    second = write_run(tmp_path / "second", {0: NAMES}, candidates, **other.get("summary", {}))
+
+    with pytest.raises(SystemExit):
+        main([str(tmp_path / "out"), str(first), str(second), "--spider", str(spider)])
+
+    assert reason in capsys.readouterr().err
     assert not (tmp_path / "out").exists()

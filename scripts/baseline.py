@@ -25,8 +25,8 @@ from minnow.execution import run_query
 from minnow.fanout import CACHE_GIGABYTES, Fanout
 from minnow.outcomes import OUTCOMES_FILE, breakdown, format_breakdown, judge_all, save_outcomes
 from minnow.prompt import SYSTEM, chat_prompt, extract_sql
-from minnow.prompts import PromptBook
 from minnow.select import pick
+from minnow.shuffle import ShuffledBook
 from minnow.spider import database_path, load_split
 
 MODEL = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
@@ -44,6 +44,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-new-tokens", type=int, default=256)
     parser.add_argument("--sample-rows", type=int, default=0, help="example rows per table")
     parser.add_argument("--value-hints", action="store_true", help="list mentioned values")
+    parser.add_argument("--shuffle-tables", type=int, metavar="SEED", help="shuffled table order")
     parser.add_argument("--samples", type=int, default=1, help="candidate queries per question")
     parser.add_argument("--temperature", type=float, default=0.8, help="for the extra candidates")
     parser.add_argument("--share-prompt", action="store_true", help="encode once for all samples")
@@ -69,8 +70,8 @@ def main() -> None:
         "system_prompt": SYSTEM,
     }
     # Only written when used, so folders of earlier runs keep matching their settings.
-    shared_gb = args.cache_gb if args.share_prompt else None
-    extras = {"share_prompt_gb": shared_gb, "limit": args.limit, "device": args.device}
+    extras = {"share_prompt_gb": args.cache_gb if args.share_prompt else None, "limit": args.limit}
+    extras |= {"device": args.device, "shuffle_tables": args.shuffle_tables}
     settings |= {key: value for key, value in extras.items() if value not in (None, "cuda")}
     claim_run_folder(args.out, settings)
     predictions_file = args.out / "predictions.jsonl"
@@ -84,14 +85,16 @@ def main() -> None:
     started = time.monotonic()
     if todo:
         model, tokenizer = load(args.model, args.adapter, args.device)
-        book = PromptBook(args.spider, examples, args.sample_rows, args.value_hints)
+        book = ShuffledBook(
+            args.spider, examples, args.sample_rows, args.value_hints, args.shuffle_tables
+        )
         # Answers depend a little on batch mates, so batches are fixed blocks of the split.
         for start in range(0, len(examples), args.batch_size):
             batch = range(start, min(start + args.batch_size, len(examples)))
             if all(index in done for index in batch):
                 continue
             prompts = [
-                chat_prompt(tokenizer, book.schema(examples[i]), examples[i].question)
+                chat_prompt(tokenizer, book.schema(examples[i], i), examples[i].question)
                 for i in batch
             ]
             # One greedy answer, then sampled ones; the vote never sees the reference query.
