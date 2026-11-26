@@ -136,7 +136,7 @@ def _joined_table(
             if not mine & {name.lower() for name in schema[other]}:
                 continue
             source = re.compile(
-                rf"\b(from|join)\s+[\"`\[]?{re.escape(table)}[\"`\]]?"
+                rf"\b(from|join)\s+[\"`\[]?{re.escape(table)}[\"`\]]?(?!\w)"
                 rf"(?:\s+(?:as\s+)?{re.escape(alias)}\b)?",
                 re.I,
             )

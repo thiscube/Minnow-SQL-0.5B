@@ -175,6 +175,30 @@ def test_missing_column_is_reached_another_way(shop, sql, repaired):
     assert run_query(shop, repaired)
 
 
+def test_join_repair_skips_a_longer_table_name_that_starts_the_same(tmp_path):
+    path = tmp_path / "pets.sqlite"
+    connection = sqlite3.connect(path)
+    connection.executescript(
+        "CREATE TABLE pet_owner (owner_id INTEGER, pet_id INTEGER);"
+        "CREATE TABLE pet (pet_id INTEGER, kind_id INTEGER);"
+        "CREATE TABLE kind (kind_id INTEGER, kind_name TEXT);"
+        "INSERT INTO pet_owner VALUES (1, 7);"
+        "INSERT INTO pet VALUES (7, 3);"
+        "INSERT INTO kind VALUES (3, 'cat');"
+    )
+    connection.commit()
+    connection.close()
+    sql = "SELECT T2.kind_name FROM pet_owner AS T1 JOIN pet AS T2 ON T1.pet_id = T2.pet_id"
+
+    repaired = repair_columns(path, sql)
+
+    assert repaired == (
+        "SELECT T2.kind_name FROM pet_owner AS T1 JOIN "
+        '(SELECT * FROM "pet" NATURAL JOIN "kind") AS T2 ON T1.pet_id = T2.pet_id'
+    )
+    assert run_query(path, repaired)
+
+
 def test_repair_that_still_does_not_run_gives_the_query_back(shop):
     ambiguous = "SELECT T1.name FROM orders AS T1 JOIN customer AS T2 ON customer_id = 1"
     four_names = "SELECT order_i, customer_i, totl, placed FROM orders"
