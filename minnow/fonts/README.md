@@ -1,0 +1,1 @@
+`sora-500-latin.woff2` is Sora (weight 500, Latin letters), by the Sora Project Authors, from Google Fonts. It is under the [SIL Open Font License 1.1](https://openfontlicense.org). The chart builds it in, so its title shows in Sora everywhere.
