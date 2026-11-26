@@ -1,0 +1,12 @@
+{
+  "model": "Qwen/Qwen2.5-Coder-0.5B-Instruct + sft-synsql-hints",
+  "split": "test_val",
+  "correct": 897,
+  "total": 1230,
+  "execution_accuracy": 72.93,
+  "generation_seconds": 3430,
+  "batch_size": 16,
+  "max_new_tokens": 256,
+  "decoding": "vote over 15 candidates; picks voted again with empty results last, then repaired where a column was missing",
+  "torch": "2.11.0+cu128"
+}

@@ -22,16 +22,22 @@ Big models are good at this. I wanted to see how far a tiny one can get, trained
 
 The test is [Spider][spider], a standard benchmark. An answer only counts when the query runs and returns the right rows.
 
-| | Spider dev (1,034 questions) | Questions never used for training or picking models (1,230) |
-| --- | ---: | ---: |
-| The model before any training | 45.36% | |
-| My best single model | 68.57% | 71.14% |
-| Three of my models voting on the answer | **73.31%** | **73.25%** |
+<!-- standing:start -->
 
-So training took it from getting less than half right to getting almost three out of four right.
+|  | Spider dev (1,034 questions) | Spider test, the half for choosing settings (1,230 questions) | Spider test, the half scored once at the end (917 questions) |
+| --- | ---: | ---: | ---: |
+| The model before any training | 45.36% |  |  |
+| My best single model | 71.18% | 72.93% | 76.66% |
+| Three of my models voting on the answer | **73.79%** | **74.72%** | **78.19%** |
+
+<!-- standing:end -->
+
+So training took it from getting less than half right to getting about three out of four right.
+
+The last column is the fairest one. I set those questions aside, chose nothing on them, and scored them a single time when everything else was finished. They come from different databases than the other two columns, so the three columns show the same setup on three sets of questions, not a model that got better from left to right.
 
 > [!NOTE]
-> Still open: one last score on a set of questions I have not looked at, and putting the model on Hugging Face. See [what is left](#what-is-left).
+> Still open: putting the model on Hugging Face. See [what is left](#what-is-left).
 
 ## The goal
 
@@ -48,8 +54,9 @@ Each step was measured on the same 1,034 questions, so the gains can be compared
 3. **Let it try several times: 67%.** The model writes 15 different queries for a question. All of them are run, and the result that most of them agree on wins. Wrong queries tend to be wrong in different ways, and right ones agree.
 4. **Tell it what is in the database: 69%.** If the question says "France" and a column contains the value "France", the prompt now says so. I also added 12,000 machine-written practice questions from [SynSQL-2.5M][omnisql].
 5. **Let three models vote: 73%.** Three models trained in slightly different ways each give their answer, and the majority wins. An answer that returns nothing only wins when no other answer is left.
+6. **Repair queries that fail: 74%.** Sometimes the winning query asks a table for a column that lives in another table. A small program then looks the column up in the database and points the query at the right table. It never sees the correct answer. With this, one model alone gets 71% and the three-model vote 74%.
 
-Not everything worked. More training data alone did not help much, and neither did reinforcement learning (rewarding the model when its query returns the right rows). Both are written up, with numbers, in [FINDINGS.md](FINDINGS.md).
+Not everything worked. More training data alone did not help much. A second round of training on questions that need several tables did not help either, and neither did reinforcement learning (rewarding the model when its query returns the right rows). All of it is written up, with numbers, in [FINDINGS.md](FINDINGS.md).
 
 ## Results
 
@@ -100,7 +107,7 @@ Every run I measured, in order. The chart and the table below are made by a scri
 - **A wrong query can get lucky.** Each question is checked on one database. If the right answer is "nothing" and a wrong query also returns nothing, it passes. results.md counts how often that could have happened.
 - **One point up or down means little.** Scoring 200 questions again with a different batch size changed 3 verdicts. Every run uses the same batch size of 16, and I only call something better when it wins by clearly more than a point.
 - **The hints are not cheating.** They come from matching words of the question against the text in the database. The correct query is never used.
-- **The dev score flatters a little.** I picked models and settings while looking at dev scores, so dev is no longer a fair exam. To fix that, I split Spider's separate test set in two by database. One half (1,230 questions) is for choosing settings such as the voting rule. The other half (917 questions) is scored once, at the very end.
+- **The dev score flatters a little.** I picked models and settings while looking at dev scores, so dev is no longer a fair exam. To fix that, I split Spider's separate test set in two by database. One half (1,230 questions) is for choosing settings such as the voting rule. The other half (917 questions) was scored once, at the very end, when nothing was left to choose. That is the last column of the table at the top, and the answers behind it are in [heldout/](heldout).
 
 ### How it compares to published work
 
@@ -114,7 +121,8 @@ Every run I measured, in order. The chart and the table below are made by a scri
 EX is short for execution accuracy. SLM-SQL is the strongest published result I know of for this exact base model. My numbers land in the same range, but this is not a clean head-to-head:
 
 - I did not rerun their models. Their rows are copied from their papers.
-- My 73% comes from three models voting. Theirs is one model with its own way of picking among several tries.
+- My best numbers come from three models voting. Theirs is one model with its own way of picking among several tries. My single model is the row above the vote in the table at the top.
+- Their test score covers all 2,147 Spider test questions. Mine are split in two: the 1,230 I used to choose settings and the 917 I scored once.
 - I check answers with my own, simpler checker on the original Spider databases. The official test suite is stricter.
 - The two model-card rows start from a slightly different base model.
 
@@ -124,7 +132,7 @@ EX is short for execution accuracy. SLM-SQL is the strongest published result I 
 - [x] Measure the untouched model: 45.36%
 - [x] First fine-tune on Spider's training set: 60.64%
 - [x] Improvements: more data, value hints, voting, reinforcement learning
-- [ ] Final score on the 917 held-back questions
+- [x] Final score on the 917 held-back questions: the last column of the table at the top
 - [ ] Release: the model on Hugging Face, a demo and a write-up
 
 ## Limits I set myself
@@ -277,6 +285,7 @@ minnow/       the logic; runs without a GPU
 tests/        tests
 scripts/      training, scoring, the dashboard and the check runner
 results/      answers, verdicts and score of every logged run
+heldout/      the same for the runs on Spider's test questions
 dashboard/    the local results page
 results.md    the log of measured runs, built from results/
 FINDINGS.md   what each experiment showed and what I decided because of it
