@@ -41,8 +41,7 @@ def _highlights(root: Path, table: Mapping) -> list[str]:
     unseen = judged_run(root / last / table["rows"][1]["runs"][-1], "", "")
     published = table["published"]
     wrong_before, wrong_after = before.total - before.correct, after.total - after.correct
-    fewer = wrong_before / wrong_after
-    mistakes = "Half the mistakes" if abs(fewer - 2) < 0.25 else f"{fewer:.1f} times fewer mistakes"
+    mistakes = f"{wrong_before / wrong_after:.1f} times fewer mistakes"
     half = ", more than half" if 2 * wrong_before > before.total else ""
     return [
         f"- **{mistakes}.** It now gets {round(100 * wrong_after / after.total)} of every 100 "

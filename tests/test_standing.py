@@ -76,19 +76,19 @@ def test_headline_list_comes_first_when_a_published_score_is_given(repo):
     ]
 
 
-def test_halved_mistakes_are_called_half(repo):
+def test_more_than_half_is_only_said_when_true(repo):
     table = {
         "published": {"name": "Other", "score": 1},
         "columns": [{"title": "Five", "folder": "five"}],
         "rows": [{"label": "a", "runs": ["base"]}, {"label": "b", "runs": ["good"]}],
     }
     (repo / STANDING_FILE).write_text(json.dumps(table), encoding="utf-8")
-    make_run(repo / "five/base", 1, 5)
-    make_run(repo / "five/good", 3, 5)
+    make_run(repo / "five/base", 3, 5)
+    make_run(repo / "five/good", 4, 5)
 
     assert standing_table(repo).startswith(
-        "- **Half the mistakes.** It now gets 40 of every 100 questions wrong. Before training "
-        "it got 80 wrong, more than half."
+        "- **2.0 times fewer mistakes.** It now gets 20 of every 100 questions wrong. Before "
+        "training it got 40 wrong.\n"
     )
 
 
